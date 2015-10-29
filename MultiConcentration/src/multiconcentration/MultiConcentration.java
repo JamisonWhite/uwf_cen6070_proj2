@@ -17,13 +17,10 @@ public class MultiConcentration {
     public static void main(String[] args) {
 
         readParameters();
+        
         if (!validateParameters()) {
             showHelp();
             return;
-        }
-        
-        if (showHelp) {
-            showHelp();
         }
         
         if (useTextApplication) {
@@ -34,15 +31,14 @@ public class MultiConcentration {
             startGuiApplication();
         }
 
-
     }
 
     public static boolean useTextApplication;
 
     public static boolean useGuiApplication;
 
-    public static boolean showHelp;
-
+    public static int size;
+    
     public static void readParameters() {
         System.out.println("NotImplementedException: read parameters is not implemented.");
     }
@@ -61,7 +57,6 @@ public class MultiConcentration {
     }
 
     public static void showHelp() {
-
         System.out.println("********************************");
         System.out.println("* MultiConcentration Game");
         System.out.println("********************************");
