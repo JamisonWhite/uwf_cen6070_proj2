@@ -41,6 +41,14 @@ public class GameGrid {
     public String[] getDisplayGrid() {
         return displayGrid;
     }    
+    
+    /**
+     * Get the data grid
+     * @return 
+     */
+    public String[] getDataGrid() {
+        return dataGrid;
+    }    
 
     /**
      * Get the display grid showing cell's data
@@ -88,7 +96,7 @@ public class GameGrid {
                 result++;
             }
         }
-        return result / 2;
+        return result;
     }
 
     /**
@@ -101,7 +109,7 @@ public class GameGrid {
         char data = 'A';
         for (int i = 0; i < sizeSquared; i++) {
             //display grid is 1 to size
-            displayGrid[i] = Integer.toString(i + 1);
+            displayGrid[i] = Integer.toString(i);
             //data grid doubles each value and increments if more than 2 * 26 
             //are needed
             String value = "" + data;
@@ -143,39 +151,53 @@ public class GameGrid {
     }
 
     /**
-     * Print grids to system out. This is just a helper function.
+     * helper function to print grids
+     * @param grid 
      */
-    private void printGrids() {
-        //todo move to text game
-        System.out.println("Display Grid");
+    public void printGrid(String[] grid) {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                System.out.print(String.format("%5s", displayGrid[i * size + j]));
+                System.out.print(String.format("%5s", grid[i * size + j]));
             }
             System.out.println();
         }
         System.out.println();
-
-        System.out.println("Data Grid");
-
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                System.out.print(String.format("%5s", dataGrid[i * size + j]));
-            }
-            System.out.println();
-        }
-        System.out.println();
-
     }
 
     public static void main(String[] args) {
 
         GameGrid grid = new GameGrid(5); //52 is an interesting case
+               
         grid.initializeGrids(42);
-        grid.printGrids();
-        grid.initializeGrids(43);
-        grid.printGrids();
-
+        
+        System.out.println("Data Grid");
+        grid.printGrid(grid.getDataGrid());
+        
+        System.out.println("Display Grid");
+        grid.printGrid(grid.getDisplayGrid());    
+        
+        System.out.println("Remaining: " + grid.remaining());
+        System.out.println();
+                
+        System.out.println("Show: " + 0);
+        grid.printGrid(grid.showCell(0));   
+        
+        System.out.println("Show: " + 10);     
+        grid.printGrid(grid.showCell(10));
+                
+        System.out.println("IsMatch: " + 0 + ", " + 10);
+        if (grid.isMatch(0, 10)) {
+            System.out.println("Found match.");
+        } else {            
+            System.out.println("No match.");
+        }        
+        System.out.println();
+        
+        System.out.println("Display Grid");
+        grid.printGrid(grid.getDisplayGrid());  
+        
+        System.out.println("Remaining: " + grid.remaining());
+        System.out.println();
     }
 
 }
