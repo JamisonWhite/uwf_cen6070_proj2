@@ -83,7 +83,7 @@ public class GameGrid {
     }
 
     /**
-     * Get the display grid showing cell's data
+     * Show cell data
      *
      * @param cell
      * @return
@@ -94,6 +94,29 @@ public class GameGrid {
         }
         String[] result = displayGrid.clone();
         result[cell] = dataGrid[cell];
+        return result;
+    }
+    
+    
+    /**
+     * Show two cells data
+     * @param cell1
+     * @param cell2
+     * @return 
+     */
+    public String[] showCell(int cell1, int cell2) {
+        if (cell1 < 0 || cell1 >= sizeSquared) {
+            throw new IllegalArgumentException("Cell1 out of range.");
+        }
+        if (cell2 < 0 || cell2 >= sizeSquared) {
+            throw new IllegalArgumentException("Cell2 out of range.");
+        }
+        if (cell1 == cell2) {
+            throw new IllegalArgumentException("Cell1 and cell2 may not be equal.");
+        }
+        String[] result = displayGrid.clone();
+        result[cell1] = dataGrid[cell1];
+        result[cell2] = dataGrid[cell2];
         return result;
     }
 
@@ -203,6 +226,10 @@ public class GameGrid {
         }
     }
 
+    /**
+     * Main will run class 
+     * @param args 
+     */
     public static void main(String[] args) {
 
         Integer gridSize = 5;
