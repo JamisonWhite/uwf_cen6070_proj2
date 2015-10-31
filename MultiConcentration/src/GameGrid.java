@@ -9,9 +9,9 @@ import java.util.Random;
 public class GameGrid {
 
     public GameGrid(int size) {
-        //todo validate size
-        //must be even
-        //muste less than 10?
+        if (size < 2 || size >= 1000) {
+            throw new IllegalArgumentException("Size out of range. 2-1000");
+        }
         this.size = size;
         sizeSquared = size * size;
         dataGrid = new String[sizeSquared];
@@ -39,7 +39,7 @@ public class GameGrid {
      * @return 
      */
     public String[] getDisplayGrid() {
-        return displayGrid;
+        return displayGrid.clone();
     }    
     
     /**
@@ -47,7 +47,7 @@ public class GameGrid {
      * @return 
      */
     public String[] getDataGrid() {
-        return dataGrid;
+        return dataGrid.clone();
     }    
 
     /**
