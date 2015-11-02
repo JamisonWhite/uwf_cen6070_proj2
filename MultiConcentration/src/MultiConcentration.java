@@ -23,14 +23,7 @@ public class MultiConcentration {
             return;
         }
         
-        if (useTextApplication) {
-            startTextApplication();
-        }
-
-        if (useGuiApplication) {
-            startGuiApplication();
-        }
-
+        startGame();
     }
 
     public static boolean useTextApplication;
@@ -50,16 +43,9 @@ public class MultiConcentration {
         return true;
     }
 
-    public static void startGuiApplication() {
+    public static void startGame() {
         GameGrid grid = new GameGrid(size);
-        GameDriver driver = new GuiGameDriver();
-        GameLoop loop = new GameLoop(driver, grid);
-        loop.Start();
-    }
-
-    public static void startTextApplication() {
-        GameGrid grid = new GameGrid(size);
-        GameDriver driver = new TextGameDriver();
+        GameDriver driver = useTextApplication ? new TextGameDriver() : new GuiGameDriver();
         GameLoop loop = new GameLoop(driver, grid);
         loop.Start();
     }
