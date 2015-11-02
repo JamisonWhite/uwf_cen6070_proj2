@@ -12,16 +12,16 @@ public class GameGrid {
         if (size < 2 || size >= 100) {
             throw new IllegalArgumentException("Size out of range. 2-100");
         }
-        this.size = size;
-        sizeSquared = size * size;
-        dataGrid = new String[sizeSquared];
-        displayGrid = new String[sizeSquared];
+        this.size = size * size;
+        dataGrid = new String[this.size];
+        displayGrid = new String[this.size];
+        isFoundGrid = new Boolean[this.size];
     }
 
     private final int size;
-    private final int sizeSquared;
     private final String[] dataGrid;
     private final String[] displayGrid;
+    private final Boolean[] isFoundGrid;
 
     /**
      * Get the size of the grid
@@ -33,30 +33,18 @@ public class GameGrid {
     }
 
     /**
-     * Get the size squared of the grid
-     *
-     * @return
-     */
-    public int getSizeSquared() {
-        return sizeSquared;
-    }
-
-    /**
      * Get the display grid
      *
      * @return
      */
     public String[] getDisplayGrid() {
-        return displayGrid.clone();
-    }
-
-    /**
-     * Get the data grid
-     *
-     * @return
-     */
-    public String[] getDataGrid() {
-        return dataGrid.clone();
+        String[] result = displayGrid.clone();
+        for (int i = 0; i < size; i++) {
+            if (isFoundGrid[i]) {
+                result[i] = dataGrid[i];
+            }
+        }
+        return result;
     }
 
     /**
@@ -66,10 +54,10 @@ public class GameGrid {
      * @return
      */
     public Boolean isCellFound(int cell) {
-        if (cell < 0 || cell >= sizeSquared) {
+        if (cell < 0 || cell >= size) {
             throw new IllegalArgumentException("Cell out of range.");
         }
-        return displayGrid[cell].equals(dataGrid[cell]);
+        return isFoundGrid[cell];
     }
 
     /**
@@ -78,23 +66,59 @@ public class GameGrid {
      * @param cell1
      * @param cell2
      * @return
+     * @throws IllegalArgumentException
      */
-    public Boolean matchCells(int cell1, int cell2) {
-        if (cell1 < 0 || cell1 >= sizeSquared) {
+    public Boolean matchCells(int cell1, int cell2) throws IllegalArgumentException {
+        if (cell1 < 0 || cell1 >= size) {
             throw new IllegalArgumentException("Cell1 out of range.");
         }
-        if (cell2 < 0 || cell2 >= sizeSquared) {
+        if (cell2 < 0 || cell2 >= size) {
             throw new IllegalArgumentException("Cell2 out of range.");
         }
         if (cell1 == cell2) {
-            throw new IllegalArgumentException("Cell1 and cell2 may not be equal.");
+            throw new IllegalArgumentException("Cell1 and cell2 must not be the same cell.");
         }
         if (dataGrid[cell1].equals(dataGrid[cell2])) {
-            displayGrid[cell1] = dataGrid[cell1];
-            displayGrid[cell2] = dataGrid[cell2];
+            isFoundGrid[cell1] = true;
+            isFoundGrid[cell2] = true;
             return true;
         }
         return false;
+    }
+
+    /**
+     * Match the cells by display.
+     *
+     * @param display1
+     * @param display2
+     * @return
+     * @throws IllegalArgumentException
+     */
+    public Boolean matchCells(String display1, String display2) throws IllegalArgumentException {
+        Integer cell1 = getIndexByDisplay(display1);
+        Integer cell2 = getIndexByDisplay(display2);
+        return matchCells(cell1, cell2);
+    }
+
+    /**
+     * Get the cell index by display.
+     *
+     * @param display1
+     * @return
+     * @throws IllegalArgumentException
+     */
+    public Integer getIndexByDisplay(String display1) throws IllegalArgumentException {
+        Integer cell1 = -1;
+        for (Integer i = 0; i < size; i++) {
+            if (display1.equals(displayGrid[i])) {
+                cell1 = i;
+                break;
+            }
+        }
+        if (cell1 < 0) {
+            throw new IllegalArgumentException("Display1 was not found.");
+        }
+        return cell1;
     }
 
     /**
@@ -104,14 +128,22 @@ public class GameGrid {
      */
     public int remaining() {
         int result = 0;
-        for (int i = 0; i < sizeSquared; i++) {
-            if (!dataGrid[i].equals(displayGrid[i])) {
+        for (int i = 0; i < size; i++) {
+            if (!isFoundGrid[i]) {
                 result++;
             }
         }
         return result;
     }
 
+    /**
+     * Initialize grids with random number
+     */
+    void initializeGrids() {        
+        Random rnd = new Random();
+        initializeGrids(rnd.nextInt());
+    }
+    
     /**
      * Initialize display and data grids
      *
@@ -121,13 +153,14 @@ public class GameGrid {
 
         //initialize values
         char data = 'A';
-        for (int i = 0; i < sizeSquared; i++) {
-            //display grid is 1 to size
-            displayGrid[i] = Integer.toString(i);
+        for (int i = 0; i < size; i++) {
+            isFoundGrid[i] = false;
+            //display grid is 1-based counting
+            displayGrid[i] = Integer.toString(i + 1);
             //data grid doubles each value and increments if more than 2 * 26 
             //are needed
             String value = "" + data;
-            if (sizeSquared > 52) {
+            if (size > 52) {
                 value = value + (i / 52);
             }
             dataGrid[i] = value;
@@ -139,8 +172,8 @@ public class GameGrid {
             }
         }
         //set the foundcell for odd sizes
-        if (sizeSquared % 2 == 1) {
-            dataGrid[sizeSquared - 1] = "";
+        if (size % 2 == 1) {
+            dataGrid[size - 1] = "";
         }
 
         //shuffle datagrid
@@ -153,10 +186,11 @@ public class GameGrid {
         }
 
         //set foundcell for odd numbers in display grid
-        if (sizeSquared % 2 == 1) {
+        if (size % 2 == 1) {
             for (int i = 0; i < dataGrid.length; i++) {
                 if ("".equals(dataGrid[i])) {
                     displayGrid[i] = "";
+                    isFoundGrid[i] = true;
                     break;
                 }
             }
@@ -169,7 +203,8 @@ public class GameGrid {
      *
      * @param grid
      */
-    public void printGrid(String[] grid) {
+    public static void printGrid(String[] grid) {
+        Integer size = ((Number) Math.sqrt(grid.length)).intValue();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 System.out.print(String.format("%5s", grid[i * size + j]));
@@ -191,36 +226,35 @@ public class GameGrid {
 
         grid.initializeGrids(42);
 
-        System.out.println("Data Grid");
-        grid.printGrid(grid.getDataGrid());
+        System.out.println("*****************************");
+        System.out.println("* Super Secret Data Grid");
+        System.out.println("*****************************");
+        printGrid(grid.dataGrid);
+        System.out.println("*****************************\r\n");
 
-        System.out.println("Display Grid");
-        grid.printGrid(grid.getDisplayGrid());
+        System.out.println("Start Solving");
+        printGrid(grid.getDisplayGrid());
 
-        System.out.println("Remaining: " + grid.remaining());
-        System.out.println();
-
-        System.out.println("*********************\r\nStart Solving");
         Integer guesses = 0;
-        for (int i = 0; i < grid.getSizeSquared(); i++) {
+        String[] dispalyGrid = grid.getDisplayGrid();
+        for (int i = 0; i < grid.getSize(); i++) {
             if (grid.isCellFound(i)) {
                 continue;
             }
-            System.out.println("\r\nSolving: " + i);
-            for (int j = i + 1; j < grid.getSizeSquared(); j++) {
+            System.out.println("\r\nSolving: " + dispalyGrid[i]);
+            for (int j = i + 1; j < grid.getSize(); j++) {
                 guesses++;
                 if (grid.matchCells(i, j)) {
-                    grid.printGrid(grid.getDisplayGrid());
-                    System.out.println("Matched: " + i + " and " + j);
+                    System.out.println("Matched: " + dispalyGrid[i] + " and " + dispalyGrid[j]);
                     System.out.println("Remaining: " + grid.remaining());
+                    printGrid(grid.getDisplayGrid());
                     break;
                 }
             }
         }
-
-        System.out.println("\r\nSolved in " + guesses + " guesses.");
-        grid.printGrid(grid.getDataGrid());
-
+        System.out.println("\r\nSolved in " + guesses + " guesses.\r\n");
+        
     }
+
 
 }
