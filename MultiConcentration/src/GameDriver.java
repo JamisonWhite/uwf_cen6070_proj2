@@ -27,5 +27,7 @@ public interface GameDriver {
     public void showGuessSuccess(GameGrid data);
 
     public void showGuessFailed(GameGrid data);
+
+    public void showException(GameGrid data, Exception ex);
     
 }

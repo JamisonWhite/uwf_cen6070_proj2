@@ -1,16 +1,23 @@
+
 /**
  * Game loop interacts with the driver and the data.
- * 
+ *
  * @author jamie
  */
 public class GameLoop {
 
+    /**
+     * Pass in driver and data to use
+     * @param driver
+     * @param data 
+     */
     public GameLoop(GameDriver driver, GameGrid data) {
         this.driver = driver;
         this.data = data;
     }
 
     private final GameDriver driver;
+    
     private final GameGrid data;
 
     /**
@@ -23,27 +30,34 @@ public class GameLoop {
 
         while (true) {
 
-            driver.showGrid(data);
+            try {
+            
+                driver.showGrid(data);
 
-            String choice = driver.getChoice(data); //hmm will this work for forms, since it's blocking?
+                //hmm will this work for forms, since it's blocking?
+                String choice = driver.getChoice(data); 
 
-            if ("Q".equals(choice)) {
-                break;
-            }
+                if ("Q".equals(choice)) {
+                    break;
+                }
 
-            if ("R".equals(choice)) {
-                data.initializeGrids();
-                driver.showReset(data);
-                continue;
-            }
+                if ("R".equals(choice)) {
+                    data.initializeGrids();
+                    driver.showReset(data);
+                    continue;
+                }
 
-            int cell1 = driver.getGuessCell1(data);
-            int cell2 = driver.getGuessCell2(data);
+                int cell1 = driver.getGuessCell1(data);
+                int cell2 = driver.getGuessCell2(data);
 
-            if (data.matchCells(cell1, cell2)) {
-                driver.showGuessSuccess(data);
-            } else {
-                driver.showGuessFailed(data);
+                if (data.matchCells(cell1, cell2)) {
+                    driver.showGuessSuccess(data);
+                } else {
+                    driver.showGuessFailed(data);
+                }
+
+            } catch (Exception ex) {
+                driver.showException(data, ex);
             }
 
         }

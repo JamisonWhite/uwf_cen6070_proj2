@@ -40,20 +40,28 @@ public class MultiConcentration {
     public static int size;
     
     public static void readParameters() {
-        System.out.println("NotImplementedException: read parameters is not implemented.");
+        System.out.println("NotImplementedException: read parameters is not implemented. Using test values: -t 10");
+        size = 10;
+        useTextApplication = true;
     }
 
     public static boolean validateParameters() {
-        System.out.println("NotImplementedException: validate parameters is not implemented.");
-        return false;
+        System.out.println("NotImplementedException: validate parameters is not implemented. Using test values: true");
+        return true;
     }
 
     public static void startGuiApplication() {
-        System.out.println("NotImplementedException: start GUI application is not implemented.");
+        GameGrid grid = new GameGrid(size);
+        GameDriver driver = new GuiGameDriver();
+        GameLoop loop = new GameLoop(driver, grid);
+        loop.Start();
     }
 
     public static void startTextApplication() {
-        System.out.println("NotImplementedException: start text application is not implemented.");
+        GameGrid grid = new GameGrid(size);
+        GameDriver driver = new TextGameDriver();
+        GameLoop loop = new GameLoop(driver, grid);
+        loop.Start();
     }
 
     public static void showHelp() {
