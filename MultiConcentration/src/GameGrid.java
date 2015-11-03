@@ -31,6 +31,7 @@ public class GameGrid {
     public int getSize() {
         return size;
     }
+
     /**
      * Get the data grid
      *
@@ -39,7 +40,7 @@ public class GameGrid {
     public String[] getDataGrid() {
         return dataGrid.clone();
     }
-    
+
     /**
      * Get the display grid
      *
@@ -54,8 +55,7 @@ public class GameGrid {
         }
         return result;
     }
-    
-    
+
     /**
      * Get the display grid
      *
@@ -165,11 +165,11 @@ public class GameGrid {
     /**
      * Initialize grids with random number
      */
-    void initializeGrids() {        
+    void initializeGrids() {
         Random rnd = new Random();
         initializeGrids(rnd.nextInt());
     }
-    
+
     /**
      * Initialize display and data grids
      *
@@ -241,11 +241,26 @@ public class GameGrid {
     }
 
     /**
-     * Main will run class
+     * call classTest()
      *
      * @param args
      */
     public static void main(String[] args) {
+        classTest();
+    }
+
+    /**
+     * Perform class tests
+     */
+    public static void classTest() {
+
+        solveTest();
+    }
+
+    /**
+     * 
+     */
+    public static void solveTest() {
 
         Integer gridSize = 5;
         GameGrid grid = new GameGrid(gridSize); //52 is an interesting case
@@ -279,8 +294,7 @@ public class GameGrid {
             }
         }
         System.out.println("\r\nSolved in " + guesses + " guesses.\r\n");
-        
-    }
 
+    }
 
 }

@@ -50,4 +50,18 @@ public class GuiGameDriver implements GameDriver {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+        /**
+     * call classTest()
+     * @param args 
+     */
+    public static void main(String[] args) {
+        classTest();
+    }
+    
+    /**
+     *  Perform class tests
+     */
+    public static void classTest() {
+                
+    }
 }

@@ -65,4 +65,19 @@ public class GameLoop {
 
     }
 
+    /**
+     * call classTest()
+     * @param args 
+     */
+    public static void main(String[] args) {
+        classTest();
+    }
+    
+    /**
+     *  Perform class tests
+     */
+    public static void classTest() {
+                
+    }
+    
 }

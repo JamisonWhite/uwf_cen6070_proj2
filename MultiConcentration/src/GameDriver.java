@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  *
  * @author jamie
@@ -17,7 +11,6 @@ public interface GameDriver {
     public String getChoice(GameGrid data);
 
     public void showExit(GameGrid data);
-
 
     public int getGuessCell1(GameGrid data);
 

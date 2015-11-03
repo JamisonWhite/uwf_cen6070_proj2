@@ -9,22 +9,19 @@ import java.util.logging.Logger;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author jwhite
  */
 public class TextGameDriver implements GameDriver {
-    
-    
+
     public TextGameDriver() {
         inScanner = new Scanner(System.in);
         cell1 = -1;
         cell2 = -1;
     }
     private final Scanner inScanner;
-    
-    
+
     @Override
     public void showNewGameDisplay(GameGrid data) {
         printGrid(data.getDataGrid());
@@ -45,30 +42,33 @@ public class TextGameDriver implements GameDriver {
     @Override
     public void showGrid(GameGrid data) {
         if (cell1 < 0 || cell2 < 0) {
-            printGrid(data.getDisplayGrid());  
-            
+            printGrid(data.getDisplayGrid());
+
         } else {
-            printGrid(data.getDisplayGrid(cell1, cell2));              
-        }   
+            printGrid(data.getDisplayGrid(cell1, cell2));
+        }
     }
 
     @Override
-    public String getChoice(GameGrid data) {        
-        System.out.print("Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: "); 
+    public String getChoice(GameGrid data) {
+        System.out.print("Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ");
         String result;
         cell1 = -1;
         cell2 = -1;
-        while(inScanner.hasNext()) {
+        while (inScanner.hasNext()) {
             result = inScanner.next();
-            if ("R".equals(result)) return "R";
-            if ("Q".equals(result)) return "Q";
+            if ("R".equals(result)) {
+                return "R";
+            }
+            if ("Q".equals(result)) {
+                return "Q";
+            }
             //Read the numbers
-            if (cell1 < 0)
-            {
+            if (cell1 < 0) {
                 cell1 = Integer.parseInt(result) - 1;
                 continue;
             }
-            cell2 = Integer.parseInt(result) - 1;       
+            cell2 = Integer.parseInt(result) - 1;
             break;
         }
         //todo add "Please reentered" message for invalid stuff
@@ -84,7 +84,7 @@ public class TextGameDriver implements GameDriver {
 
     private int cell1;
     private int cell2;
-    
+
     @Override
     public int getGuessCell1(GameGrid data) {
         return cell1;
@@ -97,20 +97,19 @@ public class TextGameDriver implements GameDriver {
 
     @Override
     public void showGuessSuccess(GameGrid data) {
-        System.out.println("Good Guess!"); 
+        System.out.println("Good Guess!");
     }
 
     @Override
     public void showGuessFailed(GameGrid data) {
-        System.out.println("Sorry..."); 
+        System.out.println("Sorry...");
     }
 
     @Override
     public void showException(GameGrid data, Exception ex) {
-        System.out.println("Error: " + ex.getMessage() );             
+        System.out.println("Error: " + ex.getMessage());
     }
-    
-    
+
     /**
      * helper function to print grids
      *
@@ -124,5 +123,21 @@ public class TextGameDriver implements GameDriver {
             }
             System.out.println();
         }
+    }
+
+    /**
+     * call classTest()
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        classTest();
+    }
+
+    /**
+     * Perform class tests
+     */
+    public static void classTest() {
+
     }
 }
