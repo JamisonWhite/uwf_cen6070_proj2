@@ -1,5 +1,5 @@
 /**
- *
+ * GUI game driver
  * @author jwhite
  */
 public class GuiGameDriver implements GameDriver {

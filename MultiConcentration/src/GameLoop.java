@@ -1,4 +1,3 @@
-
 /**
  * Game loop interacts with the driver and the data.
  *
