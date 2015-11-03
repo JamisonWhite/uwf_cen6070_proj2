@@ -5,7 +5,7 @@
 public class GuiGameDriver implements GameDriver {
 
     @Override
-    public void showWelcome(GameGrid data) {
+    public void showNewGameDisplay(GameGrid data) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -24,10 +24,6 @@ public class GuiGameDriver implements GameDriver {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public void showReset(GameGrid data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public int getGuessCell1(GameGrid data) {

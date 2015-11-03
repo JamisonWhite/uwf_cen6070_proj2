@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 
 /**
  *
@@ -15,14 +9,10 @@ public class MultiConcentration {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
-        readParameters();
-        
-        if (!validateParameters()) {
+        if (!readParameters(args)) {
             showHelp();
             return;
         }
-        
         startGame();
     }
 
@@ -31,23 +21,29 @@ public class MultiConcentration {
     public static boolean useGuiApplication;
 
     public static int size;
-    
-    public static void readParameters() {
-        System.out.println("NotImplementedException: read parameters is not implemented. Using test values: -t 10");
-        size = 3;
-        useTextApplication = true;
-    }
 
-    public static boolean validateParameters() {
-        System.out.println("NotImplementedException: validate parameters is not implemented. Using test values: true");
+    public static boolean readParameters(String[] args) {
+        if (args.length >= 1) {
+            String driver = args[0];
+            if ("-t".equals(driver)) {
+                useTextApplication = true;
+            } else if ("-g".equals(driver)) {
+                useGuiApplication = true;
+            } else {
+                //todo validate size
+                return false;
+            }
+        } else {
+            return false;
+        }
+        if (args.length >= 2) {
+            String sizeStr = args[1];
+            size = Integer.parseInt(sizeStr);
+            //todo validate size
+        } else {
+            return false;
+        }
         return true;
-    }
-
-    public static void startGame() {
-        GameGrid grid = new GameGrid(size);
-        GameDriver driver = useTextApplication ? new TextGameDriver() : new GuiGameDriver();
-        GameLoop loop = new GameLoop(driver, grid);
-        loop.Start();
     }
 
     public static void showHelp() {
@@ -60,7 +56,13 @@ public class MultiConcentration {
         System.out.println(" -g for the GUI interface");
         System.out.println(" -t for the text interface");
         System.out.println(" size - number of rows and columns - must have a valid value");
+    }
 
+    public static void startGame() {
+        GameGrid grid = new GameGrid(size);
+        GameDriver driver = useTextApplication ? new TextGameDriver() : new GuiGameDriver();
+        GameLoop loop = new GameLoop(driver, grid);
+        loop.Start();
     }
 
 }

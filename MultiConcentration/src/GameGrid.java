@@ -31,7 +31,15 @@ public class GameGrid {
     public int getSize() {
         return size;
     }
-
+    /**
+     * Get the data grid
+     *
+     * @return
+     */
+    public String[] getDataGrid() {
+        return dataGrid.clone();
+    }
+    
     /**
      * Get the display grid
      *
@@ -41,6 +49,24 @@ public class GameGrid {
         String[] result = displayGrid.clone();
         for (int i = 0; i < size; i++) {
             if (isFoundGrid[i]) {
+                result[i] = dataGrid[i];
+            }
+        }
+        return result;
+    }
+    
+    
+    /**
+     * Get the display grid
+     *
+     * @param cell1
+     * @param cell2
+     * @return
+     */
+    public String[] getDisplayGrid(int cell1, int cell2) {
+        String[] result = displayGrid.clone();
+        for (int i = 0; i < size; i++) {
+            if (isFoundGrid[i] || i == cell1 || i == cell2) {
                 result[i] = dataGrid[i];
             }
         }

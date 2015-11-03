@@ -26,7 +26,7 @@ public class GameLoop {
     public void Start() {
 
         data.initializeGrids();
-        driver.showWelcome(data);
+        driver.showNewGameDisplay(data);
 
         while (true) {
 
@@ -43,13 +43,12 @@ public class GameLoop {
 
                 if ("R".equals(choice)) {
                     data.initializeGrids();
-                    driver.showReset(data);
+                    driver.showNewGameDisplay(data);
                     continue;
                 }
 
                 int cell1 = driver.getGuessCell1(data);
                 int cell2 = driver.getGuessCell2(data);
-
                 if (data.matchCells(cell1, cell2)) {
                     driver.showGuessSuccess(data);
                 } else {

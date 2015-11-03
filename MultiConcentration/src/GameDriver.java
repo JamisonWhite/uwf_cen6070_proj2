@@ -10,7 +10,7 @@
  */
 public interface GameDriver {
     
-    public void showWelcome(GameGrid data);
+    public void showNewGameDisplay(GameGrid data);
 
     public void showGrid(GameGrid data);
 
@@ -18,7 +18,6 @@ public interface GameDriver {
 
     public void showExit(GameGrid data);
 
-    public void showReset(GameGrid data);
 
     public int getGuessCell1(GameGrid data);
 
