@@ -34,7 +34,7 @@ public class MultiConcentration {
     
     public static void readParameters() {
         System.out.println("NotImplementedException: read parameters is not implemented. Using test values: -t 10");
-        size = 10;
+        size = 3;
         useTextApplication = true;
     }
 
