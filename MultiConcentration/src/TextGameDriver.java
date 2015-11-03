@@ -8,6 +8,9 @@ import java.util.logging.Logger;
  */
 public class TextGameDriver implements GameDriver {
 
+    /**
+     * Initialize state
+     */
     public TextGameDriver() {
         inScanner = new Scanner(System.in);
         cell1 = -1;
@@ -15,6 +18,10 @@ public class TextGameDriver implements GameDriver {
     }
     private final Scanner inScanner;
 
+    /**
+     * Show new game message and time limited data grid
+     * @param data 
+     */
     @Override
     public void showNewGameDisplay(GameGrid data) {
         printGrid(data.getDataGrid());
@@ -32,6 +39,10 @@ public class TextGameDriver implements GameDriver {
         }
     }
 
+    /**
+     * Show the data grid
+     * @param data 
+     */
     @Override
     public void showGrid(GameGrid data) {
         if (cell1 < 0 || cell2 < 0) {
@@ -42,6 +53,11 @@ public class TextGameDriver implements GameDriver {
         }
     }
 
+    /**
+     * Get users choice
+     * @param data
+     * @return 
+     */
     @Override
     public String getChoice(GameGrid data) {
         System.out.print("Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ");
@@ -70,6 +86,10 @@ public class TextGameDriver implements GameDriver {
         return result;
     }
 
+    /**
+     * Show exit screen
+     * @param data 
+     */
     @Override
     public void showExit(GameGrid data) {
         System.out.println("Game Over");
@@ -78,26 +98,49 @@ public class TextGameDriver implements GameDriver {
     private int cell1;
     private int cell2;
 
+    /**
+     * Get last cell1 guess
+     * @param data
+     * @return 
+     */
     @Override
     public int getGuessCell1(GameGrid data) {
         return cell1;
     }
 
+    /**
+     * Get last cell2 guess
+     * @param data
+     * @return 
+     */
     @Override
     public int getGuessCell2(GameGrid data) {
         return cell2;
     }
 
+    /**
+     * Show success message
+     * @param data 
+     */
     @Override
     public void showGuessSuccess(GameGrid data) {
         System.out.println("Good Guess!");
     }
 
+    /**
+     * Show failed message
+     * @param data 
+     */
     @Override
     public void showGuessFailed(GameGrid data) {
         System.out.println("Sorry...");
     }
 
+    /** 
+     * Show exception message
+     * @param data
+     * @param ex 
+     */
     @Override
     public void showException(GameGrid data, Exception ex) {
         System.out.println("Error: " + ex.getMessage());

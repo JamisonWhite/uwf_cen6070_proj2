@@ -8,6 +8,10 @@ import java.util.Random;
  */
 public class GameGrid {
 
+    /**
+     * Initialize grid
+     * @param size 
+     */
     public GameGrid(int size) {
         if (size < 2 || size >= 100) {
             throw new IllegalArgumentException("Size out of range. 2-100");
