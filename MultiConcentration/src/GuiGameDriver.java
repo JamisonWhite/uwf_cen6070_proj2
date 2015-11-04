@@ -1,20 +1,27 @@
-
-
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 /**
- * GUI game driver
+ * <p>
+ * Desktop application version of Multi Concentration game.</p>
  *
- * @author jwhite
+ * @author Justin Lambert, Salina Hall, Jamie (Robert) White, Mike Worn
+ * @version 1.0.0 November 15, 2015 CEN6070	Project #: 2 File Name:
+ * GuiGameDriver.java
  */
 public class GuiGameDriver extends JFrame implements GameDriver {
 
@@ -26,14 +33,24 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     private JMenuItem fileMenuItem; // main file menu
     private JMenuItem resetMenuItem; // To reset the application grid
     private JMenuItem exitMenuItem; // To exit the application
+    
+    private JPanel gameBoard;
+    private ArrayList<JButton> gameButtons;
+    
+    private JPanel statusBar;
+    private JLabel gameStatus;
 
     //=============================================
     // Static Attributes/variables
     //=============================================
 
-    private static final int FRAME_WIDTH = 512;
-    private static final int FRAME_HEIGHT = 512;
+    private static final int MIN_FRAME_WIDTH = 350;
+    private static final int MIN_FRAME_HEIGHT = 350;
+    
+    // *** REMOVE WHEN NOT NEEDED
+    private static final int GAME_BOARD_SIZE = 4;
    
+    // <editor-fold defaultstate="collapsed" desc="Default Constructor">
     /**
      * Default Constructor
      */
@@ -47,20 +64,40 @@ public class GuiGameDriver extends JFrame implements GameDriver {
 
         // Create a BorderLayout for the control sections
         setLayout(new BorderLayout());
+        
+        createGameBoard();
+        createStatusBar();
 
         // Set the application window dimensions and don't allow resizing
-        setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        int generatedGameBoardWidth = (56 * GuiGameDriver.GAME_BOARD_SIZE);
+        int generatedGameBoardHeight = (32 * GuiGameDriver.GAME_BOARD_SIZE) + 50;
+        
+        if (generatedGameBoardWidth < MIN_FRAME_WIDTH) {
+            if (generatedGameBoardHeight < MIN_FRAME_HEIGHT) {
+                setSize(MIN_FRAME_WIDTH, MIN_FRAME_HEIGHT);
+            } else {
+                setSize(MIN_FRAME_WIDTH, generatedGameBoardHeight);
+            }
+        } else {
+            if (generatedGameBoardHeight < MIN_FRAME_HEIGHT) {
+                setSize(generatedGameBoardWidth, MIN_FRAME_HEIGHT);
+            } else {
+                setSize(generatedGameBoardWidth, generatedGameBoardHeight);
+            }
+        }
+
         setVisible(true);
         setResizable(true);
     }
+    // </editor-fold>
 
     // =============================================
     // Private Implementation Methods
     // =============================================
 
+    // <editor-fold defaultstate="collapsed" desc="createMenuBar">
     /**
-     * Construct the Log Data and Stop Server button at the top of the
-     * application
+     * Construct the main menu at the top of the application
      */
     private void createMenuBar() {
 
@@ -86,6 +123,56 @@ public class GuiGameDriver extends JFrame implements GameDriver {
 
         setJMenuBar(menubar);
     }
+    // </editor-fold>
+    
+    // <editor-fold defaultstate="collapsed" desc="createGameBoard">
+    /**
+     * Construct the game board in the center of the application
+     */
+    private void createGameBoard() {
+        this.gameBoard = new JPanel();
+        int gameButtonIndex = 1;
+        //panel.setSize(300,300);
+        
+        GridLayout layout = new GridLayout(GuiGameDriver.GAME_BOARD_SIZE, GuiGameDriver.GAME_BOARD_SIZE);
+
+        this.gameBoard.setLayout(layout);
+        
+        this.gameButtons = new ArrayList<JButton>();
+
+	// Loop through elements.
+	for (int i = 0; i < GuiGameDriver.GAME_BOARD_SIZE; i++) {
+            
+            for (int j = 0; j < GuiGameDriver.GAME_BOARD_SIZE; j++) {
+                this.gameButtons.add(new JButton(Integer.toString(gameButtonIndex)));
+                this.gameBoard.add(this.gameButtons.get(gameButtonIndex - 1));
+                gameButtonIndex++;
+            }
+	}
+        
+        this.add(this.gameBoard, BorderLayout.CENTER);
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="createStatusBar">
+    /**
+     * Construct the game board in the center of the application
+     */
+    private void createStatusBar() {
+        Font font = new Font("Courier", Font.BOLD, 14);
+        this.gameStatus = new JLabel("GOOD GUESS!", SwingConstants.CENTER);
+        this.gameStatus.setFont(font);
+        this.gameStatus.setBackground(Color.WHITE);
+        
+        this.statusBar = new JPanel();
+        this.statusBar.setLayout(new BorderLayout());
+        this.statusBar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        this.statusBar.setBackground(Color.WHITE);
+        this.statusBar.add(this.gameStatus, BorderLayout.CENTER);
+        
+        this.add(this.statusBar, BorderLayout.SOUTH);
+    }
+    // </editor-fold>
     
     /**
      * Show new game message and time limited data grid
@@ -185,6 +272,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     // Event Listener classes
     // =============================================
 
+    // <editor-fold defaultstate="collapsed" desc="ResetMenuListener">
     /**
      * Event handler for the Reset Menu option
      */
@@ -201,7 +289,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
             
         }
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="ExitMenuListener">
     /**
      * Event handler for the Exit Menu option
      */
@@ -217,6 +307,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
                 System.exit(0);
         }
     }
+    // </editor-fold>
 
     /**
      * call classTest()
