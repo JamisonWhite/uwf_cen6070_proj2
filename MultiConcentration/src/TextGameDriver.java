@@ -26,7 +26,7 @@ public class TextGameDriver implements GameDriver {
     public void showNewGameDisplay(GameGrid data) {
         printGrid(data.getDataGrid());
         System.out.print("Memorize the above grid! ");
-        for (int i = 3; i >= 0; i--) {
+        for (int i = MultiConcentration.MemorizeSeconds; i >= 0; i--) {
             try {
                 System.out.print(i + " ");
                 Thread.sleep(1000);
@@ -72,7 +72,7 @@ public class TextGameDriver implements GameDriver {
             if ("Q".equals(result)) {
                 return "Q";
             }
-            //Read the numbers
+            //Read the numbers; Display is 1-based
             if (cell1 < 0) {
                 cell1 = Integer.parseInt(result) - 1;
                 continue;

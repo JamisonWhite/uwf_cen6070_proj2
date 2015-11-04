@@ -13,8 +13,8 @@ public class GameGrid {
      * @param size 
      */
     public GameGrid(int size) {
-        if (size < 2 || size >= 100) {
-            throw new IllegalArgumentException("Size out of range. 2-100");
+        if (size < 2 || size >= MultiConcentration.MaxSize) {
+            throw new IllegalArgumentException("Size out of range. 2-" + MultiConcentration.MaxSize);
         }
         this.size = size * size;
         dataGrid = new String[this.size];
@@ -274,7 +274,7 @@ public class GameGrid {
         System.out.println("*****************************");
         System.out.println("* Super Secret Data Grid");
         System.out.println("*****************************");
-        printGrid(grid.dataGrid);
+        printGrid(grid.getDataGrid());
         System.out.println("*****************************\r\n");
 
         System.out.println("Start Solving");
@@ -292,7 +292,7 @@ public class GameGrid {
                 if (grid.matchCells(i, j)) {
                     System.out.println("Matched: " + dispalyGrid[i] + " and " + dispalyGrid[j]);
                     System.out.println("Remaining: " + grid.remaining());
-                    printGrid(grid.getDisplayGrid());
+                    printGrid(grid.getDisplayGrid(i, j));
                     break;
                 }
             }
