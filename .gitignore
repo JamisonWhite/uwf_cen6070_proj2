@@ -14,3 +14,4 @@ hs_err_pid*
 /MultiConcentration/build/
 MultiConcentration/.jacocoverage
 /MultiConcentration/dist/
+jacoco*
