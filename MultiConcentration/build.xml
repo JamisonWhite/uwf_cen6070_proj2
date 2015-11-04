@@ -70,4 +70,11 @@
     nbproject/build-impl.xml file. 
 
     -->
+    
+        <copy file="emma/emma.jar" todir="build/classes/"/>          
+<!--        <exec dir="${build.dir}/classes/" executable="java">
+              <arg line="-jar emma.jar -r html -cp &quot;.&quot; -sp &quot;.&quot; BasicTokenizer"/>
+        </exec>  -->
+        
+        
 </project>
