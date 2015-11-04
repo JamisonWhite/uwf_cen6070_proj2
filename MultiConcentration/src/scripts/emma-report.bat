@@ -1,4 +1,5 @@
 
 @echo Generating EMMA reports
-
-java -jar emma.jar -r html -cp "." -sp "." BasicTokenizer
+cd ..
+jenv local 1.6
+java -jar emma.jar -r html -cp "." -sp "." TestDriver
