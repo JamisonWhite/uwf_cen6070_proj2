@@ -102,7 +102,8 @@ public class GameLoop {
         choices.add("R"); //showNewGameDisplay
         choices.add("Q"); //showExit
         loop.Start();
-        driver.printCounts();
+        //todo test counts
+        //driver.printCounts();
         
 
         //TC000 Execute full loop
@@ -110,13 +111,15 @@ public class GameLoop {
         choices.add("0 1"); //showGuessFailed
         choices.add("Q"); //showExit
         loop.Start();
-        driver.printCounts();
+        //todo test counts
+        //driver.printCounts();
 
         //TC000 Execute loop
         driver.initialize();
         choices.add("Q"); //showExit
         loop.Start();
-        driver.printCounts();
+        //todo test counts
+        //driver.printCounts();
 
         
         
