@@ -1,3 +1,4 @@
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -9,16 +10,18 @@ import java.util.logging.Logger;
 
 /**
  * Text game driver
+ *
  * @author jwhite
  */
 public class TextGameDriver implements GameDriver {
 
     /**
      * Initialize state
+     *
      * @param inputStream
      * @param outputStream
      */
-    public TextGameDriver(InputStream inputStream, PrintStream  outputStream) {
+    public TextGameDriver(InputStream inputStream, PrintStream outputStream) {
         this.outputStream = outputStream;
         this.inputScanner = new Scanner(inputStream);
         cell1 = -1;
@@ -27,16 +30,16 @@ public class TextGameDriver implements GameDriver {
     private final Scanner inputScanner;
     private final PrintStream outputStream;
 
-    
     /**
      * Show new game message and time limited data grid
-     * @param data 
+     *
+     * @param data
      */
     @Override
     public void showNewGameDisplay(GameGrid data) {
         printGrid(data.getDataGrid());
         outputStream.print("Memorize the above grid! ");
-        for (int i = MultiConcentration.MemorizeSeconds; i >= 0; i--) {
+        for (int i = Config.MemorizeSeconds; i >= 0; i--) {
             try {
                 outputStream.print(i + " ");
                 Thread.sleep(1000);
@@ -51,13 +54,13 @@ public class TextGameDriver implements GameDriver {
 
     /**
      * Show the data grid
-     * @param data 
+     *
+     * @param data
      */
     @Override
     public void showGrid(GameGrid data) {
         if (cell1 < 0 || cell2 < 0) {
             printGrid(data.getDisplayGrid());
-
         } else {
             printGrid(data.getDisplayGrid(cell1, cell2));
         }
@@ -65,40 +68,43 @@ public class TextGameDriver implements GameDriver {
 
     /**
      * Get users choice
+     *
      * @param data
-     * @return 
+     * @return
      */
     @Override
     public String getChoice(GameGrid data) {
         outputStream.print("Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ");
-        String result;
+        String next;
+        String cellChoice = "";
         cell1 = -1;
         cell2 = -1;
         while (inputScanner.hasNext()) {
-            result = inputScanner.next();
-            if ("R".equals(result)) {
+            next = inputScanner.next();
+            if ("R".equals(next)) {
                 return "R";
             }
-            if ("Q".equals(result)) {
+            if ("Q".equals(next)) {
                 return "Q";
             }
             //Read the numbers; Display is 1-based
             if (cell1 < 0) {
-                cell1 = Integer.parseInt(result) - 1;
+                cellChoice = next;
+                cell1 = Integer.parseInt(next) - 1;
                 continue;
             }
-            cell2 = Integer.parseInt(result) - 1;
+            cell2 = Integer.parseInt(next) - 1;
+            cellChoice = cellChoice + " " + next;
             break;
         }
         //todo add "Please reentered" message for invalid stuff
-        result = cell1 + " " + cell2;
-        outputStream.println("Selection : " + result);
-        return result;
+        return cellChoice;
     }
 
     /**
      * Show exit screen
-     * @param data 
+     *
+     * @param data
      */
     @Override
     public void showExit(GameGrid data) {
@@ -110,8 +116,9 @@ public class TextGameDriver implements GameDriver {
 
     /**
      * Get last cell1 guess
+     *
      * @param data
-     * @return 
+     * @return
      */
     @Override
     public int getGuessCell1(GameGrid data) {
@@ -120,8 +127,9 @@ public class TextGameDriver implements GameDriver {
 
     /**
      * Get last cell2 guess
+     *
      * @param data
-     * @return 
+     * @return
      */
     @Override
     public int getGuessCell2(GameGrid data) {
@@ -130,7 +138,8 @@ public class TextGameDriver implements GameDriver {
 
     /**
      * Show success message
-     * @param data 
+     *
+     * @param data
      */
     @Override
     public void showGuessSuccess(GameGrid data) {
@@ -139,17 +148,19 @@ public class TextGameDriver implements GameDriver {
 
     /**
      * Show failed message
-     * @param data 
+     *
+     * @param data
      */
     @Override
     public void showGuessFailed(GameGrid data) {
         outputStream.println("Sorry...");
     }
 
-    /** 
+    /**
      * Show exception message
+     *
      * @param data
-     * @param ex 
+     * @param ex
      */
     @Override
     public void showException(GameGrid data, Exception ex) {
@@ -177,56 +188,96 @@ public class TextGameDriver implements GameDriver {
      * @param args
      */
     public static void main(String[] args) {
-            classTest();
 
+        try {
+            classTest();
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(TextGameDriver.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
      * Perform class tests
      */
-    public static void classTest()  {
+    public static void classTest() throws UnsupportedEncodingException {
 
-        //todo read and write from stream
-        InputStream in;
-        try {
-            in = new ByteArrayInputStream("Q\r\n".getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(TextGameDriver.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        PrintStream out = new PrintStream(new ByteArrayOutputStream());
-        
-        TextGameDriver driver = new TextGameDriver(System.in, out);
         GameGrid grid = new GameGrid(4);
         grid.initializeGrids(42);
         //42 -> [B, A, A, B]
         
+        String result;
         
+        //Read and write from custom streams
+        InputStream in = new ByteArrayInputStream("Q\r\n".getBytes("UTF-8"));
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream out = new PrintStream(outputStream);
+        TextGameDriver driver = new TextGameDriver(in, out);
+
+        outputStream.reset();
         driver.showNewGameDisplay(grid);
-        TestDriver.printTestCase("TC000", "showNewGameDisplay", true, true);
-        
+        result = outputStream.toString("UTF-8");
+        TestDriver.printTestCase("TC000", "showNewGameDisplay", true, result.length() > 0);
+
+        outputStream.reset();
         driver.showGrid(grid);
-        TestDriver.printTestCase("TC000", "showGrid",  true, true);
-        
+        result = outputStream.toString("UTF-8");
+        TestDriver.printTestCase("TC000", "showGrid", true, result.length() > 0);
+
+        outputStream.reset();
         driver.showGuessFailed(grid);
-        TestDriver.printTestCase("TC000", "showGuessFailed",  true, true);
-        
+        result = outputStream.toString("UTF-8");
+        TestDriver.printTestCase("TC000", "showGuessFailed", "Sorry...\r\n", result);
+
+        outputStream.reset();
         driver.showGuessSuccess(grid);
-        TestDriver.printTestCase("TC000", "showGuessSuccess",  true, true);
-        
-        driver.getGuessCell1(grid);
-        TestDriver.printTestCase("TC000", "getGuessCell1",  true, true);
-        
-        driver.getGuessCell2(grid);
-        TestDriver.printTestCase("TC000", "getGuessCell2",  true, true);
-        
-        driver.showException(grid, new UnsupportedOperationException());
-        TestDriver.printTestCase("TC000", "showException",  true, true);
-        
+        result = outputStream.toString("UTF-8");
+        TestDriver.printTestCase("TC000", "showGuessSuccess", "Good Guess!\r\n", result);
+
+        outputStream.reset();
+        driver.showException(grid, new UnsupportedOperationException("TestError"));
+        result = outputStream.toString("UTF-8");
+        TestDriver.printTestCase("TC000", "showException", "Error: TestError\r\n", result);
+
+        outputStream.reset();
         driver.showExit(grid);
-        TestDriver.printTestCase("TC000", "showExit",   true, true);
+        result = outputStream.toString("UTF-8");
+        TestDriver.printTestCase("TC000", "showExit", "Game Over\r\n", result);
+
+        driver.getGuessCell1(grid);
+        TestDriver.printTestCase("TC000", "getGuessCell1", -1, -1);
+
+        driver.getGuessCell2(grid);
+        TestDriver.printTestCase("TC000", "getGuessCell2", -1, -1);
+
+        outputStream.reset();
+        driver.getChoice(grid);
+        result = outputStream.toString("UTF-8");
+        TestDriver.printTestCase("TC000", "getChoice",  "Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ", result);
         
-//        driver.getChoice(grid);
-//        TestDriver.printTestCase("TC000", "getChoice",  true, true);
+        //play the game. Display is ONE-BASED; Data is ZERO-BASED
+        in = new ByteArrayInputStream("1 2\r\n1 4\r\nR\r\nQ\r\n".getBytes("UTF-8"));
+        driver = new TextGameDriver(in, out);
+        result = driver.getChoice(grid);
+        TestDriver.printTestCase("TC000", "getChoice cells",  "1 2", result);
+        TestDriver.printTestCase("TC000", "getGuessCell1",  0, driver.getGuessCell1(grid));
+        TestDriver.printTestCase("TC000", "getGuessCell2",  1, driver.getGuessCell2(grid));   
+        result = driver.getChoice(grid);
+        TestDriver.printTestCase("TC000", "getChoice cells",  "1 4", result);
+        TestDriver.printTestCase("TC000", "getGuessCell1",  0, driver.getGuessCell1(grid));
+        TestDriver.printTestCase("TC000", "getGuessCell2",  3, driver.getGuessCell2(grid)); 
+        result = driver.getChoice(grid);
+        TestDriver.printTestCase("TC000", "getChoice R",  "R", result);
+        result = driver.getChoice(grid);
+        TestDriver.printTestCase("TC000", "getChoice Q",  "Q", result);
+        
+        
+//        outputStream.reset();
+//        //do stuff
+//        result = outputStream.toString("UTF-8");
+//        TestDriver.printTestCase("TC000", "play the game",  true, result.length() > 0);
+        
+        
+        
         
     }
 }

@@ -15,8 +15,8 @@ public class GameGrid {
      * @param size 
      */
     public GameGrid(int size) {
-        if (size < 2 || size >= MultiConcentration.MaxSize) {
-            throw new IllegalArgumentException("Size out of range. 2-" + MultiConcentration.MaxSize);
+        if (size < 2 || size >= Config.MaxGridSize) {
+            throw new IllegalArgumentException("Size out of range. 2-" + Config.MaxGridSize);
         }
         this.size = size * size;
         dataGrid = new String[this.size];
@@ -229,7 +229,7 @@ public class GameGrid {
                 grid == null);
         
         try {
-            grid = new GameGrid(MultiConcentration.MaxSize + 1);
+            grid = new GameGrid(Config.MaxGridSize + 1);
         } catch (Exception ex) {
             grid = null;
         }        

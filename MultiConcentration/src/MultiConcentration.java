@@ -1,4 +1,8 @@
 
+import java.util.LinkedList;
+import java.util.Queue;
+
+
 /**
  * Main class for MultiConcentration game
  *
@@ -6,16 +10,7 @@
  */
 public class MultiConcentration {
 
-    /**
-     * Maximum size
-     */
-    public static final int MaxSize = 30;
-
-    
-    /**
-     * Number of seconds to memorize
-     */
-    public static final int MemorizeSeconds = 5;
+    private GameLoop loop;
     
     /**
      * Read parameters and start game
@@ -23,79 +18,21 @@ public class MultiConcentration {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
         MultiConcentration game = new MultiConcentration();
-
-        if (game.parseArguments(args)) {
-            game.startGame();
-        } else {
-            game.showUsage();
-        }
-
+        game.startGame(args);
     }
-
+    
     /**
-     * perform class tests
-     */
-    public static void classTest() {
-        
-        MultiConcentration game = new MultiConcentration();
-
-        String[] args = {"-t", "2"};
-        game.parseArguments(args);        
-        game.showUsage();
-        //game.startGame();
-        
-    }
-
-    /**
-     * Start as text
-     */
-    public boolean useTextApplication;
-
-    /**
-     * Start as GUI
-     */
-    public boolean useGuiApplication;
-
-    /**
-     * Grid size
-     */
-    public int size;
-
-    /**
-     * Parse arguments and write any errors
-     *
+     * Start game based on given size and driver
      * @param args
-     * @return
      */
-    public boolean parseArguments(String[] args) {
-        if (args.length >= 1) {
-            String driver = args[0];
-            if ("-t".equals(driver)) {
-                useTextApplication = true;
-            } else if ("-g".equals(driver)) {
-                useGuiApplication = true;
-            } else {
-                System.out.println("Error: Unknown game type. Please try again.");
-                return false;
-            }
+    public void startGame(String[] args) {
+        if (parseArguments(args)) {
+            assert loop != null;
+            loop.Start();
         } else {
-            System.out.println("Error: Missing game type. Please try again.");
-            return false;
+            showUsage();
         }
-        if (args.length >= 2) {
-            String sizeStr = args[1];
-            size = Integer.parseInt(sizeStr);
-            if (size < 2 || size > MaxSize) {
-                System.out.println("Error: Invalid grid size. Please try again.");
-                return false;
-            }
-        } else {
-            System.out.println("Error: Missing grid size. Please try again.");
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -110,17 +47,82 @@ public class MultiConcentration {
         System.out.println("Options");
         System.out.println(" -g for the GUI interface");
         System.out.println(" -t for the text interface");
-        System.out.println(" size - number of rows and columns - Valid values are between 2 and " + MaxSize);
+        System.out.println(" size - number of rows and columns - Valid values are between 2 and " + Config.MaxGridSize);
     }
 
     /**
-     * Start game based on given size and driver
+     * Parse arguments and write any errors
+     *
+     * @param args
+     * @return
      */
-    public void startGame() {
-        GameGrid grid = new GameGrid(size);
-        GameDriver driver = useTextApplication ? new TextGameDriver(System.in, System.out) : new GuiGameDriver();
-        GameLoop loop = new GameLoop(driver, grid);
-        loop.Start();
+    public boolean parseArguments(String[] args) {
+        if (args.length < 2) {
+            System.out.println("Error: Game type and size are required. Please try again.");
+            return false;
+        }
+        //reset objects
+        GameDriver driver;
+        GameGrid grid;
+        loop = null;
+
+        //Create the driver
+        String driverArg = args[0];
+        if ("-t".equals(driverArg)) {
+            driver = new TextGameDriver(System.in, System.out);
+        } else if ("-g".equals(driverArg)) {
+            driver = new GuiGameDriver();
+        } else if ("-test".equals(driverArg)) {
+            Queue<String> choices = new LinkedList<String>();
+            choices.add("Q");        
+            driver = new TestGameDriver(choices);
+        } else {
+            System.out.println("Error: Unknown game type. Please try again.");
+            return false;
+        }
+
+        //Read the size
+        String sizeStr = args[1];
+        Integer size = Integer.parseInt(sizeStr);
+        if (size < Config.MinGridSize || size > Config.MaxGridSize) {
+            System.out.println("Error: Invalid grid size. Please try again.");
+            return false;
+        }
+        grid = new GameGrid(size);
+
+        //Create the loop
+        loop = new GameLoop(driver, grid);
+        return true;
+    }
+
+
+    /**
+     * perform class tests
+     */
+    public static void classTest() {
+
+        //todo change to using custom streams and test output
+        
+        MultiConcentration game = new MultiConcentration();
+
+        game.showUsage();
+        
+        String[] args = {""};
+        TestDriver.printTestCase("TC000", "invalid arguments", false, game.parseArguments(args));
+        
+        args = new String[] {"-t", "2"};
+        TestDriver.printTestCase("TC000", "text game valid arguments", true, game.parseArguments(args));
+        
+        args = new String[] {"-g", "2"};
+        TestDriver.printTestCase("TC000", "gui game valid arguments", true, game.parseArguments(args));
+                
+        args = new String[] {"-test", "2"};
+        TestDriver.printTestCase("TC000", "test game valid arguments", true, game.parseArguments(args));
+        game.startGame(args);
+        TestDriver.printTestCase("TC000", "invalid arguments", true, true);
+        
+        
+
     }
 
 }
