@@ -1,7 +1,5 @@
 
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.util.Random;
 
@@ -121,41 +119,6 @@ public class GameGrid {
     }
 
     /**
-     * Match the cells by display.
-     *
-     * @param display1
-     * @param display2
-     * @return
-     * @throws IllegalArgumentException
-     */
-    public Boolean matchCells(String display1, String display2) throws IllegalArgumentException {
-        Integer cell1 = getIndexByDisplay(display1);
-        Integer cell2 = getIndexByDisplay(display2);
-        return matchCells(cell1, cell2);
-    }
-
-    /**
-     * Get the cell index by display.
-     *
-     * @param display1
-     * @return
-     * @throws IllegalArgumentException
-     */
-    public Integer getIndexByDisplay(String display1) throws IllegalArgumentException {
-        Integer cell1 = -1;
-        for (Integer i = 0; i < size; i++) {
-            if (display1.equals(displayGrid[i])) {
-                cell1 = i;
-                break;
-            }
-        }
-        if (cell1 < 0) {
-            throw new IllegalArgumentException("Display1 was not found.");
-        }
-        return cell1;
-    }
-
-    /**
      * Number of remaining matches
      *
      * @return
@@ -184,7 +147,11 @@ public class GameGrid {
      * @param seed
      */
     public void initializeGrids(int seed) {
-
+        assert dataGrid.length > 0;
+        assert dataGrid.length == size;
+        assert dataGrid.length == displayGrid.length;
+        assert displayGrid.length == isFoundGrid.length;
+        
         //initialize values
         char data = 'A';
         for (int i = 0; i < size; i++) {
@@ -229,7 +196,7 @@ public class GameGrid {
                 }
             }
         }
-
+        
     }
 
     /**
@@ -247,6 +214,30 @@ public class GameGrid {
     public static void classTest() {
 
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        
+        GameGrid grid;
+        
+        try {
+            grid = new GameGrid(0);
+        } catch (Exception ex) {
+            grid = null;
+        }        
+        TestDriver.printTestCase(
+                "TC000", 
+                "Create GameGrid(0) throws exception.", 
+                true, 
+                grid == null);
+        
+        try {
+            grid = new GameGrid(MultiConcentration.MaxSize + 1);
+        } catch (Exception ex) {
+            grid = null;
+        }        
+        TestDriver.printTestCase(
+                "TC000", 
+                "Create GameGrid(MaxSize + 1) throws exception.", 
+                true, 
+                grid == null);
         
         TestDriver.printTestCase(
                 "TC000", 
