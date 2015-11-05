@@ -1,4 +1,5 @@
 
+import java.util.LinkedList;
 import java.util.Queue;
 
 /**
@@ -9,10 +10,7 @@ import java.util.Queue;
  */
 public class TestGameDriver implements GameDriver {
 
-    /**
-     * Queue of choices to be returned
-     */
-    public final Queue<String> choices;
+    private final Queue<String> choices;    
     private int cell1;
     private int cell2;
 
@@ -87,8 +85,10 @@ public class TestGameDriver implements GameDriver {
     public int showExceptionCount;
     public String lastException = "";
 
+    /**
+     * Print the counts
+     */
     public void printCounts() {
-
         System.out.println("showNewGameDisplayCount: " + showNewGameDisplayCount);
         System.out.println("showGridCount: " + showGridCount);
         System.out.println("getChoiceCount: " + getChoiceCount);
@@ -101,6 +101,9 @@ public class TestGameDriver implements GameDriver {
         System.out.println();
     }
 
+    /**
+     * Initialize counts and cell values
+     */
     public void initialize() {
         showNewGameDisplayCount = 0;
         showGridCount = 0;
@@ -113,6 +116,70 @@ public class TestGameDriver implements GameDriver {
         showExitCount = 0;
         cell1 = 0;
         cell2 = 0;
+    }
+    
+    
+    /**
+     * call classTest()
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        classTest();
+    }
+
+    /**
+     * Perform class tests
+     */
+    public static void classTest() {
+
+        Queue<String> choices = new LinkedList<String>();
+        choices.add("Q");
+        TestGameDriver driver = new TestGameDriver(choices);
+        
+        
+        driver.showNewGameDisplay(null);
+        TestDriver.printTestCase("TC000", "showNewGameDisplayCount", 1, driver.showNewGameDisplayCount);
+        
+        driver.showGrid(null);
+        TestDriver.printTestCase("TC000", "showGridCount", 1, driver.showGridCount);
+        
+        driver.showGuessFailed(null);
+        TestDriver.printTestCase("TC000", "showGuessFailedCount", 1, driver.showGuessFailedCount);
+        
+        driver.showGuessSuccess(null);
+        TestDriver.printTestCase("TC000", "showGuessSuccessCount", 1, driver.showGuessSuccessCount);
+        
+        driver.getChoice(null);
+        TestDriver.printTestCase("TC000", "getChoiceCount", 1, driver.getChoiceCount);
+        
+        driver.getGuessCell1(null);
+        TestDriver.printTestCase("TC000", "getGuessCell1Count", 1, driver.getGuessCell1Count);
+        
+        driver.getGuessCell2(null);
+        TestDriver.printTestCase("TC000", "getGuessCell2Count", 1, driver.getGuessCell2Count);
+        
+        driver.showException(null, new UnsupportedOperationException());
+        TestDriver.printTestCase("TC000", "showExceptionCount", 1, driver.showExceptionCount);
+        
+        driver.showExit(null);
+        TestDriver.printTestCase("TC000", "showExitCount", 1, driver.showExitCount);
+        
+       
+        driver.initialize();
+        TestDriver.printTestCase("TC000", "initialize", 0, 
+                driver.showNewGameDisplayCount +
+                driver.showGridCount +
+                driver.showGuessFailedCount +
+                driver.showGuessSuccessCount +
+                driver.getChoiceCount +
+                driver.getGuessCell1Count +
+                driver.getGuessCell2Count +
+                driver.showExceptionCount +
+                driver.showExitCount 
+        );
+        
+        
     }
 
 }
