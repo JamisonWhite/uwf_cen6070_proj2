@@ -62,7 +62,6 @@ public class GameLoop {
             } catch (Exception ex) {
                 driver.showException(data, ex);
             }
-
         }
 
         driver.showExit(data);
@@ -87,7 +86,7 @@ public class GameLoop {
         GameGrid grid = new GameGrid(2);
         grid.initializeGrids(42);
         //42 -> [B, A, A, B]
-        Queue<String> choices = new LinkedList();
+        Queue<String> choices = new LinkedList<String>();
         TestGameDriver driver = new TestGameDriver(choices);
         
         GameLoop loop = new GameLoop(driver, grid);
@@ -122,8 +121,6 @@ public class GameLoop {
         
         
         //ASSERT
-        
-        return;
         
     }
 
