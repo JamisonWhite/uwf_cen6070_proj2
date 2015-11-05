@@ -1,3 +1,7 @@
+
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * Game loop interacts with the driver and the data.
  *
@@ -7,8 +11,9 @@ public class GameLoop {
 
     /**
      * Pass in driver and data to use
+     *
      * @param driver
-     * @param data 
+     * @param data
      */
     public GameLoop(GameDriver driver, GameGrid data) {
         this.driver = driver;
@@ -16,7 +21,7 @@ public class GameLoop {
     }
 
     private final GameDriver driver;
-    
+
     private final GameGrid data;
 
     /**
@@ -30,11 +35,11 @@ public class GameLoop {
         while (true) {
 
             try {
-            
+
                 driver.showGrid(data);
 
                 //hmm will this work for forms, since it's blocking?
-                String choice = driver.getChoice(data); 
+                String choice = driver.getChoice(data);
 
                 if ("Q".equals(choice)) {
                     break;
@@ -66,17 +71,60 @@ public class GameLoop {
 
     /**
      * call classTest()
-     * @param args 
+     *
+     * @param args
      */
     public static void main(String[] args) {
         classTest();
     }
-    
+
     /**
-     *  Perform class tests
+     * Perform class tests
      */
     public static void classTest() {
-                
+
+        //ARRANGE
+        GameGrid grid = new GameGrid(2);
+        grid.initializeGrids(42);
+        //42 -> [B, A, A, B]
+        Queue<String> choices = new LinkedList();
+        TestGameDriver driver = new TestGameDriver(choices);
+        
+        GameLoop loop = new GameLoop(driver, grid);
+       
+        //ACT
+        
+        //TC000 Execute full loop
+        driver.initialize();
+        choices.add("0 1"); //showGuessFailed
+        choices.add("0 3"); //showGuessSuccess
+        choices.add("0 100"); //showException
+        choices.add("0 A"); //showException
+        choices.add("R"); //showNewGameDisplay
+        choices.add("Q"); //showExit
+        loop.Start();
+        driver.printCounts();
+        
+
+        //TC000 Execute full loop
+        driver.initialize();
+        choices.add("0 1"); //showGuessFailed
+        choices.add("Q"); //showExit
+        loop.Start();
+        driver.printCounts();
+
+        //TC000 Execute loop
+        driver.initialize();
+        choices.add("Q"); //showExit
+        loop.Start();
+        driver.printCounts();
+
+        
+        
+        //ASSERT
+        
+        return;
+        
     }
-    
+
 }
