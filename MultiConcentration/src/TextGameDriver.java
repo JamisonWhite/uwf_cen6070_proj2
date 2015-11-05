@@ -1,3 +1,5 @@
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,14 +12,19 @@ public class TextGameDriver implements GameDriver {
 
     /**
      * Initialize state
+     * @param inputStream
+     * @param outputStream
      */
-    public TextGameDriver() {
-        inScanner = new Scanner(System.in);
+    public TextGameDriver(InputStream inputStream, PrintStream  outputStream) {
+        this.outputStream = outputStream;
+        this.inputScanner = new Scanner(inputStream);
         cell1 = -1;
         cell2 = -1;
     }
-    private final Scanner inScanner;
+    private final Scanner inputScanner;
+    private final PrintStream outputStream;
 
+    
     /**
      * Show new game message and time limited data grid
      * @param data 
@@ -25,17 +32,17 @@ public class TextGameDriver implements GameDriver {
     @Override
     public void showNewGameDisplay(GameGrid data) {
         printGrid(data.getDataGrid());
-        System.out.print("Memorize the above grid! ");
+        outputStream.print("Memorize the above grid! ");
         for (int i = MultiConcentration.MemorizeSeconds; i >= 0; i--) {
             try {
-                System.out.print(i + " ");
+                outputStream.print(i + " ");
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(TextGameDriver.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         for (int i = 0; i < 25; i++) {
-            System.out.println();
+            outputStream.println();
         }
     }
 
@@ -60,12 +67,12 @@ public class TextGameDriver implements GameDriver {
      */
     @Override
     public String getChoice(GameGrid data) {
-        System.out.print("Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ");
+        outputStream.print("Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ");
         String result;
         cell1 = -1;
         cell2 = -1;
-        while (inScanner.hasNext()) {
-            result = inScanner.next();
+        while (inputScanner.hasNext()) {
+            result = inputScanner.next();
             if ("R".equals(result)) {
                 return "R";
             }
@@ -82,7 +89,7 @@ public class TextGameDriver implements GameDriver {
         }
         //todo add "Please reentered" message for invalid stuff
         result = cell1 + " " + cell2;
-        System.out.println("Selection : " + result);
+        outputStream.println("Selection : " + result);
         return result;
     }
 
@@ -92,7 +99,7 @@ public class TextGameDriver implements GameDriver {
      */
     @Override
     public void showExit(GameGrid data) {
-        System.out.println("Game Over");
+        outputStream.println("Game Over");
     }
 
     private int cell1;
@@ -124,7 +131,7 @@ public class TextGameDriver implements GameDriver {
      */
     @Override
     public void showGuessSuccess(GameGrid data) {
-        System.out.println("Good Guess!");
+        outputStream.println("Good Guess!");
     }
 
     /**
@@ -133,7 +140,7 @@ public class TextGameDriver implements GameDriver {
      */
     @Override
     public void showGuessFailed(GameGrid data) {
-        System.out.println("Sorry...");
+        outputStream.println("Sorry...");
     }
 
     /** 
@@ -143,7 +150,7 @@ public class TextGameDriver implements GameDriver {
      */
     @Override
     public void showException(GameGrid data, Exception ex) {
-        System.out.println("Error: " + ex.getMessage());
+        outputStream.println("Error: " + ex.getMessage());
     }
 
     /**
@@ -155,9 +162,9 @@ public class TextGameDriver implements GameDriver {
         Integer size = ((Number) Math.sqrt(grid.length)).intValue();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                System.out.print(String.format("%5s", grid[i * size + j]));
+                outputStream.print(String.format("%5s", grid[i * size + j]));
             }
-            System.out.println();
+            outputStream.println();
         }
     }
 

@@ -1,4 +1,8 @@
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.util.Random;
 
 /**
@@ -229,22 +233,6 @@ public class GameGrid {
     }
 
     /**
-     * helper function to print grids
-     *
-     * @param grid
-     */
-    public static void printGrid(String[] grid) {
-        Integer size = ((Number) Math.sqrt(grid.length)).intValue();
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                System.out.print(String.format("%5s", grid[i * size + j]));
-            }
-            System.out.println();
-        }
-
-    }
-
-    /**
      * call classTest()
      *
      * @param args
@@ -258,27 +246,36 @@ public class GameGrid {
      */
     public static void classTest() {
 
-        solveTest();
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        
+        TestDriver.printTestCase(
+                "TC000", 
+                "Brute force solve a GameGrid", 
+                true, 
+                solveTest(out));
+        
     }
 
     /**
-     * 
+     * Brute force solve a GameGrid
+     * @param out
+     * @return 
      */
-    public static void solveTest() {
+    public static Boolean solveTest(PrintStream out) {
 
         Integer gridSize = 5;
         GameGrid grid = new GameGrid(gridSize); //52 is an interesting case
 
         grid.initializeGrids(42);
 
-        System.out.println("*****************************");
-        System.out.println("* Super Secret Data Grid");
-        System.out.println("*****************************");
-        printGrid(grid.getDataGrid());
-        System.out.println("*****************************\r\n");
+        out.println("*****************************");
+        out.println("* Super Secret Data Grid");
+        out.println("*****************************");
+        printGrid(out, grid.getDataGrid());
+        out.println("*****************************\r\n");
 
-        System.out.println("Start Solving");
-        printGrid(grid.getDisplayGrid());
+        out.println("Start Solving");
+        printGrid(out, grid.getDisplayGrid());
 
         Integer guesses = 0;
         String[] dispalyGrid = grid.getDisplayGrid();
@@ -286,18 +283,34 @@ public class GameGrid {
             if (grid.isCellFound(i)) {
                 continue;
             }
-            System.out.println("\r\nSolving: " + dispalyGrid[i]);
+            out.println("\r\nSolving: " + dispalyGrid[i]);
             for (int j = i + 1; j < grid.getSize(); j++) {
                 guesses++;
                 if (grid.matchCells(i, j)) {
-                    System.out.println("Matched: " + dispalyGrid[i] + " and " + dispalyGrid[j]);
-                    System.out.println("Remaining: " + grid.remaining());
-                    printGrid(grid.getDisplayGrid(i, j));
+                    out.println("Matched: " + dispalyGrid[i] + " and " + dispalyGrid[j]);
+                    out.println("Remaining: " + grid.remaining());
+                    printGrid(out, grid.getDisplayGrid(i, j));
                     break;
                 }
             }
         }
-        System.out.println("\r\nSolved in " + guesses + " guesses.\r\n");
+        out.println("\r\nSolved in " + guesses + " guesses.\r\n");
+        return true;
+    }
+
+    /**
+     * helper function to print grids
+     *
+     * @param grid
+     */
+    private static void printGrid(PrintStream out, String[] grid) {
+        Integer size = ((Number) Math.sqrt(grid.length)).intValue();
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                out.print(String.format("%5s", grid[i * size + j]));
+            }
+            out.println();
+        }
 
     }
 

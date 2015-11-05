@@ -118,7 +118,7 @@ public class MultiConcentration {
      */
     public void startGame() {
         GameGrid grid = new GameGrid(size);
-        GameDriver driver = useTextApplication ? new TextGameDriver() : new GuiGameDriver();
+        GameDriver driver = useTextApplication ? new TextGameDriver(System.in, System.out) : new GuiGameDriver();
         GameLoop loop = new GameLoop(driver, grid);
         loop.Start();
     }
