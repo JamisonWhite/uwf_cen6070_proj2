@@ -6,7 +6,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sun.nio.cs.StandardCharsets;
 
 /**
  * Text game driver
@@ -177,7 +176,7 @@ public class TextGameDriver implements GameDriver {
      *
      * @param args
      */
-    public static void main(String[] args) throws UnsupportedEncodingException {
+    public static void main(String[] args) {
             classTest();
 
     }
@@ -185,10 +184,15 @@ public class TextGameDriver implements GameDriver {
     /**
      * Perform class tests
      */
-    public static void classTest() throws UnsupportedEncodingException {
+    public static void classTest()  {
 
         //todo read and write from stream
-        InputStream in = new ByteArrayInputStream("Q\r\n".getBytes("UTF-8"));
+        InputStream in;
+        try {
+            in = new ByteArrayInputStream("Q\r\n".getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(TextGameDriver.class.getName()).log(Level.SEVERE, null, ex);
+        }
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         
         TextGameDriver driver = new TextGameDriver(System.in, out);
