@@ -1,8 +1,12 @@
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import sun.nio.cs.StandardCharsets;
 
 /**
  * Text game driver
@@ -173,14 +177,52 @@ public class TextGameDriver implements GameDriver {
      *
      * @param args
      */
-    public static void main(String[] args) {
-        classTest();
+    public static void main(String[] args) throws UnsupportedEncodingException {
+            classTest();
+
     }
 
     /**
      * Perform class tests
      */
-    public static void classTest() {
+    public static void classTest() throws UnsupportedEncodingException {
 
+        //todo read and write from stream
+        InputStream in = new ByteArrayInputStream("Q\r\n".getBytes("UTF-8"));
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        
+        TextGameDriver driver = new TextGameDriver(System.in, out);
+        GameGrid grid = new GameGrid(4);
+        grid.initializeGrids(42);
+        //42 -> [B, A, A, B]
+        
+        
+        driver.showNewGameDisplay(grid);
+        TestDriver.printTestCase("TC000", "showNewGameDisplay", true, true);
+        
+        driver.showGrid(grid);
+        TestDriver.printTestCase("TC000", "showGrid",  true, true);
+        
+        driver.showGuessFailed(grid);
+        TestDriver.printTestCase("TC000", "showGuessFailed",  true, true);
+        
+        driver.showGuessSuccess(grid);
+        TestDriver.printTestCase("TC000", "showGuessSuccess",  true, true);
+        
+        driver.getGuessCell1(grid);
+        TestDriver.printTestCase("TC000", "getGuessCell1",  true, true);
+        
+        driver.getGuessCell2(grid);
+        TestDriver.printTestCase("TC000", "getGuessCell2",  true, true);
+        
+        driver.showException(grid, new UnsupportedOperationException());
+        TestDriver.printTestCase("TC000", "showException",  true, true);
+        
+        driver.showExit(grid);
+        TestDriver.printTestCase("TC000", "showExit",   true, true);
+        
+//        driver.getChoice(grid);
+//        TestDriver.printTestCase("TC000", "getChoice",  true, true);
+        
     }
 }
