@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -39,6 +41,11 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     
     private JPanel statusBar;
     private JLabel gameStatus;
+    
+    private GameGrid grid;
+    
+    private int guess1;
+    private int guess2;
 
     //=============================================
     // Static Attributes/variables
@@ -144,7 +151,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
 	for (int i = 0; i < GuiGameDriver.GAME_BOARD_SIZE; i++) {
             
             for (int j = 0; j < GuiGameDriver.GAME_BOARD_SIZE; j++) {
-                this.gameButtons.add(new JButton(Integer.toString(gameButtonIndex)));
+                //this.gameButtons.add(new JButton(Integer.toString(gameButtonIndex)));
+                this.gameButtons.add(new JButton());
                 this.gameBoard.add(this.gameButtons.get(gameButtonIndex - 1));
                 gameButtonIndex++;
             }
@@ -174,6 +182,17 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     }
     // </editor-fold>
     
+    private void redrawGameBoard(String[] gridData) {
+        Integer size = ((Number) Math.sqrt(gridData.length)).intValue();
+        
+	// Loop through elements.
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                this.gameButtons.get(i * size + j).setText(String.format("%5s", gridData[i * size + j]));
+            }
+        }
+    }
+    
     /**
      * Show new game message and time limited data grid
      *
@@ -181,7 +200,21 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void showNewGameDisplay(GameGrid data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.grid = data;
+        
+        this.gameStatus.setText("Memorize the above grid!");
+        this.redrawGameBoard(this.grid.getDataGrid());
+        
+        for (int i = Config.MemorizeSeconds; i >= 0; i--) {
+            try {
+                this.gameStatus.setText("Memorize the above grid! " + i);
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(TextGameDriver.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        this.showGrid(this.grid);
     }
 
     /**
@@ -191,7 +224,12 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void showGrid(GameGrid data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        if (this.guess1 < 0 || this.guess2 < 0) {
+            this.redrawGameBoard(this.grid.getDisplayGrid());
+        } else {
+            this.redrawGameBoard(this.grid.getDisplayGrid(this.guess1, this.guess2));
+        }
     }
 
     /**
@@ -323,8 +361,10 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     public static void classTest() {
         GameGrid grid = new GameGrid(6);
+        grid.initializeGrids(42);
+        //42 -> [B, A, A, B]
+        
         GameDriver driver = new GuiGameDriver();
-        GameLoop loop = new GameLoop(driver, grid);
-        loop.Start();
+        driver.showNewGameDisplay(grid);
     }
 }
