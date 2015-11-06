@@ -17,6 +17,16 @@ public class TestGameDriver implements GameDriver {
     public TestGameDriver(Queue<String> choices) {
         this.choices = choices;
     }
+    
+    @Override
+    public void setup() {
+        assert choices != null;
+    }
+
+    @Override
+    public void cleanup() {
+        //nothing
+    }
 
     @Override
     public void showNewGameDisplay(GameGrid data) {
@@ -153,6 +163,10 @@ public class TestGameDriver implements GameDriver {
         choices.add("Q");
         TestGameDriver driver = new TestGameDriver(choices);
 
+        
+        driver.setup();
+        TestDriver.printTestCase("TC000", "TestGameDriver. setup",true, true);
+        
         driver.showNewGameDisplay(null);
         TestDriver.printTestCase("TC000", "TestGameDriver. showNewGameDisplayCount", 1, driver.showNewGameDisplayCount);
 
@@ -188,6 +202,9 @@ public class TestGameDriver implements GameDriver {
         driver.initialize();
         TestDriver.printTestCase("TC000", "TestGameDriver. initialize", 0, driver.totalCounts());
 
+        driver.cleanup();
+        TestDriver.printTestCase("TC000", "TestGameDriver. cleanup",true, true);
     }
+
 
 }

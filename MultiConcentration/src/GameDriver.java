@@ -5,6 +5,17 @@
 public interface GameDriver {
     
     /**
+     * Setup the driver
+     */
+    public void setup();
+    
+    /**
+     * Clean up the driver and release any resources
+     */
+    public void cleanup();
+    
+    
+    /**
      * Show new game message and time limited data grid
      * @param data 
      */

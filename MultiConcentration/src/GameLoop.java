@@ -29,7 +29,11 @@ public class GameLoop {
      */
     public void Start() {
 
+        
+        driver.setup();
+        
         data.initializeGrids();
+        
         driver.showNewGameDisplay(data);
 
         while (true) {
@@ -65,6 +69,8 @@ public class GameLoop {
         }
 
         driver.showExit(data);
+        
+        driver.cleanup();
 
     }
 

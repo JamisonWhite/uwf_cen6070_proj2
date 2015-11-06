@@ -31,6 +31,22 @@ public class TextGameDriver implements GameDriver {
     private final PrintStream outputStream;
 
     /**
+     * Assert class is ready
+     */
+    @Override
+    public void setup() {
+        assert outputStream != null;
+        assert inputScanner != null;
+    }
+
+    /**
+     * No cleanup
+     */
+    @Override
+    public void cleanup() {
+        //nothing
+    }
+    /**
      * Show new game message and time limited data grid
      *
      * @param data
@@ -211,7 +227,10 @@ public class TextGameDriver implements GameDriver {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(outputStream);
         TextGameDriver driver = new TextGameDriver(in, out);
-
+        
+        driver.setup();
+        TestDriver.printTestCase("TC000", "TestGameDriver. setup",true, true);
+              
         outputStream.reset();
         driver.showNewGameDisplay(grid);
         result = outputStream.toString("UTF-8");
@@ -270,6 +289,9 @@ public class TextGameDriver implements GameDriver {
         TestDriver.printTestCase("TC000", "TextGameDriver. getChoice Q",  "Q", result);
         
         
+        driver.cleanup();
+        TestDriver.printTestCase("TC000", "TestGameDriver. cleanup",true, true);
+        
         
 //        outputStream.reset();
 //        //do stuff
@@ -280,4 +302,5 @@ public class TextGameDriver implements GameDriver {
         
         
     }
+
 }

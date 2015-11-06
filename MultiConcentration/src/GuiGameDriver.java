@@ -1,3 +1,4 @@
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -5,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
@@ -31,62 +33,38 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     //=============================================
     // Attributes - Instance variables
     //=============================================
-    
     private JMenuBar menubar;
     private JMenuItem fileMenuItem; // main file menu
     private JMenuItem resetMenuItem; // To reset the application grid
     private JMenuItem exitMenuItem; // To exit the application
-    
+
     private JPanel gameBoard;
     private ArrayList<JButton> gameButtons;
-    
+
     private JPanel statusBar;
     private JLabel gameStatus;
-    
-    private GameGrid grid;
-    
+
     private int guess1;
     private int guess2;
 
     //=============================================
     // Static Attributes/variables
     //=============================================
-
     private static final int MIN_FRAME_WIDTH = 350;
     private static final int MIN_FRAME_HEIGHT = 350;
-   
+
     // <editor-fold defaultstate="collapsed" desc="Default Constructor">
     /**
      * Default Constructor
      */
     public GuiGameDriver() {
-        
-        this.guess1 = -1;
-        this.guess2 = -1;
 
-        // Set application title and exit button
-        setTitle("The Multi-Concentration Game");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        createMenuBar();
-
-        // Create a BorderLayout for the control sections
-        setLayout(new BorderLayout());
-        
-        createStatusBar();
-
-        // Set the application window dimensions and don't allow resizing
-        setSize(MIN_FRAME_WIDTH, MIN_FRAME_HEIGHT);
-
-        setVisible(true);
-        setResizable(true);
     }
     // </editor-fold>
 
     // =============================================
     // Private Implementation Methods
     // =============================================
-
     // <editor-fold defaultstate="collapsed" desc="createMenuBar">
     /**
      * Construct the main menu at the top of the application
@@ -98,16 +76,16 @@ public class GuiGameDriver extends JFrame implements GameDriver {
 
         this.fileMenuItem = new JMenu("File");
         this.fileMenuItem.setMnemonic(KeyEvent.VK_F);
-        
+
         this.resetMenuItem = new JMenuItem("Reset");
         this.resetMenuItem.setMnemonic(KeyEvent.VK_E);
         this.resetMenuItem.setToolTipText("Reset");
-	this.resetMenuItem.addActionListener(new ResetMenuListener());
+        this.resetMenuItem.addActionListener(new ResetMenuListener());
 
         this.exitMenuItem = new JMenuItem("Exit");
         this.exitMenuItem.setMnemonic(KeyEvent.VK_E);
         this.exitMenuItem.setToolTipText("Exit application");
-	this.exitMenuItem.addActionListener(new ExitMenuListener());
+        this.exitMenuItem.addActionListener(new ExitMenuListener());
 
         this.fileMenuItem.add(this.resetMenuItem);
         this.fileMenuItem.add(this.exitMenuItem);
@@ -116,20 +94,23 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         setJMenuBar(menubar);
     }
     // </editor-fold>
-    
+
     // <editor-fold defaultstate="collapsed" desc="createGameBoard">
     /**
      * Construct the game board in the center of the application
      */
-    private void createGameBoard() {
+    private void createGameBoard(GameGrid data) {
+        if (this.gameBoard != null)
+            return;
+        
         this.gameBoard = new JPanel();
         int gameButtonIndex = 1;
-        Integer size = ((Number) Math.sqrt(this.grid.getSize())).intValue();
-        
+        Integer size = ((Number) Math.sqrt(data.getSize())).intValue();
+
         // Set the application window dimensions and don't allow resizing
         int generatedGameBoardWidth = (64 * size);
         int generatedGameBoardHeight = (32 * size) + 50;
-        
+
         if (generatedGameBoardWidth < MIN_FRAME_WIDTH) {
             if (generatedGameBoardHeight < MIN_FRAME_HEIGHT) {
                 setSize(MIN_FRAME_WIDTH, MIN_FRAME_HEIGHT);
@@ -147,20 +128,20 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         GridLayout layout = new GridLayout(size, size);
 
         this.gameBoard.setLayout(layout);
-        
+
         this.gameButtons = new ArrayList<JButton>();
 
-	// Loop through elements.
-	for (int i = 0; i < size; i++) {
-            
+        // Loop through elements.
+        for (int i = 0; i < size; i++) {
+
             for (int j = 0; j < size; j++) {
                 //this.gameButtons.add(new JButton(Integer.toString(gameButtonIndex)));
                 this.gameButtons.add(new JButton());
                 this.gameBoard.add(this.gameButtons.get(gameButtonIndex - 1));
                 gameButtonIndex++;
             }
-	}
-        
+        }
+
         this.add(this.gameBoard, BorderLayout.CENTER);
     }
     // </editor-fold>
@@ -174,22 +155,22 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         this.gameStatus = new JLabel("GOOD GUESS!", SwingConstants.CENTER);
         this.gameStatus.setFont(font);
         this.gameStatus.setBackground(Color.WHITE);
-        
+
         this.statusBar = new JPanel();
         this.statusBar.setLayout(new BorderLayout());
         this.statusBar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         this.statusBar.setBackground(Color.WHITE);
         this.statusBar.add(this.gameStatus, BorderLayout.CENTER);
-        
+
         this.add(this.statusBar, BorderLayout.SOUTH);
     }
     // </editor-fold>
-    
+
     private void redrawGameBoard(String[] gridData) {
         Integer size = ((Number) Math.sqrt(gridData.length)).intValue();
         int gameButtonIndex = 0;
-        
-	// Loop through elements.
+
+        // Loop through elements.
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 this.gameButtons.get(gameButtonIndex).setText(String.format("%5s", gridData[gameButtonIndex]));
@@ -197,7 +178,34 @@ public class GuiGameDriver extends JFrame implements GameDriver {
             }
         }
     }
-    
+
+    /**
+     * Setup the GUI elements
+     */
+    @Override
+    public void setup() {
+
+        this.guess1 = -1;
+        this.guess2 = -1;
+
+        // Set application title and exit button
+        setTitle("The Multi-Concentration Game");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        createMenuBar();
+
+        // Create a BorderLayout for the control sections
+        setLayout(new BorderLayout());
+
+        createStatusBar();
+
+        // Set the application window dimensions and don't allow resizing
+        setSize(MIN_FRAME_WIDTH, MIN_FRAME_HEIGHT);
+
+        setVisible(true);
+        setResizable(true);
+    }
+
     /**
      * Show new game message and time limited data grid
      *
@@ -205,13 +213,12 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void showNewGameDisplay(GameGrid data) {
-        this.grid = data;
-        
+
         this.gameStatus.setText("Memorize the above grid!");
-        this.createGameBoard();
-        
-        this.redrawGameBoard(this.grid.getDataGrid());
-        
+        this.createGameBoard(data);
+
+        this.redrawGameBoard(data.getDataGrid());
+
         for (int i = Config.MemorizeSeconds; i >= 0; i--) {
             try {
                 this.gameStatus.setText("Memorize the above grid! " + i);
@@ -220,8 +227,6 @@ public class GuiGameDriver extends JFrame implements GameDriver {
                 Logger.getLogger(TextGameDriver.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
-        this.showGrid(this.grid);
     }
 
     /**
@@ -231,11 +236,10 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void showGrid(GameGrid data) {
-        
         if (this.guess1 < 0 || this.guess2 < 0) {
-            this.redrawGameBoard(this.grid.getDisplayGrid());
+            this.redrawGameBoard(data.getDisplayGrid());
         } else {
-            this.redrawGameBoard(this.grid.getDisplayGrid(this.guess1, this.guess2));
+            this.redrawGameBoard(data.getDisplayGrid(this.guess1, this.guess2));
         }
     }
 
@@ -247,8 +251,19 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public String getChoice(GameGrid data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //ugh, tight loop.
+        this.gameStatus.setText("Select a pair of numbers.");
+        
+        try {
+            while (choice == null || "".equals(choice)) {
+                Thread.sleep(5);
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(GuiGameDriver.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return choice;
     }
+    private String choice;
 
     /**
      * Show exit screen
@@ -257,7 +272,12 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void showExit(GameGrid data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.gameStatus.setText("Game Over");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(GuiGameDriver.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -268,7 +288,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public int getGuessCell1(GameGrid data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.guess1;
     }
 
     /**
@@ -279,7 +299,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public int getGuessCell2(GameGrid data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.guess2;
     }
 
     /**
@@ -289,7 +309,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void showGuessSuccess(GameGrid data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.gameStatus.setText("Good Guess!");
     }
 
     /**
@@ -299,7 +319,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void showGuessFailed(GameGrid data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.gameStatus.setText("Sorry...");
     }
 
     /**
@@ -310,28 +330,32 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void showException(GameGrid data, Exception ex) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.gameStatus.setText("Error: " + ex.getMessage());
+    }
+
+    @Override
+    public void cleanup() {
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 
     // =============================================
     // Event Listener classes
     // =============================================
-
     // <editor-fold defaultstate="collapsed" desc="ResetMenuListener">
     /**
      * Event handler for the Reset Menu option
      */
     private class ResetMenuListener implements ActionListener {
+
         /**
          * Log to a selected file and/or the database when the Log Button is
          * clicked
-         * 
-         * @param e
-         * the event component source
+         *
+         * @param e the event component source
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            
+            choice = "R";
         }
     }
     // </editor-fold>
@@ -341,15 +365,15 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      * Event handler for the Exit Menu option
      */
     private class ExitMenuListener implements ActionListener {
+
         /**
          * Simply exit the application
-         * 
-         * @param e
-         * the event component source
+         *
+         * @param e the event component source
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+            choice = "Q";
         }
     }
     // </editor-fold>
@@ -370,8 +394,11 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         GameGrid grid = new GameGrid(6);
         grid.initializeGrids(42);
         //42 -> [B, A, A, B]
-        
+
         GameDriver driver = new GuiGameDriver();
+        driver.setup();
         driver.showNewGameDisplay(grid);
+        driver.showExit(grid);
+        driver.cleanup();
     }
 }
