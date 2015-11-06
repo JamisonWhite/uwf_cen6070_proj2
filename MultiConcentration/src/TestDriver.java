@@ -15,12 +15,20 @@ public class TestDriver {
      * @param args 
      */
     public static void main(String[] args) {
+        
+        args = new String[] {"-test","4"};
+        MultiConcentration.main(args);
         MultiConcentration.classTest();
+        
         GameGrid.main(args);
         GameLoop.main(args);
         TestGameDriver.main(args);
         TextGameDriver.main(args);
         GuiGameDriver.main(args);
+        
+        printTestCase("TC000", "TestDriver. Code coverage test for positive test case.", true, true);
+        printTestCase("TC000", "TestDriver. Code coverage test for negative test case. (This is not really a failure.)", true, false);
+        
         assert args.length > 0;
     }
     
