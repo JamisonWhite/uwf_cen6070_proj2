@@ -183,14 +183,19 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     // </editor-fold>
     
     private void redrawGameBoard(String[] gridData) {
-        Integer size = ((Number) Math.sqrt(gridData.length)).intValue();
         
-	// Loop through elements.
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                this.gameButtons.get(i * size + j).setText(String.format("%5s", gridData[i * size + j]));
-            }
+        for (int i = 0; i < gridData.length; i++) {
+            this.gameButtons.get(i).setText(gridData[i]);
         }
+        
+//        Integer size = ((Number) Math.sqrt(gridData.length)).intValue();
+//        
+//	// Loop through elements.
+//        for (int i = 0; i < size; i++) {
+//            for (int j = 0; j < size; j++) {
+//                this.gameButtons.get(i * size + j).setText(String.format("%5s", gridData[i * size + j]));
+//            }
+//        }
     }
     
     /**
@@ -202,7 +207,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     public void showNewGameDisplay(GameGrid data) {
         this.grid = data;
         
-        this.gameStatus.setText("Memorize the above grid!");
+        this.gameStatus.setText("Memorize the above grid!xxxx");
         this.redrawGameBoard(this.grid.getDataGrid());
         
         for (int i = Config.MemorizeSeconds; i >= 0; i--) {

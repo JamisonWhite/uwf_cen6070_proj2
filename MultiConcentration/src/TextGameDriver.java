@@ -188,7 +188,6 @@ public class TextGameDriver implements GameDriver {
      * @param args
      */
     public static void main(String[] args) {
-
         try {
             classTest();
         } catch (UnsupportedEncodingException ex) {
@@ -216,59 +215,60 @@ public class TextGameDriver implements GameDriver {
         outputStream.reset();
         driver.showNewGameDisplay(grid);
         result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "showNewGameDisplay", true, result.length() > 0);
+        TestDriver.printTestCase("TC000", "TextGameDriver. showNewGameDisplay", true, result.length() > 0);
 
         outputStream.reset();
         driver.showGrid(grid);
         result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "showGrid", true, result.length() > 0);
+        TestDriver.printTestCase("TC000", "TextGameDriver. showGrid", true, result.length() > 0);
 
         outputStream.reset();
         driver.showGuessFailed(grid);
         result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "showGuessFailed", "Sorry...\r\n", result);
+        TestDriver.printTestCase("TC000", "TextGameDriver. showGuessFailed", "Sorry...", result.trim());
 
         outputStream.reset();
         driver.showGuessSuccess(grid);
         result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "showGuessSuccess", "Good Guess!\r\n", result);
+        TestDriver.printTestCase("TC000", "TextGameDriver. showGuessSuccess", "Good Guess!", result.trim());
 
         outputStream.reset();
         driver.showException(grid, new UnsupportedOperationException("TestError"));
         result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "showException", "Error: TestError\r\n", result);
+        TestDriver.printTestCase("TC000", "TextGameDriver. showException", "Error: TestError", result.trim());
 
         outputStream.reset();
         driver.showExit(grid);
         result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "showExit", "Game Over\r\n", result);
+        TestDriver.printTestCase("TC000", "TextGameDriver. showExit", "Game Over", result.trim());
 
         driver.getGuessCell1(grid);
-        TestDriver.printTestCase("TC000", "getGuessCell1", -1, -1);
+        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell1", -1, -1);
 
         driver.getGuessCell2(grid);
-        TestDriver.printTestCase("TC000", "getGuessCell2", -1, -1);
+        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell2", -1, -1);
 
         outputStream.reset();
         driver.getChoice(grid);
         result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "getChoice",  "Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ", result);
+        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice",  "Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ", result);
         
         //play the game. Display is ONE-BASED; Data is ZERO-BASED
         in = new ByteArrayInputStream("1 2\r\n1 4\r\nR\r\nQ\r\n".getBytes("UTF-8"));
         driver = new TextGameDriver(in, out);
         result = driver.getChoice(grid);
-        TestDriver.printTestCase("TC000", "getChoice cells",  "1 2", result);
-        TestDriver.printTestCase("TC000", "getGuessCell1",  0, driver.getGuessCell1(grid));
-        TestDriver.printTestCase("TC000", "getGuessCell2",  1, driver.getGuessCell2(grid));   
+        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice cells",  "1 2", result);
+        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell1",  0, driver.getGuessCell1(grid));
+        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell2",  1, driver.getGuessCell2(grid));   
         result = driver.getChoice(grid);
-        TestDriver.printTestCase("TC000", "getChoice cells",  "1 4", result);
-        TestDriver.printTestCase("TC000", "getGuessCell1",  0, driver.getGuessCell1(grid));
-        TestDriver.printTestCase("TC000", "getGuessCell2",  3, driver.getGuessCell2(grid)); 
+        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice cells",  "1 4", result);
+        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell1",  0, driver.getGuessCell1(grid));
+        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell2",  3, driver.getGuessCell2(grid)); 
         result = driver.getChoice(grid);
-        TestDriver.printTestCase("TC000", "getChoice R",  "R", result);
+        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice R",  "R", result);
         result = driver.getChoice(grid);
-        TestDriver.printTestCase("TC000", "getChoice Q",  "Q", result);
+        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice Q",  "Q", result);
+        
         
         
 //        outputStream.reset();

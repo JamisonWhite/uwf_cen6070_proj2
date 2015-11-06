@@ -18,6 +18,7 @@ public class MultiConcentration {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        //classTest();
         MultiConcentration game = new MultiConcentration();
         game.startGame(args);
     }
@@ -103,23 +104,37 @@ public class MultiConcentration {
 
         //todo change to using custom streams and test output
         
+        boolean result;
         MultiConcentration game = new MultiConcentration();
-
-        game.showUsage();
         
         String[] args = {""};
-        TestDriver.printTestCase("TC000", "invalid arguments", false, game.parseArguments(args));
+        TestDriver.printTestCase("TC000", "MultiConcentration. parse missing arguments", false, game.parseArguments(args));
+        
+        args = new String[] {"-xxx", "2"};
+        TestDriver.printTestCase("TC000", "MultiConcentration. text game parse invalid game type", false, game.parseArguments(args));
+        
+        args = new String[] {"-t", "-1"};
+        TestDriver.printTestCase("TC000", "MultiConcentration. text game parse invalid size", false, game.parseArguments(args));
+        
+
+        game.showUsage();
+        TestDriver.printTestCase("TC000", "MultiConcentration. show usage", true, true);
+        
+        
+        game.startGame(args);
+        TestDriver.printTestCase("TC000", "MultiConcentration. start gameinvalid arguments", true, true);
         
         args = new String[] {"-t", "2"};
-        TestDriver.printTestCase("TC000", "text game valid arguments", true, game.parseArguments(args));
+        TestDriver.printTestCase("TC000", "MultiConcentration. text game parse valid arguments", true, game.parseArguments(args));
         
         args = new String[] {"-g", "2"};
-        TestDriver.printTestCase("TC000", "gui game valid arguments", true, game.parseArguments(args));
+        TestDriver.printTestCase("TC000", "MultiConcentration. gui game parse valid arguments", true, game.parseArguments(args));
                 
         args = new String[] {"-test", "2"};
-        TestDriver.printTestCase("TC000", "test game valid arguments", true, game.parseArguments(args));
+        TestDriver.printTestCase("TC000", "MultiConcentration. test game parse valid arguments", true, game.parseArguments(args));
+
         game.startGame(args);
-        TestDriver.printTestCase("TC000", "invalid arguments", true, true);
+        TestDriver.printTestCase("TC000", "MultiConcentration. start game valid arguments", true, true);
         
         
 
