@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -53,15 +54,15 @@ public class GuiGameDriver extends JFrame implements GameDriver {
 
     private static final int MIN_FRAME_WIDTH = 350;
     private static final int MIN_FRAME_HEIGHT = 350;
-    
-    // *** REMOVE WHEN NOT NEEDED
-    private static final int GAME_BOARD_SIZE = 4;
    
     // <editor-fold defaultstate="collapsed" desc="Default Constructor">
     /**
      * Default Constructor
      */
     public GuiGameDriver() {
+        
+        this.guess1 = -1;
+        this.guess2 = -1;
 
         // Set application title and exit button
         setTitle("The Multi-Concentration Game");
@@ -72,26 +73,10 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         // Create a BorderLayout for the control sections
         setLayout(new BorderLayout());
         
-        createGameBoard();
         createStatusBar();
 
         // Set the application window dimensions and don't allow resizing
-        int generatedGameBoardWidth = (56 * GuiGameDriver.GAME_BOARD_SIZE);
-        int generatedGameBoardHeight = (32 * GuiGameDriver.GAME_BOARD_SIZE) + 50;
-        
-        if (generatedGameBoardWidth < MIN_FRAME_WIDTH) {
-            if (generatedGameBoardHeight < MIN_FRAME_HEIGHT) {
-                setSize(MIN_FRAME_WIDTH, MIN_FRAME_HEIGHT);
-            } else {
-                setSize(MIN_FRAME_WIDTH, generatedGameBoardHeight);
-            }
-        } else {
-            if (generatedGameBoardHeight < MIN_FRAME_HEIGHT) {
-                setSize(generatedGameBoardWidth, MIN_FRAME_HEIGHT);
-            } else {
-                setSize(generatedGameBoardWidth, generatedGameBoardHeight);
-            }
-        }
+        setSize(MIN_FRAME_WIDTH, MIN_FRAME_HEIGHT);
 
         setVisible(true);
         setResizable(true);
@@ -139,18 +124,36 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     private void createGameBoard() {
         this.gameBoard = new JPanel();
         int gameButtonIndex = 1;
-        //panel.setSize(300,300);
+        Integer size = ((Number) Math.sqrt(this.grid.getSize())).intValue();
         
-        GridLayout layout = new GridLayout(GuiGameDriver.GAME_BOARD_SIZE, GuiGameDriver.GAME_BOARD_SIZE);
+        // Set the application window dimensions and don't allow resizing
+        int generatedGameBoardWidth = (64 * size);
+        int generatedGameBoardHeight = (32 * size) + 50;
+        
+        if (generatedGameBoardWidth < MIN_FRAME_WIDTH) {
+            if (generatedGameBoardHeight < MIN_FRAME_HEIGHT) {
+                setSize(MIN_FRAME_WIDTH, MIN_FRAME_HEIGHT);
+            } else {
+                setSize(MIN_FRAME_WIDTH, generatedGameBoardHeight);
+            }
+        } else {
+            if (generatedGameBoardHeight < MIN_FRAME_HEIGHT) {
+                setSize(generatedGameBoardWidth, MIN_FRAME_HEIGHT);
+            } else {
+                setSize(generatedGameBoardWidth, generatedGameBoardHeight);
+            }
+        }
+
+        GridLayout layout = new GridLayout(size, size);
 
         this.gameBoard.setLayout(layout);
         
         this.gameButtons = new ArrayList<JButton>();
 
 	// Loop through elements.
-	for (int i = 0; i < GuiGameDriver.GAME_BOARD_SIZE; i++) {
+	for (int i = 0; i < size; i++) {
             
-            for (int j = 0; j < GuiGameDriver.GAME_BOARD_SIZE; j++) {
+            for (int j = 0; j < size; j++) {
                 //this.gameButtons.add(new JButton(Integer.toString(gameButtonIndex)));
                 this.gameButtons.add(new JButton());
                 this.gameBoard.add(this.gameButtons.get(gameButtonIndex - 1));
@@ -183,19 +186,16 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     // </editor-fold>
     
     private void redrawGameBoard(String[] gridData) {
+        Integer size = ((Number) Math.sqrt(gridData.length)).intValue();
+        int gameButtonIndex = 0;
         
-        for (int i = 0; i < gridData.length; i++) {
-            this.gameButtons.get(i).setText(gridData[i]);
+	// Loop through elements.
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                this.gameButtons.get(gameButtonIndex).setText(String.format("%5s", gridData[gameButtonIndex]));
+                gameButtonIndex++;
+            }
         }
-        
-//        Integer size = ((Number) Math.sqrt(gridData.length)).intValue();
-//        
-//	// Loop through elements.
-//        for (int i = 0; i < size; i++) {
-//            for (int j = 0; j < size; j++) {
-//                this.gameButtons.get(i * size + j).setText(String.format("%5s", gridData[i * size + j]));
-//            }
-//        }
     }
     
     /**
@@ -207,7 +207,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     public void showNewGameDisplay(GameGrid data) {
         this.grid = data;
         
-        this.gameStatus.setText("Memorize the above grid!xxxx");
+        this.gameStatus.setText("Memorize the above grid!");
+        this.createGameBoard();
+        
         this.redrawGameBoard(this.grid.getDataGrid());
         
         for (int i = Config.MemorizeSeconds; i >= 0; i--) {
@@ -218,7 +220,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
                 Logger.getLogger(TextGameDriver.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
         this.showGrid(this.grid);
     }
 
