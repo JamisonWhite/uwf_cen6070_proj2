@@ -7,6 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
@@ -391,14 +395,60 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      * Perform class tests
      */
     public static void classTest() {
-        GameGrid grid = new GameGrid(6);
+//        GameGrid grid = new GameGrid(6);
+//        grid.initializeGrids(42);
+//        //42 -> [B, A, A, B]
+//
+//        GameDriver driver = new GuiGameDriver();
+//        driver.setup();
+//        driver.showNewGameDisplay(grid);
+//        driver.showExit(grid);
+//        driver.cleanup();
+        
+        
+        GameGrid grid = new GameGrid(4);
         grid.initializeGrids(42);
         //42 -> [B, A, A, B]
-
-        GameDriver driver = new GuiGameDriver();
+        
+        String choice;
+        
+        //Read and write from custom streams
+        GuiGameDriver driver = new GuiGameDriver();
+        
         driver.setup();
+        TestDriver.printTestCase("TC000", "GuiGameDriver. setup",true, true);
+              
         driver.showNewGameDisplay(grid);
+        TestDriver.printTestCase("TC000", "GuiGameDriver. showNewGameDisplay", true, driver.gameStatus.getText().length() > 0);
+
+        driver.showGrid(grid);
+        TestDriver.printTestCase("TC000", "GuiGameDriver. showGrid", true, driver.gameStatus.getText().length() > 0);
+
+        driver.showGuessFailed(grid);
+        TestDriver.printTestCase("TC000", "GuiGameDriver. showGuessFailed", "Sorry...", driver.gameStatus.getText().trim());
+
+        driver.showGuessSuccess(grid);
+        TestDriver.printTestCase("TC000", "GuiGameDriver. showGuessSuccess", "Good Guess!", driver.gameStatus.getText().trim());
+
+        driver.showException(grid, new UnsupportedOperationException("TestError"));
+        TestDriver.printTestCase("TC000", "GuiGameDriver. showException", "Error: TestError", driver.gameStatus.getText().trim());
+
+        driver.getGuessCell1(grid);
+        TestDriver.printTestCase("TC000", "GuiGameDriver. getGuessCell1", -1, -1);
+
+        driver.getGuessCell2(grid);
+        TestDriver.printTestCase("TC000", "GuiGameDriver. getGuessCell2", -1, -1);
+
+        driver.choice = "1 2";
+        driver.getChoice(grid);
+        TestDriver.printTestCase("TC000", "GuiGameDriver. getChoice",  "Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ", driver.gameStatus.getText());
+                
         driver.showExit(grid);
+        TestDriver.printTestCase("TC000", "GuiGameDriver. showExit", "Game Over", driver.gameStatus.getText().trim());
+
         driver.cleanup();
+        TestDriver.printTestCase("TC000", "GuiGameDriver. cleanup",true, true);
+        
+        
     }
 }
