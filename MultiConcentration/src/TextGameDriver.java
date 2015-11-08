@@ -229,7 +229,7 @@ public class TextGameDriver implements GameDriver {
         TextGameDriver driver = new TextGameDriver(in, out);
         
         driver.setup();
-        TestDriver.printTestCase("TC000", "TestGameDriver. setup",true, true);
+        TestDriver.printTestCase("TC000", "TextGameDriver. setup",true, true);
               
         outputStream.reset();
         driver.showNewGameDisplay(grid);
@@ -290,7 +290,7 @@ public class TextGameDriver implements GameDriver {
         
         
         driver.cleanup();
-        TestDriver.printTestCase("TC000", "TestGameDriver. cleanup",true, true);
+        TestDriver.printTestCase("TC000", "TextGameDriver. cleanup",true, true);
         
         
 //        outputStream.reset();

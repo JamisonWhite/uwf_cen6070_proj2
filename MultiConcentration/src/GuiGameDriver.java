@@ -104,9 +104,10 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      * Construct the game board in the center of the application
      */
     private void createGameBoard(GameGrid data) {
-        if (this.gameBoard != null)
+        if (this.gameBoard != null) {
             return;
-        
+        }
+
         this.gameBoard = new JPanel();
         int gameButtonIndex = 1;
         Integer size = ((Number) Math.sqrt(data.getSize())).intValue();
@@ -132,18 +133,30 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         GridLayout layout = new GridLayout(size, size);
 
         this.gameBoard.setLayout(layout);
-
         this.gameButtons = new ArrayList<JButton>();
 
         // Loop through elements.
-        for (int i = 0; i < size; i++) {
-
-            for (int j = 0; j < size; j++) {
-                //this.gameButtons.add(new JButton(Integer.toString(gameButtonIndex)));
-                this.gameButtons.add(new JButton());
-                this.gameBoard.add(this.gameButtons.get(gameButtonIndex - 1));
-                gameButtonIndex++;
-            }
+        for (int i = 0; i < data.getSize(); i++) {
+            JButton button = new JButton();
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    JButton button = (JButton) ae.getSource();
+                    String text = button.getText().trim();
+                    int x = Integer.parseInt(text);
+                    if (guess1 < 0) 
+                    {
+                        guess1 = x;
+                    }
+                    else if (guess2 < 0) 
+                    {
+                        guess2 = x;
+                        choice = guess1 + " " + guess2;
+                    }
+                }
+            });
+            this.gameButtons.add(button);
+            this.gameBoard.add(this.gameButtons.get(i));
         }
 
         this.add(this.gameBoard, BorderLayout.CENTER);
@@ -171,15 +184,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     // </editor-fold>
 
     private void redrawGameBoard(String[] gridData) {
-        Integer size = ((Number) Math.sqrt(gridData.length)).intValue();
-        int gameButtonIndex = 0;
-
-        // Loop through elements.
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                this.gameButtons.get(gameButtonIndex).setText(String.format("%5s", gridData[gameButtonIndex]));
-                gameButtonIndex++;
-            }
+        for (int i = 0; i < gridData.length; i++) {
+            this.gameButtons.get(i).setText(String.format("%5s", gridData[i]));
         }
     }
 
@@ -257,7 +263,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     public String getChoice(GameGrid data) {
         //ugh, tight loop.
         this.gameStatus.setText("Select a pair of numbers.");
-        
+
         try {
             while (choice == null || "".equals(choice)) {
                 Thread.sleep(5);
@@ -265,6 +271,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         } catch (InterruptedException ex) {
             Logger.getLogger(GuiGameDriver.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.gameStatus.setText("Choice: " + choice);
+        choice = ""; //hokey
         return choice;
     }
     private String choice;
@@ -404,20 +412,19 @@ public class GuiGameDriver extends JFrame implements GameDriver {
 //        driver.showNewGameDisplay(grid);
 //        driver.showExit(grid);
 //        driver.cleanup();
-        
-        
+
         GameGrid grid = new GameGrid(4);
         grid.initializeGrids(42);
         //42 -> [B, A, A, B]
-        
+
         String choice;
-        
+
         //Read and write from custom streams
         GuiGameDriver driver = new GuiGameDriver();
-        
+
         driver.setup();
-        TestDriver.printTestCase("TC000", "GuiGameDriver. setup",true, true);
-              
+        TestDriver.printTestCase("TC000", "GuiGameDriver. setup", true, true);
+
         driver.showNewGameDisplay(grid);
         TestDriver.printTestCase("TC000", "GuiGameDriver. showNewGameDisplay", true, driver.gameStatus.getText().length() > 0);
 
@@ -441,14 +448,13 @@ public class GuiGameDriver extends JFrame implements GameDriver {
 
         driver.choice = "1 2";
         driver.getChoice(grid);
-        TestDriver.printTestCase("TC000", "GuiGameDriver. getChoice",  "Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ", driver.gameStatus.getText());
-                
+        TestDriver.printTestCase("TC000", "GuiGameDriver. getChoice", "Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ", driver.gameStatus.getText());
+
         driver.showExit(grid);
         TestDriver.printTestCase("TC000", "GuiGameDriver. showExit", "Game Over", driver.gameStatus.getText().trim());
 
         driver.cleanup();
-        TestDriver.printTestCase("TC000", "GuiGameDriver. cleanup",true, true);
-        
-        
+        TestDriver.printTestCase("TC000", "GuiGameDriver. cleanup", true, true);
+
     }
 }
