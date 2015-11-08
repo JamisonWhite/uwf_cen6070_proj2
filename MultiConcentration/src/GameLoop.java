@@ -29,47 +29,46 @@ public class GameLoop {
      */
     public void Start() {
 
-        
-        driver.setup();
-        
         data.initializeGrids();
-        
-        driver.showNewGameDisplay(data);
+
+        driver.setup(data);
+
+        driver.showNewGameDisplay();
 
         while (true) {
 
             try {
 
-                driver.showGrid(data);
-
                 //hmm will this work for forms, since it's blocking?
-                String choice = driver.getChoice(data);
+                driver.getChoice();
 
-                if ("Q".equals(choice)) {
+                if (driver.isExitRequested()) {
+                    driver.showExit();
                     break;
                 }
 
-                if ("R".equals(choice)) {
+                if (driver.isResetRequested()) {
                     data.initializeGrids();
-                    driver.showNewGameDisplay(data);
+                    driver.showNewGameDisplay();
                     continue;
+
                 }
 
-                int cell1 = driver.getGuessCell1(data);
-                int cell2 = driver.getGuessCell2(data);
-                if (data.matchCells(cell1, cell2)) {
-                    driver.showGuessSuccess(data);
-                } else {
-                    driver.showGuessFailed(data);
+                if (driver.isGuessRequested()) {
+                    int cell1 = driver.getGuessCell1();
+                    int cell2 = driver.getGuessCell2();
+                    if (data.matchCells(cell1, cell2)) {
+                        driver.showGuessSuccess(cell1, cell2);
+                    } else {
+                        driver.showGuessFailed(cell1, cell2);
+                    }
                 }
 
             } catch (Exception ex) {
-                driver.showException(data, ex);
+                driver.showException(ex);
             }
         }
 
-        driver.showExit(data);
-        
         driver.cleanup();
 
     }
@@ -94,9 +93,9 @@ public class GameLoop {
         //42 -> [B, A, A, B]
         Queue<String> choices = new LinkedList<String>();
         TestGameDriver driver = new TestGameDriver(choices);
-        
+
         GameLoop loop = new GameLoop(driver, grid);
-       
+
         //TC000 Execute full loop
         driver.initialize();
         choices.add("Q"); //showExit
@@ -110,21 +109,18 @@ public class GameLoop {
         loop.Start();
         TestDriver.printTestCase("TC000", "GameLoop. reset game", true, driver.totalCounts() > 0);
 
-
-        
         driver.initialize();
         choices.add("1 2"); //showGuessFailed
         choices.add("Q"); //showExit
         loop.Start();
         TestDriver.printTestCase("TC000", "GameLoop. guess failed", true, driver.totalCounts() > 0);
 
-        
         driver.initialize();
         choices.add("1 4"); //showGuessSuccess
         choices.add("Q"); //showExit
         loop.Start();
         TestDriver.printTestCase("TC000", "GameLoop. guess success", true, driver.totalCounts() > 0);
-        
+
         driver.initialize();
         choices.add("0 100"); //showException
         choices.add("0 A"); //showException
@@ -132,8 +128,6 @@ public class GameLoop {
         loop.Start();
         TestDriver.printTestCase("TC000", "GameLoop. exception", true, driver.totalCounts() > 0);
 
-        
-        
         //TC000 Execute full loop
         driver.initialize();
         choices.add("1 2"); //showGuessFailed
@@ -142,7 +136,7 @@ public class GameLoop {
         choices.add("Q"); //showExit
         loop.Start();
         TestDriver.printTestCase("TC000", "GameLoop. play full game", true, driver.totalCounts() > 0);
-        
+
     }
 
 }

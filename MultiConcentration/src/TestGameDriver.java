@@ -14,12 +14,14 @@ public class TestGameDriver implements GameDriver {
     private int cell1;
     private int cell2;
 
+    private GameGrid data;
+    
     public TestGameDriver(Queue<String> choices) {
         this.choices = choices;
     }
     
     @Override
-    public void setup() {
+    public void setup(GameGrid data) {
         assert choices != null;
     }
 
@@ -29,66 +31,67 @@ public class TestGameDriver implements GameDriver {
     }
 
     @Override
-    public void showNewGameDisplay(GameGrid data) {
+    public Boolean isResetRequested() {
+        return false;
+    }
+
+    @Override
+    public Boolean isExitRequested() {
+        return false;
+    }
+
+    @Override
+    public Boolean isGuessRequested() {
+        return false;
+    }
+
+    @Override
+    public void showNewGameDisplay() {
         showNewGameDisplayCount++;
     }
 
     public int showNewGameDisplayCount;
 
-    @Override
-    public void showGrid(GameGrid data) {
-        showGridCount++;
-    }
-
-    public int showGridCount;
 
     @Override
-    public String getChoice(GameGrid data) {
-        getChoiceCount++;
-        String choice = choices.remove();
-        if (choice.contains(" ")) {
-            String[] cells = choice.split(" ");
-            cell1 = Integer.parseInt(cells[0]);
-            cell2 = Integer.parseInt(cells[1]);
-        }
-        return choice;
-    }
-    public int getChoiceCount;
-
-    @Override
-    public void showExit(GameGrid data) {
+    public void showExit() {
         showExitCount++;
     }
     public int showExitCount;
 
     @Override
-    public int getGuessCell1(GameGrid data) {
+    public void getChoice() {
+        //todo 
+    }
+    
+    @Override
+    public int getGuessCell1() {
         getGuessCell1Count++;
         return cell1;
     }
     public int getGuessCell1Count;
 
     @Override
-    public int getGuessCell2(GameGrid data) {
+    public int getGuessCell2() {
         getGuessCell2Count++;
         return cell2;
     }
     public int getGuessCell2Count;
 
     @Override
-    public void showGuessSuccess(GameGrid data) {
+    public void showGuessSuccess(int cell1, int cell2) {
         showGuessSuccessCount++;
     }
     public int showGuessSuccessCount;
 
     @Override
-    public void showGuessFailed(GameGrid data) {
+    public void showGuessFailed(int cell1, int cell2) {
         showGuessFailedCount++;
     }
     public int showGuessFailedCount;
 
     @Override
-    public void showException(GameGrid data, Exception ex) {
+    public void showException(Exception ex) {
         showExceptionCount++;
         lastException = ex.toString();
     }
@@ -102,10 +105,8 @@ public class TestGameDriver implements GameDriver {
      */
     public int totalCounts() {
         return showNewGameDisplayCount
-                + showGridCount
                 + showGuessFailedCount
                 + showGuessSuccessCount
-                + getChoiceCount
                 + getGuessCell1Count
                 + getGuessCell2Count
                 + showExceptionCount
@@ -117,8 +118,6 @@ public class TestGameDriver implements GameDriver {
      */
     public void printCounts() {
         System.out.println("showNewGameDisplayCount: " + showNewGameDisplayCount);
-        System.out.println("showGridCount: " + showGridCount);
-        System.out.println("getChoiceCount: " + getChoiceCount);
         System.out.println("getGuessCell1Count: " + getGuessCell1Count);
         System.out.println("getGuessCell2Count: " + getGuessCell2Count);
         System.out.println("showGuessFailedCount: " + showGuessFailedCount);
@@ -133,8 +132,6 @@ public class TestGameDriver implements GameDriver {
      */
     public void initialize() {
         showNewGameDisplayCount = 0;
-        showGridCount = 0;
-        getChoiceCount = 0;
         getGuessCell1Count = 0;
         getGuessCell2Count = 0;
         showGuessFailedCount = 0;
@@ -164,34 +161,30 @@ public class TestGameDriver implements GameDriver {
         TestGameDriver driver = new TestGameDriver(choices);
 
         
-        driver.setup();
+        driver.setup(null);
         TestDriver.printTestCase("TC000", "TestGameDriver. setup",true, true);
         
-        driver.showNewGameDisplay(null);
+        driver.showNewGameDisplay();
         TestDriver.printTestCase("TC000", "TestGameDriver. showNewGameDisplayCount", 1, driver.showNewGameDisplayCount);
 
-        driver.showGrid(null);
-        TestDriver.printTestCase("TC000", "TestGameDriver. showGridCount", 1, driver.showGridCount);
 
-        driver.showGuessFailed(null);
+        driver.showGuessFailed(1, 2);
         TestDriver.printTestCase("TC000", "TestGameDriver. showGuessFailedCount", 1, driver.showGuessFailedCount);
 
-        driver.showGuessSuccess(null);
+        driver.showGuessSuccess(1, 3);
         TestDriver.printTestCase("TC000", "TestGameDriver. showGuessSuccessCount", 1, driver.showGuessSuccessCount);
 
-        driver.getChoice(null);
-        TestDriver.printTestCase("TC000", "TestGameDriver. getChoiceCount", 1, driver.getChoiceCount);
 
-        driver.getGuessCell1(null);
+        driver.getGuessCell1();
         TestDriver.printTestCase("TC000", "TestGameDriver. getGuessCell1Count", 1, driver.getGuessCell1Count);
 
-        driver.getGuessCell2(null);
+        driver.getGuessCell2();
         TestDriver.printTestCase("TC000", "TestGameDriver. getGuessCell2Count", 1, driver.getGuessCell2Count);
 
-        driver.showException(null, new UnsupportedOperationException());
+        driver.showException(new UnsupportedOperationException());
         TestDriver.printTestCase("TC000", "TestGameDriver. showExceptionCount", 1, driver.showExceptionCount);
 
-        driver.showExit(null);
+        driver.showExit();
         TestDriver.printTestCase("TC000", "TestGameDriver. showExitCount", 1, driver.showExitCount);
 
         TestDriver.printTestCase("TC000", "TestGameDriver. print counts", true, driver.totalCounts() > 0);
@@ -205,6 +198,7 @@ public class TestGameDriver implements GameDriver {
         driver.cleanup();
         TestDriver.printTestCase("TC000", "TestGameDriver. cleanup",true, true);
     }
+
 
 
 }

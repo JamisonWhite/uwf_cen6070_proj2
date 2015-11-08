@@ -23,5 +23,5 @@ public class Config {
     /**
      * Number of seconds to memorize
      */
-    public static final int MemorizeSeconds = 5;
+    public static final int MemorizeSeconds = 1;
 }
