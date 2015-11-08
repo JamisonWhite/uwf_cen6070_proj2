@@ -37,6 +37,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     //=============================================
     // Attributes - Instance variables
     //=============================================
+    
     private JMenuBar menubar;
     private JMenuItem fileMenuItem; // main file menu
     private JMenuItem resetMenuItem; // To reset the application grid
@@ -50,10 +51,12 @@ public class GuiGameDriver extends JFrame implements GameDriver {
 
     private int guess1;
     private int guess2;
+    private String choice;
 
     //=============================================
     // Static Attributes/variables
     //=============================================
+    
     private static final int MIN_FRAME_WIDTH = 350;
     private static final int MIN_FRAME_HEIGHT = 350;
 
@@ -69,6 +72,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     // =============================================
     // Private Implementation Methods
     // =============================================
+    
     // <editor-fold defaultstate="collapsed" desc="createMenuBar">
     /**
      * Construct the main menu at the top of the application
@@ -170,6 +174,12 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     }
     // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="redrawGameBoard">
+    /**
+     * Redraws the gameboard with the specified grid data
+     *
+     * @param gridData Could be the displayGrid or the dataGrid
+     */
     private void redrawGameBoard(String[] gridData) {
         Integer size = ((Number) Math.sqrt(gridData.length)).intValue();
         int gameButtonIndex = 0;
@@ -182,7 +192,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
             }
         }
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="setup">
     /**
      * Setup the GUI elements
      */
@@ -209,7 +221,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         setVisible(true);
         setResizable(true);
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="showNewGameDisplay">
     /**
      * Show new game message and time limited data grid
      *
@@ -232,7 +246,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
             }
         }
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="showGrid">
     /**
      * Show the data grid
      *
@@ -246,7 +262,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
             this.redrawGameBoard(data.getDisplayGrid(this.guess1, this.guess2));
         }
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="getChoice">
     /**
      * Get users choice
      *
@@ -267,8 +285,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         }
         return choice;
     }
-    private String choice;
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="showExit">
     /**
      * Show exit screen
      *
@@ -283,7 +302,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
             Logger.getLogger(GuiGameDriver.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="getGuessCell1">
     /**
      * Get last cell1 guess
      *
@@ -294,7 +315,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     public int getGuessCell1(GameGrid data) {
         return this.guess1;
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="getGuessCell2">
     /**
      * Get last cell2 guess
      *
@@ -305,7 +328,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     public int getGuessCell2(GameGrid data) {
         return this.guess2;
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="showGuessSuccess">
     /**
      * Show success message
      *
@@ -315,7 +340,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     public void showGuessSuccess(GameGrid data) {
         this.gameStatus.setText("Good Guess!");
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="showGuessFailed">
     /**
      * Show failed message
      *
@@ -325,7 +352,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     public void showGuessFailed(GameGrid data) {
         this.gameStatus.setText("Sorry...");
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="showException">
     /**
      * Show exception message
      *
@@ -336,15 +365,19 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     public void showException(GameGrid data, Exception ex) {
         this.gameStatus.setText("Error: " + ex.getMessage());
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="showException">
     @Override
     public void cleanup() {
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
+    // </editor-fold>
 
     // =============================================
     // Event Listener classes
     // =============================================
+    
     // <editor-fold defaultstate="collapsed" desc="ResetMenuListener">
     /**
      * Event handler for the Reset Menu option
