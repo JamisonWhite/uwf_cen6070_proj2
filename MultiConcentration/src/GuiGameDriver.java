@@ -98,8 +98,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         this.fileMenuItem.add(this.resetMenuItem);
         this.fileMenuItem.add(this.exitMenuItem);
         this.menubar.add(this.fileMenuItem);
-
         setJMenuBar(menubar);
+        
+        assert getJMenuBar() != null;
     }
     // </editor-fold>
 
@@ -108,17 +109,25 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      * Construct the game board in the center of the application
      */
     private void createGameBoard(GameGrid data) {
+        assert data != null;
+        assert this.gameBoard != null;
+        
+        //TODO assert: Determine if next line should stay or Assert modified
         if (this.gameBoard != null)
             return;
         
         this.gameBoard = new JPanel();
+        assert this.gameBoard != null;
+        
         int gameButtonIndex = 1;
         Integer size = ((Number) Math.sqrt(data.getSize())).intValue();
+        assert size > 0;
 
         // Set the application window dimensions and don't allow resizing
         int generatedGameBoardWidth = (64 * size);
         int generatedGameBoardHeight = (32 * size) + 50;
-
+        
+        //TODO assert: MAX's?
         if (generatedGameBoardWidth < MIN_FRAME_WIDTH) {
             if (generatedGameBoardHeight < MIN_FRAME_HEIGHT) {
                 setSize(MIN_FRAME_WIDTH, MIN_FRAME_HEIGHT);
@@ -140,6 +149,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         this.gameButtons = new ArrayList<JButton>();
 
         // Loop through elements.
+        assert size > 1; //Min Size is 2x2
         for (int i = 0; i < size; i++) {
 
             for (int j = 0; j < size; j++) {
@@ -181,10 +191,15 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      * @param gridData Could be the displayGrid or the dataGrid
      */
     private void redrawGameBoard(String[] gridData) {
+        assert gridData != null;
+        assert gridData.length > 3;  //Min Size is 2x2 (sqrt(4))
+        assert this.gameButtons.isEmpty() == false;
+        
         Integer size = ((Number) Math.sqrt(gridData.length)).intValue();
         int gameButtonIndex = 0;
 
         // Loop through elements.
+        assert size > 1; //Min Size is 2x2
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 this.gameButtons.get(gameButtonIndex).setText(String.format("%5s", gridData[gameButtonIndex]));
@@ -202,7 +217,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     public void setup() {
 
         this.guess1 = -1;
+        assert this.guess1 < 0;
         this.guess2 = -1;
+        assert this.guess2 < 0;
 
         // Set application title and exit button
         setTitle("The Multi-Concentration Game");
@@ -232,6 +249,23 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     @Override
     public void showNewGameDisplay(GameGrid data) {
 
+        //TODO assert: This should probably throw an IllegalArgumentException per 
+        //"By convention, preconditions on public methods are enforced by explicit checks that throw particular, specified exceptions."
+        //This would apply to all Public Methods of the interface
+        /** EXAMPLE
+  * Sets the refresh rate.
+  *
+  * @param  rate refresh rate, in frames per second.
+  * @throws IllegalArgumentException if rate <= 0 or
+  * rate > MAX_REFRESH_RATE.
+
+public void setRefreshRate(int rate) {
+  // Enforce specified precondition in public method
+  if (rate <= 0 || rate > MAX_REFRESH_RATE)
+    throw new IllegalArgumentException("Illegal rate: " + rate);
+    setRefreshInterval(1000/rate);
+  }*/
+        
         this.gameStatus.setText("Memorize the above grid!");
         this.createGameBoard(data);
 
@@ -367,7 +401,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     }
     // </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="showException">
+    // <editor-fold defaultstate="collapsed" desc="cleanup">
     @Override
     public void cleanup() {
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
