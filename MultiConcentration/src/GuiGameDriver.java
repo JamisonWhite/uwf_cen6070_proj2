@@ -45,10 +45,6 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     private JPanel statusBar;
     private JLabel gameStatus;
 
-    /**
-     * Generate random speed for the gamegrid
-     */
-    private Random gridGenerator;
 
     private GameGrid data;
     private Boolean resetRequested;
@@ -72,7 +68,6 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     public GuiGameDriver() {
         this.resetColorButton = new JButton();
-        this.gridGenerator = new Random();
     }
     // </editor-fold>
 
@@ -249,10 +244,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      * Reset the gameboard to default state
      */
     private void resetGameBoard() {
-        String[] gridData = data.getDataGrid();
-
-        int dx = 1 + this.gridGenerator.nextInt(GuiGameDriver.VARIANCE);
-        data.initializeGrids(dx);
+        data.initializeGrids();
         this.gameButtonsAnswered = new Boolean[data.getSize()];
         Arrays.fill(this.gameButtonsAnswered, Boolean.FALSE);
 
