@@ -91,6 +91,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         this.menubar.add(this.fileMenuItem);
 
         setJMenuBar(menubar);
+        
+        assert getJMenuBar() != null;
     }
     // </editor-fold>
 
@@ -99,8 +101,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      * Construct the game board in the center of the application
      */
     private void createGameBoard(GameGrid data) {
-        if (this.gameBoard != null) {
-            return;
+        if (data== null) {
+            throw new IllegalArgumentException("GameGrid may not be null.");
         }
 
         this.gameBoard = new JPanel();
