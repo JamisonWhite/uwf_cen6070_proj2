@@ -540,8 +540,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         driver.getGuessCell2();
         TestDriver.printTestCase("TC000", "GuiGameDriver. getGuessCell2", -1, -1);
 
-        driver.getChoice();
-        TestDriver.printTestCase("TC000", "GuiGameDriver. getChoice", "Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ", driver.gameStatus.getText());
+//        driver.getChoice();
+//        TestDriver.printTestCase("TC000", "GuiGameDriver. getChoice", "Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ", driver.gameStatus.getText());
 
         driver.showExit();
         TestDriver.printTestCase("TC000", "GuiGameDriver. showExit", "Game Over", driver.gameStatus.getText().trim());
