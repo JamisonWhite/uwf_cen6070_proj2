@@ -48,6 +48,14 @@ public class GameGrid {
     }
 
     /**
+     * Get the data grid
+     *
+     * @return
+     */
+    public Boolean[] getIsFoundGrid() {
+        return isFoundGrid.clone();
+    }
+    /**
      * Get the display grid
      *
      * @return
