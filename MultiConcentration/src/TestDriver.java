@@ -14,8 +14,11 @@ public class TestDriver {
      * Execute all class tests
      * @param args 
      */
-    public static void main(String[] args) {
-        
+    public static void main(String[] args) throws IllegalArgumentException {
+        if (args.length != 2){
+            throw new IllegalArgumentException("Missing Args.");
+        } //replaced assert precondition
+
         args = new String[] {"-test","4"};
         MultiConcentration.main(args);
         MultiConcentration.classTest();
@@ -28,8 +31,6 @@ public class TestDriver {
         
         printTestCase("TC000", "TestDriver. Code coverage test for positive test case.", true, true);
         printTestCase("TC000", "TestDriver. Code coverage test for negative test case. (This is not really a failure.)", true, false);
-        
-        assert args.length > 0;
     }
     
     /**
