@@ -213,6 +213,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     @Override
     public void showNewGameDisplay() {
 
+        this.guess1 = -1;
+        this.guess2 = -1;
         this.gameStatus.setText("Memorize the above grid!");
         this.createGameBoard(data);
 
@@ -270,6 +272,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void showExit() {
+        this.guess1 = -1;
+        this.guess2 = -1;
         this.gameStatus.setText("Game Over");
         try {
             Thread.sleep(1000);
@@ -330,6 +334,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void showException(Exception ex) {
+        this.guess1 = -1;
+        this.guess2 = -1;
         this.redrawGameBoard(data.getDisplayGrid());
         this.gameStatus.setText("Error: " + ex.getMessage());
     }
