@@ -6,7 +6,7 @@ import java.util.Queue;
  * Test game driver uses predefined choices and counts number of times each
  * method is called.
  *
- * @author jwhite
+ * @author jwhiteasdf
  */
 public class TestGameDriver implements GameDriver {
 
@@ -42,14 +42,15 @@ public class TestGameDriver implements GameDriver {
 
     @Override
     public Boolean isGuessRequested() {
+        showIsGuessRequested++;
         return false;
     }
+    public int showIsGuessRequested;
 
     @Override
     public void showNewGameDisplay() {
         showNewGameDisplayCount++;
     }
-
     public int showNewGameDisplayCount;
 
 
