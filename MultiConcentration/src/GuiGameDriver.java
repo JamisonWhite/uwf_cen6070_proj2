@@ -176,6 +176,15 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     private Boolean exitRequested;
     private Boolean guessRequested;
 
+    private void resetChoices() {        
+        this.guess1 = -1;
+        this.guess2 = -1;
+        exitRequested = false;
+        resetRequested = false;
+        guessRequested = false;
+    }
+    
+    
     /**
      * Setup the GUI elements
      */
@@ -184,9 +193,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         if (data == null) {
             throw new IllegalArgumentException("Game grid may not be null.");
         }
+        resetChoices();
         this.data = data;
-        this.guess1 = -1;
-        this.guess2 = -1;
 
         // Set application title and exit button
         setTitle("The Multi-Concentration Game");
@@ -212,9 +220,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void showNewGameDisplay() {
-
-        this.guess1 = -1;
-        this.guess2 = -1;
+        resetChoices();
         this.gameStatus.setText("Memorize the above grid!");
         this.createGameBoard(data);
 
@@ -254,9 +260,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     @Override
     public void getChoice() {
         //ugh, tight loop.
-        exitRequested = false;
-        resetRequested = false;
-        guessRequested = false;
+        resetChoices();
         try {
             while (!(exitRequested || resetRequested || guessRequested)) {
                 Thread.sleep(5);
@@ -272,14 +276,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void showExit() {
-        this.guess1 = -1;
-        this.guess2 = -1;
+        resetChoices();
         this.gameStatus.setText("Game Over");
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(GuiGameDriver.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /**
@@ -308,8 +306,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void showGuessSuccess(int cell1, int cell2) {
-        this.guess1 = -1;
-        this.guess2 = -1;
+        resetChoices();
         this.redrawGameBoard(data.getDisplayGrid(cell1, cell2));
         this.gameStatus.setText("Good Guess!");
     }
@@ -320,8 +317,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void showGuessFailed(int cell1, int cell2) {
-        this.guess1 = -1;
-        this.guess2 = -1;
+        resetChoices();
         this.redrawGameBoard(data.getDisplayGrid(cell1, cell2));
         this.gameStatus.setText("Sorry...");
     }
@@ -334,8 +330,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void showException(Exception ex) {
-        this.guess1 = -1;
-        this.guess2 = -1;
+        resetChoices();
         this.redrawGameBoard(data.getDisplayGrid());
         this.gameStatus.setText("Error: " + ex.getMessage());
     }
