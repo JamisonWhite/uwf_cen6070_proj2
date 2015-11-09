@@ -14,7 +14,7 @@ public class GameGrid {
      * Initialize grid
      * @param size 
      */
-    public GameGrid(int size) {
+    public GameGrid(int size) throws IllegalArgumentException {
         if (size < 2 || size >= Config.MaxGridSize) {
             throw new IllegalArgumentException("Size out of range. 2-" + Config.MaxGridSize);
         }
@@ -35,7 +35,10 @@ public class GameGrid {
      * @return
      */
     public int getSize() {
-        return size;
+        int retVal = size;
+        
+        assert retVal > 0; //assert postcondition
+        return retVal;
     }
 
     /**
@@ -67,6 +70,8 @@ public class GameGrid {
                 result[i] = dataGrid[i];
             }
         }
+        
+        assert result.length > 0; //assert postcondition
         return result;
     }
 
@@ -84,6 +89,8 @@ public class GameGrid {
                 result[i] = dataGrid[i];
             }
         }
+        
+        assert result.length > 0; //assert postcondition
         return result;
     }
 
@@ -93,10 +100,14 @@ public class GameGrid {
      * @param cell
      * @return
      */
-    public Boolean isCellFound(int cell) {
+    public Boolean isCellFound(int cell) throws IllegalArgumentException {
         if (cell < 0 || cell >= size) {
             throw new IllegalArgumentException("Cell out of range.");
         }
+        
+        Boolean retVal = isFoundGrid[cell];
+        assert retVal != null;
+        
         return isFoundGrid[cell];
     }
 
@@ -118,6 +129,7 @@ public class GameGrid {
         if (cell1 == cell2) {
             throw new IllegalArgumentException("Cell1 and cell2 must not be the same cell.");
         }
+        
         if (dataGrid[cell1].equals(dataGrid[cell2])) {
             isFoundGrid[cell1] = true;
             isFoundGrid[cell2] = true;
@@ -154,11 +166,19 @@ public class GameGrid {
      *
      * @param seed
      */
-    public void initializeGrids(int seed) {
-        assert dataGrid.length > 0;
-        assert dataGrid.length == size;
-        assert dataGrid.length == displayGrid.length;
-        assert displayGrid.length == isFoundGrid.length;
+    public void initializeGrids(int seed) throws IllegalArgumentException {
+        if (dataGrid.length == 0){
+            throw new IllegalArgumentException("dataGrid.length > 0");
+        } //replaced assert precondition
+        if (dataGrid.length != size) {
+            throw new IllegalArgumentException("dataGrid.length == size");
+        } //replaced assert precondition
+        if (dataGrid.length != displayGrid.length) {
+            throw new IllegalArgumentException("dataGrid.length == displayGrid.length");
+        } //replaced assert precondition
+        if (displayGrid.length != isFoundGrid.length) {
+            throw new IllegalArgumentException("displayGrid.length == isFoundGrid.length");
+        } //replaced assert precondition
         
         //initialize values
         char data = 'A';
@@ -204,7 +224,6 @@ public class GameGrid {
                 }
             }
         }
-        
     }
 
     /**
@@ -252,7 +271,6 @@ public class GameGrid {
                 "GameGrid. Brute force solve a GameGrid", 
                 true, 
                 solveTest(out));
-        
     }
 
     /**
@@ -294,6 +312,7 @@ public class GameGrid {
             }
         }
         out.println("\r\nSolved in " + guesses + " guesses.\r\n");
+        
         return true;
     }
 
@@ -310,7 +329,5 @@ public class GameGrid {
             }
             out.println();
         }
-
     }
-
 }
