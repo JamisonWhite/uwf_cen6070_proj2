@@ -29,9 +29,7 @@ import javax.swing.SwingConstants;
  */
 public class GuiGameDriver extends JFrame implements GameDriver {
 
-    //=============================================
-    // Attributes - Instance variables
-    //=============================================
+    // <editor-fold defaultstate="collapsed" desc="Attributes - Instance variables">
     private JMenuBar menubar;
     private JMenuItem fileMenuItem; // main file menu
     private JMenuItem resetMenuItem; // To reset the application grid
@@ -43,14 +41,20 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     private JPanel statusBar;
     private JLabel gameStatus;
 
+    private GameGrid data;
+    private Boolean resetRequested;
+    private Boolean exitRequested;
+    private Boolean guessRequested;
+
     private int guess1;
     private int guess2;
+    private Boolean guessFailed;
+    // </editor-fold>
 
-    //=============================================
-    // Static Attributes/variables
-    //=============================================
+    // <editor-fold defaultstate="collapsed" desc="Static Attributes/variables">
     private static final int MIN_FRAME_WIDTH = 350;
     private static final int MIN_FRAME_HEIGHT = 350;
+    // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Default Constructor">
     /**
@@ -64,6 +68,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     // =============================================
     // Private Implementation Methods
     // =============================================
+    
     // <editor-fold defaultstate="collapsed" desc="createMenuBar">
     /**
      * Construct the main menu at the top of the application
@@ -167,17 +172,45 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     }
     // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="redrawGameBoard">
+    /**
+     * Redraws the gameboard with the specified grid data
+     *
+     * @param gridData Could be the displayGrid or the dataGrid
+     */
     private void redrawGameBoard(String[] gridData) {
         for (int i = 0; i < gridData.length; i++) {
             this.gameButtons.get(i).setText(String.format("%5s", gridData[i]));
         }
     }
+    // </editor-fold>
 
-    private GameGrid data;
-    private Boolean resetRequested;
-    private Boolean exitRequested;
-    private Boolean guessRequested;
+    // <editor-fold defaultstate="collapsed" desc="disableGameBoard">
+    /**
+     * Disable the gameboard so the user can't interact
+     */
+    private void disableGameBoard() {
+        for (JButton gameButton : this.gameButtons) {
+            gameButton.setEnabled(false);
+        }
+    }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="enableGameBoard">
+    /**
+     * Enable the gameboard if it has been disabled
+     */
+    private void enableGameBoard() {
+        for (JButton gameButton : this.gameButtons) {
+            gameButton.setEnabled(true);
+        }
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="resetChoices">
+    /**
+     * Reset the user's selection choices after a match or mismatch
+     */
     private void resetChoices() {        
         this.guess1 = -1;
         this.guess2 = -1;
@@ -185,8 +218,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         resetRequested = false;
         guessRequested = false;
     }
-    
-    
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="setup">
     /**
      * Setup the GUI elements
      */
@@ -195,6 +229,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         if (data == null) {
             throw new IllegalArgumentException("Game grid may not be null.");
         }
+        
         resetChoices();
         this.data = data;
 
@@ -215,7 +250,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         setVisible(true);
         setResizable(true);
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="showNewGameDisplay">
     /**
      * Show new game message and time limited data grid
      *
@@ -227,6 +264,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         this.createGameBoard(data);
 
         this.redrawGameBoard(data.getDataGrid());
+        this.disableGameBoard();
 
         for (int i = Config.MemorizeSeconds; i >= 0; i--) {
             try {
@@ -236,9 +274,12 @@ public class GuiGameDriver extends JFrame implements GameDriver {
                 Logger.getLogger(TextGameDriver.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
         this.redrawGameBoard(data.getDisplayGrid());
+        this.enableGameBoard();
         this.gameStatus.setText("Select a pair of numbers.");
     }
+    // </editor-fold>
 
     @Override
     public Boolean isResetRequested() {
@@ -255,6 +296,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         return guessRequested;
     }
 
+    // <editor-fold defaultstate="collapsed" desc="getChoice">
     /**
      * Get users choice
      *
@@ -271,7 +313,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
             Logger.getLogger(GuiGameDriver.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="showExit">
     /**
      * Show exit screen
      *
@@ -281,7 +325,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         resetChoices();
         this.gameStatus.setText("Game Over");
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="getGuessCell1">
     /**
      * Get last cell1 guess
      *
@@ -291,7 +337,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     public int getGuessCell1() {
         return this.guess1 - 1;
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="getGuessCell2">
     /**
      * Get last cell2 guess
      *
@@ -301,7 +349,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     public int getGuessCell2() {
         return this.guess2 - 1;
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="showGuessSuccess">
     /**
      * Show success message
      *
@@ -312,7 +362,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         this.redrawGameBoard(data.getDisplayGrid(cell1, cell2));
         this.gameStatus.setText("Good Guess!");
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="showGuessFailed">
     /**
      * Show failed message
      *
@@ -323,8 +375,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         this.redrawGameBoard(data.getDisplayGrid(cell1, cell2));
         this.gameStatus.setText("Sorry...");
     }
-    private Boolean guessFailed; //todo use this ...
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="showException">
     /**
      * Show exception message
      *
@@ -336,7 +389,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         this.redrawGameBoard(data.getDisplayGrid());
         this.gameStatus.setText("Error: " + ex.getMessage());
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="cleanup">
     /**
      *
      */
@@ -344,44 +399,17 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     public void cleanup() {
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
+    // </editor-fold>
 
     // =============================================
     // Event Listener classes
     // =============================================
+    
     // <editor-fold defaultstate="collapsed" desc="ResetMenuListener">
-    private class CellButtonListener implements ActionListener {
-
-        public CellButtonListener() {
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            String action = ae.getActionCommand();
-            int x;
-            String text = action.split("\\s")[0].trim();
-            x = Integer.parseInt(text);
-
-            if (x >= 0) {
-                if (guess1 < 0) {
-                    guess1 = x;
-                } else if (guess2 < 0) {
-                    guess2 = x;
-                    guessRequested = true;
-                } else {
-                    guessRequested = true;
-                }
-            } else {
-                guess1 = -1;
-                guess2 = -1;
-            }
-        }
-    }
-
     /**
      * Event handler for the Reset Menu option
      */
     private class ResetMenuListener implements ActionListener {
-
         /**
          * Log to a selected file and/or the database when the Log Button is
          * clicked
@@ -409,6 +437,39 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         @Override
         public void actionPerformed(ActionEvent e) {
             exitRequested = true;
+        }
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="GameButtonClickListener">
+    /**
+     * Event handler for when a game tile/button is clicked
+     */
+    private class CellButtonListener implements ActionListener {
+
+        public CellButtonListener() {
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            String action = ae.getActionCommand();
+            int x;
+            String text = action.split("\\s")[0].trim();
+            x = Integer.parseInt(text);
+
+            if (x >= 0) {
+                if (guess1 < 0) {
+                    guess1 = x;
+                } else if (guess2 < 0) {
+                    guess2 = x;
+                    guessRequested = true;
+                } else {
+                    guessRequested = true;
+                }
+            } else {
+                guess1 = -1;
+                guess2 = -1;
+            }
         }
     }
     // </editor-fold>
