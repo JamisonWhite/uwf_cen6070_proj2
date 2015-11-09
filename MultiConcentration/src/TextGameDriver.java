@@ -76,19 +76,19 @@ public class TextGameDriver implements GameDriver {
     public Boolean isResetRequested() {
         return resetRequested;
     }
-    private Boolean resetRequested;
+    private Boolean resetRequested = false;
 
     @Override
     public Boolean isExitRequested() {
         return exitRequested;
     }
-    private Boolean exitRequested;
+    private Boolean exitRequested = false;
 
     @Override
     public Boolean isGuessRequested() {
         return guessRequested;
     }
-    private Boolean guessRequested;
+    private Boolean guessRequested = false;
 
     /**
      * Get users choice
@@ -240,7 +240,17 @@ public class TextGameDriver implements GameDriver {
         driver.showNewGameDisplay();
         result = outputStream.toString("UTF-8");
         TestDriver.printTestCase("TC000", "TextGameDriver. showNewGameDisplay", true, result.length() > 0);
-
+        
+        TestDriver.printTestCase("TC000", "TextGameDriver. isExitRequested", false, driver.isExitRequested());
+        
+        TestDriver.printTestCase("TC000", "TextGameDriver. isGuessRequested", false, driver.isGuessRequested());
+        
+        TestDriver.printTestCase("TC000", "TextGameDriver. isResetRequested", false, driver.isResetRequested());
+        
+        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell1", true, driver.getGuessCell1() < 0);
+        
+        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell2", true, driver.getGuessCell2() < 0);
+        
         outputStream.reset();
         driver.showGuessFailed(1, 2);
         result = outputStream.toString("UTF-8");
@@ -261,11 +271,6 @@ public class TextGameDriver implements GameDriver {
         result = outputStream.toString("UTF-8");
         TestDriver.printTestCase("TC000", "TextGameDriver. showExit", true, result.trim().endsWith("Game Over"));
 
-        driver.getGuessCell1();
-        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell1", -1, -1);
-
-        driver.getGuessCell2();
-        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell2", -1, -1);
 
         outputStream.reset();
         driver.getChoice();
