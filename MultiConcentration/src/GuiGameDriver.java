@@ -117,18 +117,18 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         if (data == null) {
             throw new IllegalArgumentException("GameGrid may not be null.");
         }
-
         if (this.gameBoard != null) {
             return;
         }
+        
 
+        //Create the panel
         this.gameBoard = new JPanel();
         assert this.gameBoard != null;
 
+        // Set the application window dimensions and don't allow resizing
         Integer size = ((Number) Math.sqrt(data.getSize())).intValue();
         assert size > 0;
-
-        // Set the application window dimensions and don't allow resizing
         int generatedGameBoardWidth = (64 * size);
         int generatedGameBoardHeight = (32 * size) + 50;
 
@@ -146,13 +146,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
             }
         }
 
-        GridLayout layout = new GridLayout(size, size);
-
-        this.gameBoard.setLayout(layout);
-        this.gameButtons = new ArrayList<JButton>();
-
-        // Loop through elements.
+        //Create the buttons
         assert data.getSize() > 1; //Min Size is 2x2
+        this.gameButtons = new ArrayList<JButton>();
         for (int i = 0; i < data.getSize(); i++) {
             JButton button = new JButton();
             if (!"".equals(data.getDataGrid()[i])) {
@@ -163,6 +159,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
             this.gameBoard.add(this.gameButtons.get(i));
         }
 
+        //do the layout
+        GridLayout layout = new GridLayout(size, size);
+        this.gameBoard.setLayout(layout);
         this.add(this.gameBoard, BorderLayout.CENTER);
     }
     // </editor-fold>
@@ -196,9 +195,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     private void redrawGameBoard(String[] gridData) {
         assert gridData != null;
         assert gridData.length > 3;  //Min Size is 2x2 (sqrt(4))
-
         for (int i = 0; i < gridData.length; i++) {
-            this.gameButtons.get(i).setText(String.format("%5s", gridData[i]));
+            JButton button = this.gameButtons.get(i);
+            button.setText(String.format("%5s", gridData[i]));
         }
     }
     // </editor-fold>
@@ -239,40 +238,6 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     }
     // </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="resetGameBoard">
-    /**
-     * Reset the gameboard to default state
-     */
-    private void resetGameBoard() {
-        data.initializeGrids();
-        this.gameButtonsAnswered = new Boolean[data.getSize()];
-        Arrays.fill(this.gameButtonsAnswered, Boolean.FALSE);
-
-        for (int i = 0; i < gameButtons.size(); i++) {
-            this.gameButtons.get(i).setEnabled(true);
-            this.gameButtons.get(i).setBackground(this.resetColorButton.getBackground());
-        }
-
-        resetChoices();
-        this.gameStatus.setText("Memorize the above grid!");
-
-        this.redrawGameBoard(data.getDataGrid());
-        this.disableGameBoard();
-
-        for (int i = Config.MemorizeSeconds; i >= 0; i--) {
-            try {
-                this.gameStatus.setText("Memorize the above grid! " + i);
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(TextGameDriver.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        this.redrawGameBoard(data.getDisplayGrid());
-        this.enableGameBoard();
-        this.gameStatus.setText("Select a pair of numbers.");
-    }
-    // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="setup">
     /**
@@ -314,11 +279,13 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     @Override
     public void showNewGameDisplay() {
         resetChoices();
-        this.gameStatus.setText("Memorize the above grid!");
-        this.createGameBoard(data);
-        this.gameButtonsAnswered = new Boolean[data.getSize()];
-        Arrays.fill(this.gameButtonsAnswered, Boolean.FALSE);
-
+        data.initializeGrids();
+        this.createGameBoard(data);    
+        
+        for (int i = 0; i < gameButtons.size(); i++) {
+            this.gameButtons.get(i).setEnabled(false);
+            this.gameButtons.get(i).setBackground(this.resetColorButton.getBackground());
+        }        
         this.redrawGameBoard(data.getDataGrid());
         this.disableGameBoard();
 
@@ -330,7 +297,6 @@ public class GuiGameDriver extends JFrame implements GameDriver {
                 Logger.getLogger(TextGameDriver.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
         this.redrawGameBoard(data.getDisplayGrid());
         this.enableGameBoard();
         this.gameStatus.setText("Select a pair of numbers.");
@@ -442,9 +408,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     public void showGuessFailed(int cell1, int cell2) {
         resetChoices();
         this.enableGameBoard();
-        this.gameButtons.get(cell1).setBackground(resetColorButton.getBackground());
+        this.gameButtons.get(cell1).setBackground(this.resetColorButton.getBackground());
         this.gameButtons.get(cell1).setEnabled(true);
-        this.gameButtons.get(cell2).setBackground(resetColorButton.getBackground());
+        this.gameButtons.get(cell2).setBackground(this.resetColorButton.getBackground());
         this.gameButtons.get(cell1).setEnabled(true);
         this.redrawGameBoard(data.getDisplayGrid(cell1, cell2));
         this.gameStatus.setText("Sorry...");
@@ -493,7 +459,6 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         @Override
         public void actionPerformed(ActionEvent e) {
             resetRequested = true;
-            resetGameBoard();
         }
     }
     // </editor-fold>
@@ -529,12 +494,14 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         public void actionPerformed(ActionEvent ae) {
             JButton button = (JButton) ae.getSource();
             String action = ae.getActionCommand();
-            int x;
-            String text = action.split("\\s")[0].trim();
-            x = Integer.parseInt(text);
+            String[] text = action.split("\\s");
+            if (text.length != 2)
+                    return;
+            int x = Integer.parseInt(text[0].trim());
+            button.setText(text[1]);
 
             if (x >= 0) {
-                button.setBackground(Color.ORANGE); //todo not working on OSX
+                button.setBackground(Color.ORANGE); //todo not working on OSX                
                 if (guess1 < 0) {
                     guess1 = x;
                 } else if (guess2 < 0) {
