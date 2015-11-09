@@ -102,7 +102,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
 
         setJMenuBar(menubar);
 
-        assert getJMenuBar() != null;
+        assert getJMenuBar() != null; //assert postcondition
     }
     // </editor-fold>
 
@@ -111,8 +111,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      * Construct the game board in the center of the application
      */
     private void createGameBoard(GameGrid data) {
-        assert data != null;
-        assert this.gameBoard == null;
+        assert data != null; //assert precondition
+        assert this.gameBoard == null; //assert precondition //Jaime please review OnReset
 
         if (data == null) {
             throw new IllegalArgumentException("GameGrid may not be null.");
@@ -120,15 +120,15 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         if (this.gameBoard != null) {
             return;
         }
-        
 
         //Create the panel
         this.gameBoard = new JPanel();
-        assert this.gameBoard != null;
+        assert this.gameBoard != null; //assert run-time
 
         // Set the application window dimensions and don't allow resizing
         Integer size = ((Number) Math.sqrt(data.getSize())).intValue();
-        assert size > 0;
+        assert size > 0; //assert precondition
+        
         int generatedGameBoardWidth = (64 * size);
         int generatedGameBoardHeight = (32 * size) + 50;
 
@@ -147,7 +147,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         }
 
         //Create the buttons
-        assert data.getSize() > 1; //Min Size is 2x2
+        assert data.getSize() > 1; //assert run-time Min Size is 2x2
         this.gameButtons = new ArrayList<JButton>();
         for (int i = 0; i < data.getSize(); i++) {
             JButton button = new JButton();
@@ -193,8 +193,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      * @param gridData Could be the displayGrid or the dataGrid
      */
     private void redrawGameBoard(String[] gridData) {
-        assert gridData != null;
-        assert gridData.length > 3;  //Min Size is 2x2 (sqrt(4))
+        assert gridData != null; //assert precondition
+        assert gridData.length > 3; //assert run-time Min Size is 2x2 (sqrt(4))
+        
         for (int i = 0; i < gridData.length; i++) {
             JButton button = this.gameButtons.get(i);
             button.setText(String.format("%5s", gridData[i]));
@@ -207,6 +208,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      * Disable the game board so the user can't interact
      */
     private void disableGameBoard() {
+        assert this.gameButtons != null; //assert precondition
+        
         for (int i = 0; i < this.gameButtons.size(); i++) {
             //this.gameButtons.get(i).setEnabled(false);
         }
@@ -218,6 +221,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      * Enable the game board if it has been disabled
      */
     private void enableGameBoard() {
+        assert this.gameButtons != null; //assert precondition
+        
         Boolean[] isFound = this.data.getIsFoundGrid();
         for (int i = 0; i < this.gameButtons.size(); i++) {
             this.gameButtons.get(i).setEnabled(!isFound[i]);
@@ -237,7 +242,6 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         guessRequested = false;
     }
     // </editor-fold>
-
 
     // <editor-fold defaultstate="collapsed" desc="setup">
     /**
@@ -357,6 +361,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public int getGuessCell1() {
+        assert this.guess1 > -1; //assert precondition //Justin Please Review.
         return this.guess1 - 1;
     }
     // </editor-fold>
@@ -369,6 +374,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public int getGuessCell2() {
+        assert this.guess2 > -1; //assert precondition //Justin Please Review.
         return this.guess2 - 1;
     }
     // </editor-fold>
@@ -395,7 +401,6 @@ public class GuiGameDriver extends JFrame implements GameDriver {
             disableGameBoard();
             gameStatus.setText("Congratulations!  Reset to play again..");
         }
-
     }
     // </editor-fold>
 
@@ -509,9 +514,13 @@ public class GuiGameDriver extends JFrame implements GameDriver {
                     guessRequested = true;
                     disableGameBoard();
                 } else {
+                    assert guess1 >= 0; // assert invariant
+                    assert guess2 >= 0; // assert invariant
                     guessRequested = true;
                 }
             } else {
+                assert guess1 < 0; // assert invariant
+                assert guess2 < 0; // assert invariant
                 guess1 = -1;
                 guess2 = -1;
             }
