@@ -106,13 +106,22 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      * Construct the game board in the center of the application
      */
     private void createGameBoard(GameGrid data) {
+        assert data != null;
+        assert this.gameBoard == null;
+        
         if (data== null) {
             throw new IllegalArgumentException("GameGrid may not be null.");
         }
 
+        if (this.gameBoard != null)
+            return;
+        
         this.gameBoard = new JPanel();
+        assert this.gameBoard != null;
+        
         int gameButtonIndex = 1;
         Integer size = ((Number) Math.sqrt(data.getSize())).intValue();
+        assert size > 0;
 
         // Set the application window dimensions and don't allow resizing
         int generatedGameBoardWidth = (64 * size);
@@ -138,6 +147,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         this.gameButtons = new ArrayList<JButton>();
 
         // Loop through elements.
+        assert data.getSize() > 1; //Min Size is 2x2
         for (int i = 0; i < data.getSize(); i++) {
             JButton button = new JButton();
             if (!"".equals(data.getDataGrid()[i])) {
@@ -179,6 +189,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      * @param gridData Could be the displayGrid or the dataGrid
      */
     private void redrawGameBoard(String[] gridData) {
+        assert gridData != null;
+        assert gridData.length > 3;  //Min Size is 2x2 (sqrt(4))
+        
         for (int i = 0; i < gridData.length; i++) {
             this.gameButtons.get(i).setText(String.format("%5s", gridData[i]));
         }
