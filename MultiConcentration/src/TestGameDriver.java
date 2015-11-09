@@ -15,11 +15,11 @@ public class TestGameDriver implements GameDriver {
     private int cell2;
 
     private GameGrid data;
-    
+
     public TestGameDriver(Queue<String> choices) {
         this.choices = choices;
     }
-    
+
     @Override
     public void setup(GameGrid data) {
         assert choices != null;
@@ -27,32 +27,36 @@ public class TestGameDriver implements GameDriver {
 
     @Override
     public void cleanup() {
-        //nothing
+        cleanupCount++;
     }
+    public int cleanupCount;
 
     @Override
     public Boolean isResetRequested() {
+        isResetRequestedCount++;
         return false;
     }
+    public int isResetRequestedCount;
 
     @Override
     public Boolean isExitRequested() {
+        isExitRequestedCount++;
         return false;
     }
+    public int isExitRequestedCount;
 
     @Override
     public Boolean isGuessRequested() {
-        showIsGuessRequested++;
+        isGuessRequestedCount++;
         return false;
     }
-    public int showIsGuessRequested;
+    public int isGuessRequestedCount;
 
     @Override
     public void showNewGameDisplay() {
         showNewGameDisplayCount++;
     }
     public int showNewGameDisplayCount;
-
 
     @Override
     public void showExit() {
@@ -62,9 +66,10 @@ public class TestGameDriver implements GameDriver {
 
     @Override
     public void getChoice() {
-        //todo 
+        getChoiceCount++;
     }
-    
+    public int getChoiceCount;
+
     @Override
     public int getGuessCell1() {
         getGuessCell1Count++;
@@ -106,6 +111,9 @@ public class TestGameDriver implements GameDriver {
      */
     public int totalCounts() {
         return showNewGameDisplayCount
+                + isExitRequestedCount
+                + isResetRequestedCount
+                + isGuessRequestedCount
                 + showGuessFailedCount
                 + showGuessSuccessCount
                 + getGuessCell1Count
@@ -119,6 +127,9 @@ public class TestGameDriver implements GameDriver {
      */
     public void printCounts() {
         System.out.println("showNewGameDisplayCount: " + showNewGameDisplayCount);
+        System.out.println("isExitRequestedCount: " + isExitRequestedCount);
+        System.out.println("isResetRequestedCount: " + isResetRequestedCount);
+        System.out.println("getGuessCell1Count: " + isGuessRequestedCount);
         System.out.println("getGuessCell1Count: " + getGuessCell1Count);
         System.out.println("getGuessCell2Count: " + getGuessCell2Count);
         System.out.println("showGuessFailedCount: " + showGuessFailedCount);
@@ -161,20 +172,17 @@ public class TestGameDriver implements GameDriver {
         choices.add("Q");
         TestGameDriver driver = new TestGameDriver(choices);
 
-        
         driver.setup(null);
-        TestDriver.printTestCase("TC000", "TestGameDriver. setup",true, true);
-        
+        TestDriver.printTestCase("TC000", "TestGameDriver. setup", true, true);
+
         driver.showNewGameDisplay();
         TestDriver.printTestCase("TC000", "TestGameDriver. showNewGameDisplayCount", 1, driver.showNewGameDisplayCount);
-
 
         driver.showGuessFailed(1, 2);
         TestDriver.printTestCase("TC000", "TestGameDriver. showGuessFailedCount", 1, driver.showGuessFailedCount);
 
         driver.showGuessSuccess(1, 3);
         TestDriver.printTestCase("TC000", "TestGameDriver. showGuessSuccessCount", 1, driver.showGuessSuccessCount);
-
 
         driver.getGuessCell1();
         TestDriver.printTestCase("TC000", "TestGameDriver. getGuessCell1Count", 1, driver.getGuessCell1Count);
@@ -197,9 +205,7 @@ public class TestGameDriver implements GameDriver {
         TestDriver.printTestCase("TC000", "TestGameDriver. initialize", 0, driver.totalCounts());
 
         driver.cleanup();
-        TestDriver.printTestCase("TC000", "TestGameDriver. cleanup",true, true);
+        TestDriver.printTestCase("TC000", "TestGameDriver. cleanup", true, true);
     }
-
-
 
 }
