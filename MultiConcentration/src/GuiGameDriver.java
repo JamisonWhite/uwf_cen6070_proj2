@@ -7,12 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -138,7 +133,10 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         // Loop through elements.
         for (int i = 0; i < data.getSize(); i++) {
             JButton button = new JButton();
-            button.addActionListener(new CellButtonListener());
+            if (!"".equals(data.getDataGrid()[i])) {
+                button.addActionListener(new CellButtonListener());
+                button.setActionCommand(data.getDisplayGrid()[i] + " " + data.getDataGrid()[i]);
+            }
             this.gameButtons.add(button);
             this.gameBoard.add(this.gameButtons.get(i));
         }
@@ -183,6 +181,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void setup(GameGrid data) {
+        if (data == null) {
+            throw new IllegalArgumentException("Game grid may not be null.");
+        }
         this.data = data;
         this.guess1 = -1;
         this.guess2 = -1;
@@ -226,6 +227,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
             }
         }
         this.redrawGameBoard(data.getDisplayGrid());
+        this.gameStatus.setText("Select a pair of numbers.");
     }
 
     @Override
@@ -250,7 +252,6 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     @Override
     public void getChoice() {
         //ugh, tight loop.
-        this.gameStatus.setText("Select a pair of numbers.");
         exitRequested = false;
         resetRequested = false;
         guessRequested = false;
@@ -284,9 +285,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public int getGuessCell1() {
-        int result = this.guess1 - 1; //consume the guess
-        this.guess1 = -1;
-        return result;
+        return this.guess1 - 1;
     }
 
     /**
@@ -296,9 +295,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public int getGuessCell2() {
-        int result = this.guess2 - 1; //consume the guess
-        this.guess2 = -1;
-        return result;
+        return this.guess2 - 1;
     }
 
     /**
@@ -307,13 +304,10 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void showGuessSuccess(int cell1, int cell2) {
+        this.guess1 = -1;
+        this.guess2 = -1;
         this.redrawGameBoard(data.getDisplayGrid(cell1, cell2));
         this.gameStatus.setText("Good Guess!");
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(GuiGameDriver.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /**
@@ -322,14 +316,12 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void showGuessFailed(int cell1, int cell2) {
+        this.guess1 = -1;
+        this.guess2 = -1;
         this.redrawGameBoard(data.getDisplayGrid(cell1, cell2));
         this.gameStatus.setText("Sorry...");
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(GuiGameDriver.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
+    private Boolean guessFailed; //todo use this ...
 
     /**
      * Show exception message
@@ -338,12 +330,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     @Override
     public void showException(Exception ex) {
+        this.redrawGameBoard(data.getDisplayGrid());
         this.gameStatus.setText("Error: " + ex.getMessage());
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex1) {
-            Logger.getLogger(GuiGameDriver.class.getName()).log(Level.SEVERE, null, ex1);
-        }
     }
 
     /**
@@ -365,21 +353,18 @@ public class GuiGameDriver extends JFrame implements GameDriver {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            JButton button = (JButton) ae.getSource();
-            String text = button.getText().trim();
+            String action = ae.getActionCommand();
             int x;
-            try {
-                x = Integer.parseInt(text);
-            } catch (NumberFormatException ex) {
-                x = -1;
-            }
+            String text = action.split("\\s")[0].trim();
+            x = Integer.parseInt(text);
+
             if (x >= 0) {
                 if (guess1 < 0) {
                     guess1 = x;
-                    gameStatus.setText("Guess: " + guess1);
                 } else if (guess2 < 0) {
                     guess2 = x;
-                    gameStatus.setText("Guess: " + guess1 + " " + guess2);
+                    guessRequested = true;
+                } else {
                     guessRequested = true;
                 }
             } else {
