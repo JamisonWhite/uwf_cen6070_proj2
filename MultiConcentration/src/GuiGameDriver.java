@@ -7,12 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -37,7 +32,6 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     //=============================================
     // Attributes - Instance variables
     //=============================================
-    
     private JMenuBar menubar;
     private JMenuItem fileMenuItem; // main file menu
     private JMenuItem resetMenuItem; // To reset the application grid
@@ -51,12 +45,10 @@ public class GuiGameDriver extends JFrame implements GameDriver {
 
     private int guess1;
     private int guess2;
-    private String choice;
 
     //=============================================
     // Static Attributes/variables
     //=============================================
-    
     private static final int MIN_FRAME_WIDTH = 350;
     private static final int MIN_FRAME_HEIGHT = 350;
 
@@ -72,7 +64,6 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     // =============================================
     // Private Implementation Methods
     // =============================================
-    
     // <editor-fold defaultstate="collapsed" desc="createMenuBar">
     /**
      * Construct the main menu at the top of the application
@@ -98,9 +89,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         this.fileMenuItem.add(this.resetMenuItem);
         this.fileMenuItem.add(this.exitMenuItem);
         this.menubar.add(this.fileMenuItem);
+
         setJMenuBar(menubar);
-        
-        assert getJMenuBar() != null;
     }
     // </editor-fold>
 
@@ -109,25 +99,18 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      * Construct the game board in the center of the application
      */
     private void createGameBoard(GameGrid data) {
-        assert data != null;
-        assert this.gameBoard != null;
-        
-        //TODO assert: Determine if next line should stay or Assert modified
-        if (this.gameBoard != null)
+        if (this.gameBoard != null) {
             return;
-        
+        }
+
         this.gameBoard = new JPanel();
-        assert this.gameBoard != null;
-        
         int gameButtonIndex = 1;
         Integer size = ((Number) Math.sqrt(data.getSize())).intValue();
-        assert size > 0;
 
         // Set the application window dimensions and don't allow resizing
         int generatedGameBoardWidth = (64 * size);
         int generatedGameBoardHeight = (32 * size) + 50;
-        
-        //TODO assert: MAX's?
+
         if (generatedGameBoardWidth < MIN_FRAME_WIDTH) {
             if (generatedGameBoardHeight < MIN_FRAME_HEIGHT) {
                 setSize(MIN_FRAME_WIDTH, MIN_FRAME_HEIGHT);
@@ -145,19 +128,17 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         GridLayout layout = new GridLayout(size, size);
 
         this.gameBoard.setLayout(layout);
-
         this.gameButtons = new ArrayList<JButton>();
 
         // Loop through elements.
-        assert size > 1; //Min Size is 2x2
-        for (int i = 0; i < size; i++) {
-
-            for (int j = 0; j < size; j++) {
-                //this.gameButtons.add(new JButton(Integer.toString(gameButtonIndex)));
-                this.gameButtons.add(new JButton());
-                this.gameBoard.add(this.gameButtons.get(gameButtonIndex - 1));
-                gameButtonIndex++;
+        for (int i = 0; i < data.getSize(); i++) {
+            JButton button = new JButton();
+            if (!"".equals(data.getDataGrid()[i])) {
+                button.addActionListener(new CellButtonListener());
+                button.setActionCommand(data.getDisplayGrid()[i] + " " + data.getDataGrid()[i]);
             }
+            this.gameButtons.add(button);
+            this.gameBoard.add(this.gameButtons.get(i));
         }
 
         this.add(this.gameBoard, BorderLayout.CENTER);
@@ -184,42 +165,36 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     }
     // </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="redrawGameBoard">
-    /**
-     * Redraws the gameboard with the specified grid data
-     *
-     * @param gridData Could be the displayGrid or the dataGrid
-     */
     private void redrawGameBoard(String[] gridData) {
-        assert gridData != null;
-        assert gridData.length > 3;  //Min Size is 2x2 (sqrt(4))
-        assert this.gameButtons.isEmpty() == false;
-        
-        Integer size = ((Number) Math.sqrt(gridData.length)).intValue();
-        int gameButtonIndex = 0;
-
-        // Loop through elements.
-        assert size > 1; //Min Size is 2x2
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                this.gameButtons.get(gameButtonIndex).setText(String.format("%5s", gridData[gameButtonIndex]));
-                gameButtonIndex++;
-            }
+        for (int i = 0; i < gridData.length; i++) {
+            this.gameButtons.get(i).setText(String.format("%5s", gridData[i]));
         }
     }
-    // </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="setup">
+    private GameGrid data;
+    private Boolean resetRequested;
+    private Boolean exitRequested;
+    private Boolean guessRequested;
+
+    private void resetChoices() {        
+        this.guess1 = -1;
+        this.guess2 = -1;
+        exitRequested = false;
+        resetRequested = false;
+        guessRequested = false;
+    }
+    
+    
     /**
      * Setup the GUI elements
      */
     @Override
-    public void setup() {
-
-        this.guess1 = -1;
-        assert this.guess1 < 0;
-        this.guess2 = -1;
-        assert this.guess2 < 0;
+    public void setup(GameGrid data) {
+        if (data == null) {
+            throw new IllegalArgumentException("Game grid may not be null.");
+        }
+        resetChoices();
+        this.data = data;
 
         // Set application title and exit button
         setTitle("The Multi-Concentration Game");
@@ -238,34 +213,14 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         setVisible(true);
         setResizable(true);
     }
-    // </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="showNewGameDisplay">
     /**
      * Show new game message and time limited data grid
      *
-     * @param data
      */
     @Override
-    public void showNewGameDisplay(GameGrid data) {
-
-        //TODO assert: This should probably throw an IllegalArgumentException per 
-        //"By convention, preconditions on public methods are enforced by explicit checks that throw particular, specified exceptions."
-        //This would apply to all Public Methods of the interface
-        /** EXAMPLE
-  * Sets the refresh rate.
-  *
-  * @param  rate refresh rate, in frames per second.
-  * @throws IllegalArgumentException if rate <= 0 or
-  * rate > MAX_REFRESH_RATE.
-
-public void setRefreshRate(int rate) {
-  // Enforce specified precondition in public method
-  if (rate <= 0 || rate > MAX_REFRESH_RATE)
-    throw new IllegalArgumentException("Illegal rate: " + rate);
-    setRefreshInterval(1000/rate);
-  }*/
-        
+    public void showNewGameDisplay() {
+        resetChoices();
         this.gameStatus.setText("Memorize the above grid!");
         this.createGameBoard(data);
 
@@ -279,140 +234,147 @@ public void setRefreshRate(int rate) {
                 Logger.getLogger(TextGameDriver.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        this.redrawGameBoard(data.getDisplayGrid());
+        this.gameStatus.setText("Select a pair of numbers.");
     }
-    // </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="showGrid">
-    /**
-     * Show the data grid
-     *
-     * @param data
-     */
     @Override
-    public void showGrid(GameGrid data) {
-        if (this.guess1 < 0 || this.guess2 < 0) {
-            this.redrawGameBoard(data.getDisplayGrid());
-        } else {
-            this.redrawGameBoard(data.getDisplayGrid(this.guess1, this.guess2));
-        }
+    public Boolean isResetRequested() {
+        return resetRequested;
     }
-    // </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="getChoice">
+    @Override
+    public Boolean isExitRequested() {
+        return exitRequested;
+    }
+
+    @Override
+    public Boolean isGuessRequested() {
+        return guessRequested;
+    }
+
     /**
      * Get users choice
      *
-     * @param data
-     * @return
      */
     @Override
-    public String getChoice(GameGrid data) {
+    public void getChoice() {
         //ugh, tight loop.
-        this.gameStatus.setText("Select a pair of numbers.");
-        
+        resetChoices();
         try {
-            while (choice == null || "".equals(choice)) {
+            while (!(exitRequested || resetRequested || guessRequested)) {
                 Thread.sleep(5);
             }
         } catch (InterruptedException ex) {
             Logger.getLogger(GuiGameDriver.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return choice;
     }
-    // </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="showExit">
     /**
      * Show exit screen
      *
-     * @param data
      */
     @Override
-    public void showExit(GameGrid data) {
+    public void showExit() {
+        resetChoices();
         this.gameStatus.setText("Game Over");
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(GuiGameDriver.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
-    // </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="getGuessCell1">
     /**
      * Get last cell1 guess
      *
-     * @param data
      * @return
      */
     @Override
-    public int getGuessCell1(GameGrid data) {
-        return this.guess1;
+    public int getGuessCell1() {
+        return this.guess1 - 1;
     }
-    // </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="getGuessCell2">
     /**
      * Get last cell2 guess
      *
-     * @param data
      * @return
      */
     @Override
-    public int getGuessCell2(GameGrid data) {
-        return this.guess2;
+    public int getGuessCell2() {
+        return this.guess2 - 1;
     }
-    // </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="showGuessSuccess">
     /**
      * Show success message
      *
-     * @param data
      */
     @Override
-    public void showGuessSuccess(GameGrid data) {
+    public void showGuessSuccess(int cell1, int cell2) {
+        resetChoices();
+        this.redrawGameBoard(data.getDisplayGrid(cell1, cell2));
         this.gameStatus.setText("Good Guess!");
     }
-    // </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="showGuessFailed">
     /**
      * Show failed message
      *
-     * @param data
      */
     @Override
-    public void showGuessFailed(GameGrid data) {
+    public void showGuessFailed(int cell1, int cell2) {
+        resetChoices();
+        this.redrawGameBoard(data.getDisplayGrid(cell1, cell2));
         this.gameStatus.setText("Sorry...");
     }
-    // </editor-fold>
+    private Boolean guessFailed; //todo use this ...
 
-    // <editor-fold defaultstate="collapsed" desc="showException">
     /**
      * Show exception message
      *
-     * @param data
      * @param ex
      */
     @Override
-    public void showException(GameGrid data, Exception ex) {
+    public void showException(Exception ex) {
+        resetChoices();
+        this.redrawGameBoard(data.getDisplayGrid());
         this.gameStatus.setText("Error: " + ex.getMessage());
     }
-    // </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="cleanup">
+    /**
+     *
+     */
     @Override
     public void cleanup() {
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
-    // </editor-fold>
 
     // =============================================
     // Event Listener classes
     // =============================================
-    
     // <editor-fold defaultstate="collapsed" desc="ResetMenuListener">
+    private class CellButtonListener implements ActionListener {
+
+        public CellButtonListener() {
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            String action = ae.getActionCommand();
+            int x;
+            String text = action.split("\\s")[0].trim();
+            x = Integer.parseInt(text);
+
+            if (x >= 0) {
+                if (guess1 < 0) {
+                    guess1 = x;
+                } else if (guess2 < 0) {
+                    guess2 = x;
+                    guessRequested = true;
+                } else {
+                    guessRequested = true;
+                }
+            } else {
+                guess1 = -1;
+                guess2 = -1;
+            }
+        }
+    }
+
     /**
      * Event handler for the Reset Menu option
      */
@@ -426,7 +388,7 @@ public void setRefreshRate(int rate) {
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            choice = "R";
+            resetRequested = true;
         }
     }
     // </editor-fold>
@@ -444,7 +406,7 @@ public void setRefreshRate(int rate) {
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            choice = "Q";
+            exitRequested = true;
         }
     }
     // </editor-fold>
@@ -471,51 +433,46 @@ public void setRefreshRate(int rate) {
 //        driver.showNewGameDisplay(grid);
 //        driver.showExit(grid);
 //        driver.cleanup();
-        
-        
+
         GameGrid grid = new GameGrid(4);
         grid.initializeGrids(42);
         //42 -> [B, A, A, B]
-        
+
         String choice;
-        
+
         //Read and write from custom streams
         GuiGameDriver driver = new GuiGameDriver();
-        
-        driver.setup();
-        TestDriver.printTestCase("TC000", "GuiGameDriver. setup",true, true);
-              
-        driver.showNewGameDisplay(grid);
+
+        driver.setup(grid);
+        TestDriver.printTestCase("TC000", "GuiGameDriver. setup", true, true);
+
+        driver.showNewGameDisplay();
         TestDriver.printTestCase("TC000", "GuiGameDriver. showNewGameDisplay", true, driver.gameStatus.getText().length() > 0);
 
-        driver.showGrid(grid);
-        TestDriver.printTestCase("TC000", "GuiGameDriver. showGrid", true, driver.gameStatus.getText().length() > 0);
-
-        driver.showGuessFailed(grid);
+        driver.showGuessFailed(1, 2);
         TestDriver.printTestCase("TC000", "GuiGameDriver. showGuessFailed", "Sorry...", driver.gameStatus.getText().trim());
 
-        driver.showGuessSuccess(grid);
+        driver.showGuessSuccess(1, 4);
         TestDriver.printTestCase("TC000", "GuiGameDriver. showGuessSuccess", "Good Guess!", driver.gameStatus.getText().trim());
 
-        driver.showException(grid, new UnsupportedOperationException("TestError"));
+        driver.showException(new UnsupportedOperationException("TestError"));
         TestDriver.printTestCase("TC000", "GuiGameDriver. showException", "Error: TestError", driver.gameStatus.getText().trim());
 
-        driver.getGuessCell1(grid);
+        driver.getGuessCell1();
         TestDriver.printTestCase("TC000", "GuiGameDriver. getGuessCell1", -1, -1);
 
-        driver.getGuessCell2(grid);
+        driver.getGuessCell2();
         TestDriver.printTestCase("TC000", "GuiGameDriver. getGuessCell2", -1, -1);
 
-        driver.choice = "1 2";
-        driver.getChoice(grid);
-        TestDriver.printTestCase("TC000", "GuiGameDriver. getChoice",  "Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ", driver.gameStatus.getText());
-                
-        driver.showExit(grid);
+        driver.getChoice();
+        TestDriver.printTestCase("TC000", "GuiGameDriver. getChoice", "Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ", driver.gameStatus.getText());
+
+        driver.showExit();
         TestDriver.printTestCase("TC000", "GuiGameDriver. showExit", "Game Over", driver.gameStatus.getText().trim());
 
         driver.cleanup();
-        TestDriver.printTestCase("TC000", "GuiGameDriver. cleanup",true, true);
-        
-        
+        TestDriver.printTestCase("TC000", "GuiGameDriver. cleanup", true, true);
+
     }
+
 }
