@@ -6,8 +6,9 @@ public interface GameDriver {
     
     /**
      * Setup the driver
+     * @param data
      */
-    public void setup();
+    public void setup(GameGrid data);
     
     /**
      * Clean up the driver and release any resources
@@ -17,60 +18,68 @@ public interface GameDriver {
     
     /**
      * Show new game message and time limited data grid
-     * @param data 
      */
-    public void showNewGameDisplay(GameGrid data);
+    public void showNewGameDisplay();
+
+    /**
+     * Get the choice
+     */
+    public void getChoice();
+    
+    /**
+     * Show the data grid
+     * @return 
+     */
+    public Boolean isResetRequested();
+    
+    /**
+     * Show the data grid
+     * @return 
+     */
+    public Boolean isExitRequested();
 
     /**
      * Show the data grid
-     * @param data 
-     */
-    public void showGrid(GameGrid data);
-
-    /**
-     * Get users choice
-     * @param data
      * @return 
      */
-    public String getChoice(GameGrid data);
-
-    /**
-     * Show exit screen
-     * @param data 
-     */
-    public void showExit(GameGrid data);
-
+    public Boolean isGuessRequested();
+    
     /**
      * Get last cell1 guess
-     * @param data
      * @return 
      */
-    public int getGuessCell1(GameGrid data);
+    public int getGuessCell1();
 
     /**
      * Get last cell2 guess
-     * @param data
      * @return 
      */
-    public int getGuessCell2(GameGrid data);
+    public int getGuessCell2();
 
     /**
      * Show success message
-     * @param data 
+     * @param cell1
+     * @param cell2
      */
-    public void showGuessSuccess(GameGrid data);
+    public void showGuessSuccess(int cell1, int cell2);
 
     /**
      * Show failed message
-     * @param data 
+     * @param cell1
+     * @param cell2
      */
-    public void showGuessFailed(GameGrid data);
+    public void showGuessFailed(int cell1, int cell2);
 
+       
+    /**
+     * Show exit screen
+     */
+    public void showExit();
+    
     /** 
      * Show exception message
-     * @param data
      * @param ex 
      */
-    public void showException(GameGrid data, Exception ex);
+    public void showException(Exception ex);
     
 }

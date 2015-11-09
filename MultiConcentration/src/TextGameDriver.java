@@ -30,11 +30,14 @@ public class TextGameDriver implements GameDriver {
     private final Scanner inputScanner;
     private final PrintStream outputStream;
 
+    private GameGrid data;
+
     /**
      * Assert class is ready
      */
     @Override
-    public void setup() {
+    public void setup(GameGrid data) {
+        this.data = data;
         assert outputStream != null;
         assert inputScanner != null;
     }
@@ -46,13 +49,13 @@ public class TextGameDriver implements GameDriver {
     public void cleanup() {
         //nothing
     }
+
     /**
      * Show new game message and time limited data grid
      *
-     * @param data
      */
     @Override
-    public void showNewGameDisplay(GameGrid data) {
+    public void showNewGameDisplay() {
         printGrid(data.getDataGrid());
         outputStream.print("Memorize the above grid! ");
         for (int i = Config.MemorizeSeconds; i >= 0; i--) {
@@ -66,64 +69,68 @@ public class TextGameDriver implements GameDriver {
         for (int i = 0; i < 25; i++) {
             outputStream.println();
         }
+        printGrid(data.getDisplayGrid());
     }
 
-    /**
-     * Show the data grid
-     *
-     * @param data
-     */
     @Override
-    public void showGrid(GameGrid data) {
-        if (cell1 < 0 || cell2 < 0) {
-            printGrid(data.getDisplayGrid());
-        } else {
-            printGrid(data.getDisplayGrid(cell1, cell2));
-        }
+    public Boolean isResetRequested() {
+        return resetRequested;
     }
+    private Boolean resetRequested;
+
+    @Override
+    public Boolean isExitRequested() {
+        return exitRequested;
+    }
+    private Boolean exitRequested;
+
+    @Override
+    public Boolean isGuessRequested() {
+        return guessRequested;
+    }
+    private Boolean guessRequested;
 
     /**
      * Get users choice
      *
-     * @param data
-     * @return
      */
-    @Override
-    public String getChoice(GameGrid data) {
+    public void getChoice() {
         outputStream.print("Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ");
         String next;
         String cellChoice = "";
         cell1 = -1;
         cell2 = -1;
+        exitRequested = false;
+        resetRequested = false;
+        guessRequested = false;
         while (inputScanner.hasNext()) {
             next = inputScanner.next();
             if ("R".equals(next)) {
-                return "R";
+                resetRequested = true;
+                return;
             }
             if ("Q".equals(next)) {
-                return "Q";
+                exitRequested = true;
+                return;
             }
-            //Read the numbers; Display is 1-based
             if (cell1 < 0) {
                 cellChoice = next;
-                cell1 = Integer.parseInt(next) - 1;
+                cell1 = Integer.parseInt(next);
                 continue;
             }
-            cell2 = Integer.parseInt(next) - 1;
-            cellChoice = cellChoice + " " + next;
-            break;
+            cell2 = Integer.parseInt(next);
+            guessRequested = true;
+            return;
         }
-        //todo add "Please reentered" message for invalid stuff
-        return cellChoice;
     }
 
     /**
      * Show exit screen
      *
-     * @param data
      */
     @Override
-    public void showExit(GameGrid data) {
+    public void showExit() {
+        printGrid(data.getDisplayGrid());
         outputStream.println("Game Over");
     }
 
@@ -133,53 +140,51 @@ public class TextGameDriver implements GameDriver {
     /**
      * Get last cell1 guess
      *
-     * @param data
      * @return
      */
     @Override
-    public int getGuessCell1(GameGrid data) {
-        return cell1;
+    public int getGuessCell1() {
+        return cell1 - 1; //one-based
     }
 
     /**
      * Get last cell2 guess
      *
-     * @param data
      * @return
      */
     @Override
-    public int getGuessCell2(GameGrid data) {
-        return cell2;
+    public int getGuessCell2() {
+        return cell2 - 1; //one-based
     }
 
     /**
      * Show success message
      *
-     * @param data
      */
     @Override
-    public void showGuessSuccess(GameGrid data) {
+    public void showGuessSuccess(int cell1, int cell2) {
+        printGrid(data.getDisplayGrid(cell1, cell2));
         outputStream.println("Good Guess!");
     }
 
     /**
      * Show failed message
      *
-     * @param data
      */
     @Override
-    public void showGuessFailed(GameGrid data) {
+    public void showGuessFailed(int cell1, int cell2) {
+        printGrid(data.getDisplayGrid(cell1, cell2));
         outputStream.println("Sorry...");
     }
 
     /**
      * Show exception message
      *
-     * @param data
      * @param ex
      */
     @Override
-    public void showException(GameGrid data, Exception ex) {
+    public void showException(Exception ex) {
+        printGrid(data.getDisplayGrid());
         outputStream.println("Error: " + ex.getMessage());
     }
 
@@ -219,88 +224,77 @@ public class TextGameDriver implements GameDriver {
         GameGrid grid = new GameGrid(4);
         grid.initializeGrids(42);
         //42 -> [B, A, A, B]
-        
+
         String result;
-        
+
         //Read and write from custom streams
         InputStream in = new ByteArrayInputStream("Q\r\n".getBytes("UTF-8"));
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(outputStream);
         TextGameDriver driver = new TextGameDriver(in, out);
-        
-        driver.setup();
-        TestDriver.printTestCase("TC000", "TestGameDriver. setup",true, true);
-              
+
+        driver.setup(grid);
+        TestDriver.printTestCase("TC000", "TextGameDriver. setup", true, true);
+
         outputStream.reset();
-        driver.showNewGameDisplay(grid);
+        driver.showNewGameDisplay();
         result = outputStream.toString("UTF-8");
         TestDriver.printTestCase("TC000", "TextGameDriver. showNewGameDisplay", true, result.length() > 0);
 
         outputStream.reset();
-        driver.showGrid(grid);
+        driver.showGuessFailed(1, 2);
         result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "TextGameDriver. showGrid", true, result.length() > 0);
+        TestDriver.printTestCase("TC000", "TextGameDriver. showGuessFailed", true, result.trim().endsWith("Sorry..."));
 
         outputStream.reset();
-        driver.showGuessFailed(grid);
+        driver.showGuessSuccess(1, 4);
         result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "TextGameDriver. showGuessFailed", "Sorry...", result.trim());
+        TestDriver.printTestCase("TC000", "TextGameDriver. showGuessSuccess", true, result.trim().endsWith("Good Guess!"));
 
         outputStream.reset();
-        driver.showGuessSuccess(grid);
+        driver.showException(new UnsupportedOperationException("TestError"));
         result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "TextGameDriver. showGuessSuccess", "Good Guess!", result.trim());
+        TestDriver.printTestCase("TC000", "TextGameDriver. showException", true, result.trim().endsWith("Error: TestError"));
 
         outputStream.reset();
-        driver.showException(grid, new UnsupportedOperationException("TestError"));
+        driver.showExit();
         result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "TextGameDriver. showException", "Error: TestError", result.trim());
+        TestDriver.printTestCase("TC000", "TextGameDriver. showExit", true, result.trim().endsWith("Game Over"));
 
-        outputStream.reset();
-        driver.showExit(grid);
-        result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "TextGameDriver. showExit", "Game Over", result.trim());
-
-        driver.getGuessCell1(grid);
+        driver.getGuessCell1();
         TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell1", -1, -1);
 
-        driver.getGuessCell2(grid);
+        driver.getGuessCell2();
         TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell2", -1, -1);
 
         outputStream.reset();
-        driver.getChoice(grid);
+        driver.getChoice();
         result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice",  "Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ", result);
-        
+        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice", "Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ", result);
+
         //play the game. Display is ONE-BASED; Data is ZERO-BASED
         in = new ByteArrayInputStream("1 2\r\n1 4\r\nR\r\nQ\r\n".getBytes("UTF-8"));
         driver = new TextGameDriver(in, out);
-        result = driver.getChoice(grid);
-        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice cells",  "1 2", result);
-        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell1",  0, driver.getGuessCell1(grid));
-        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell2",  1, driver.getGuessCell2(grid));   
-        result = driver.getChoice(grid);
-        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice cells",  "1 4", result);
-        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell1",  0, driver.getGuessCell1(grid));
-        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell2",  3, driver.getGuessCell2(grid)); 
-        result = driver.getChoice(grid);
-        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice R",  "R", result);
-        result = driver.getChoice(grid);
-        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice Q",  "Q", result);
-        
-        
+        driver.getChoice();
+        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice cells", true, driver.isGuessRequested());
+        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell1", 0, driver.getGuessCell1());
+        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell2", 1, driver.getGuessCell2());
+        driver.getChoice();
+        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice cells", true, driver.isGuessRequested());
+        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell1", 0, driver.getGuessCell1());
+        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell2", 3, driver.getGuessCell2());
+        driver.getChoice();
+        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice R", true, driver.isResetRequested());
+        driver.getChoice();
+        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice Q", true, driver.isExitRequested());
+
         driver.cleanup();
-        TestDriver.printTestCase("TC000", "TestGameDriver. cleanup",true, true);
-        
-        
+        TestDriver.printTestCase("TC000", "TextGameDriver. cleanup", true, true);
+
 //        outputStream.reset();
 //        //do stuff
 //        result = outputStream.toString("UTF-8");
 //        TestDriver.printTestCase("TC000", "play the game",  true, result.length() > 0);
-        
-        
-        
-        
     }
 
 }
