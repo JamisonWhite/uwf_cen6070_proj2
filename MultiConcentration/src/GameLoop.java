@@ -1,6 +1,12 @@
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /**
  * Game loop interacts with the driver and the data.
@@ -84,56 +90,33 @@ public class GameLoop {
      * @param args
      */
     public static void main(String[] args) {
-        classTest();
+        try {
+            classTest();
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(GameLoop.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
      * Perform class tests
      */
-    public static void classTest() {
+    public static void classTest() throws UnsupportedEncodingException {
 
         //ARRANGE
-        GameGrid grid = new GameGrid(2);
+        GameGrid grid = new GameGrid(2);       
+        
         grid.initializeGrids(42);
         //42 -> [B, A, A, B]
-        Queue<String> choices = new LinkedList<String>();
-        TestGameDriver driver = new TestGameDriver(choices);
+
+        String result;
+
+        //Read and write from custom streams
+        InputStream in = new ByteArrayInputStream("Q\r\n".getBytes("UTF-8"));
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream out = new PrintStream(outputStream);
+        TextGameDriver driver = new TextGameDriver(in, out);
 
         GameLoop loop = new GameLoop(driver, grid);
-
-        //TC000 Execute full loop
-        driver.initialize();
-        choices.add("Q"); //showExit
-        loop.Start();
-        TestDriver.printTestCase("TC000", "GameLoop. quit game", true, driver.totalCounts() > 0);
-
-//        //TC000 Execute loop
-//        driver.initialize();
-//        choices.add("R"); //showreset
-//        choices.add("Q"); //showExit
-//        loop.Start();
-//        TestDriver.printTestCase("TC000", "GameLoop. reset game", true, driver.totalCounts() > 0);
-//
-//        driver.initialize();
-//        choices.add("0 1"); //showGuessFailed
-//        choices.add("Q"); //showExit
-//        loop.Start();
-//        TestDriver.printTestCase("TC000", "GameLoop. guess failed", true, driver.totalCounts() > 0);
-//
-//        driver.initialize();
-//        choices.add("0 3"); //showGuessSuccess
-//        choices.add("Q"); //showExit
-//        loop.Start();
-//        TestDriver.printTestCase("TC000", "GameLoop. guess success", true, driver.totalCounts() > 0);
-
-//        driver.initialize();
-//        choices.add("0 100"); //showException
-//        choices.add("0 A"); //showException
-//        choices.add("Q"); //showExit
-//        loop.Start();
-//        TestDriver.printTestCase("TC000", "GameLoop. exception", true, driver.totalCounts() > 0);
-
-
     }
 
 }

@@ -1,7 +1,4 @@
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 
 /**
  * Main class for MultiConcentration game
@@ -75,10 +72,6 @@ public class MultiConcentration {
             driver = new TextGameDriver(System.in, System.out);
         } else if ("-g".equals(driverArg)) {
             driver = new GuiGameDriver();
-        } else if ("-test".equals(driverArg)) {
-            Queue<String> choices = new LinkedList<String>();
-            choices.add("Q");        
-            driver = new TestGameDriver(choices);
         } else {
             System.out.println("Error: Unknown game type. Please try again.");
             return false;

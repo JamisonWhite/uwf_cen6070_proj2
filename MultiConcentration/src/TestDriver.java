@@ -22,7 +22,6 @@ public class TestDriver {
         
         GameGrid.main(args);
         GameLoop.main(args);
-        TestGameDriver.main(args);
         TextGameDriver.main(args);
         GuiGameDriver.main(args);
         
