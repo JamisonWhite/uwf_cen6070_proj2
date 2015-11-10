@@ -14,6 +14,7 @@ public class GameLoop {
      *
      * @param driver
      * @param data
+     * @throws IllegalArgumentException
      */
     public GameLoop(GameDriver driver, GameGrid data) throws IllegalArgumentException {
         if (driver == null){

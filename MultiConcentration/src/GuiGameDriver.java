@@ -109,6 +109,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     // <editor-fold defaultstate="collapsed" desc="createGameBoard">
     /**
      * Construct the game board in the center of the application
+     * 
+     * @param data
+     * @throws IllegalArgumentException
      */
     private void createGameBoard(GameGrid data) {
         assert data != null; //assert precondition
@@ -246,6 +249,9 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     // <editor-fold defaultstate="collapsed" desc="setup">
     /**
      * Setup the GUI elements
+     * 
+     * @param data
+     * @throws IllegalArgumentException
      */
     @Override
     public void setup(GameGrid data) {

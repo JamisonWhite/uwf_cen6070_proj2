@@ -12,7 +12,8 @@ public class GameGrid {
 
     /**
      * Initialize grid
-     * @param size 
+     * @param size
+     * @throws IllegalArgumentException
      */
     public GameGrid(int size) throws IllegalArgumentException {
         if (size < 2 || size >= Config.MaxGridSize) {
@@ -98,6 +99,7 @@ public class GameGrid {
      * Is the cell found.
      *
      * @param cell
+     * @throws IllegalArgumentException
      * @return
      */
     public Boolean isCellFound(int cell) throws IllegalArgumentException {
@@ -165,6 +167,7 @@ public class GameGrid {
      * Initialize display and data grids
      *
      * @param seed
+     * @throws IllegalArgumentException
      */
     public void initializeGrids(int seed) throws IllegalArgumentException {
         if (dataGrid.length == 0){
