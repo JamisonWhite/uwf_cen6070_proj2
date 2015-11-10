@@ -125,14 +125,7 @@ public class MultiConcentration {
         args = new String[] {"-g", "2"};
         TestDriver.printTestCase("TC000", "MultiConcentration. gui game parse valid arguments", true, game.parseArguments(args));
                 
-        args = new String[] {"-test", "2"};
-        TestDriver.printTestCase("TC000", "MultiConcentration. test game parse valid arguments", true, game.parseArguments(args));
-
         game.startGame(args);
         TestDriver.printTestCase("TC000", "MultiConcentration. start game valid arguments", true, true);
-        
-        
-
     }
-
 }
