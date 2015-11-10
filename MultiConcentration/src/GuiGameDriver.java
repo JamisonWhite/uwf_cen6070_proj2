@@ -37,8 +37,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
 
     private JPanel gameBoard;
     private ArrayList<JButton> gameButtons;
-    private Boolean[] gameButtonsAnswered;
-    private JButton resetColorButton;
+    private final JButton resetColorButton;
 
     private JPanel statusBar;
     private JLabel gameStatus;
@@ -57,7 +56,6 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     private static final int MIN_FRAME_WIDTH = 350;
     private static final int MIN_FRAME_HEIGHT = 350;
 
-    private final static int VARIANCE = 1000;
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Default Constructor">
@@ -151,9 +149,6 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         for (int i = 0; i < data.getSize(); i++) {
             JButton button = new JButton();
             button.addActionListener(new CellButtonListener());
-            if (!"".equals(data.getDataGrid()[i])) {
-                button.setActionCommand(data.getDisplayGrid()[i] + " " + data.getDataGrid()[i]);
-            }
             this.gameButtons.add(button);
             this.gameBoard.add(button);
         }
@@ -288,11 +283,16 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     public void showNewGameDisplay() {
         resetChoices();
         
+        String[] dataGrid = data.getDataGrid();        
+        
+        //Reset the buttons
         for (int i = 0; i < gameButtons.size(); i++) {
-            this.gameButtons.get(i).setEnabled(false);
-            this.gameButtons.get(i).setBackground(this.resetColorButton.getBackground());
-        }        
-        this.redrawGameBoard(data.getDataGrid());
+            JButton button = this.gameButtons.get(i);
+            button.setEnabled(false);
+            button.setBackground(this.resetColorButton.getBackground());
+            button.setActionCommand(data.getDisplayGrid()[i] + " " + data.getDataGrid()[i]);
+        }                
+        this.redrawGameBoard(dataGrid);
         this.disableGameBoard();
 
         for (int i = Config.MemorizeSeconds; i >= 0; i--) {
