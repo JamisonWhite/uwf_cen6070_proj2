@@ -15,10 +15,7 @@ public class TestDriver {
      * @param args 
      */
     public static void main(String[] args) throws IllegalArgumentException {
-        if (args.length != 2){
-            throw new IllegalArgumentException("Missing Args.");
-        } //replaced assert precondition
-
+        
         args = new String[] {"-test","4"};
         MultiConcentration.main(args);
         MultiConcentration.classTest();
