@@ -107,40 +107,32 @@ public class GameLoop {
         loop.Start();
         TestDriver.printTestCase("TC000", "GameLoop. quit game", true, driver.totalCounts() > 0);
 
-        //TC000 Execute loop
-        driver.initialize();
-        choices.add("R"); //showreset
-        choices.add("Q"); //showExit
-        loop.Start();
-        TestDriver.printTestCase("TC000", "GameLoop. reset game", true, driver.totalCounts() > 0);
+//        //TC000 Execute loop
+//        driver.initialize();
+//        choices.add("R"); //showreset
+//        choices.add("Q"); //showExit
+//        loop.Start();
+//        TestDriver.printTestCase("TC000", "GameLoop. reset game", true, driver.totalCounts() > 0);
+//
+//        driver.initialize();
+//        choices.add("0 1"); //showGuessFailed
+//        choices.add("Q"); //showExit
+//        loop.Start();
+//        TestDriver.printTestCase("TC000", "GameLoop. guess failed", true, driver.totalCounts() > 0);
+//
+//        driver.initialize();
+//        choices.add("0 3"); //showGuessSuccess
+//        choices.add("Q"); //showExit
+//        loop.Start();
+//        TestDriver.printTestCase("TC000", "GameLoop. guess success", true, driver.totalCounts() > 0);
 
-        driver.initialize();
-        choices.add("1 2"); //showGuessFailed
-        choices.add("Q"); //showExit
-        loop.Start();
-        TestDriver.printTestCase("TC000", "GameLoop. guess failed", true, driver.totalCounts() > 0);
+//        driver.initialize();
+//        choices.add("0 100"); //showException
+//        choices.add("0 A"); //showException
+//        choices.add("Q"); //showExit
+//        loop.Start();
+//        TestDriver.printTestCase("TC000", "GameLoop. exception", true, driver.totalCounts() > 0);
 
-        driver.initialize();
-        choices.add("1 4"); //showGuessSuccess
-        choices.add("Q"); //showExit
-        loop.Start();
-        TestDriver.printTestCase("TC000", "GameLoop. guess success", true, driver.totalCounts() > 0);
-
-        driver.initialize();
-        choices.add("0 100"); //showException
-        choices.add("0 A"); //showException
-        choices.add("Q"); //showExit
-        loop.Start();
-        TestDriver.printTestCase("TC000", "GameLoop. exception", true, driver.totalCounts() > 0);
-
-        //TC000 Execute full loop
-        driver.initialize();
-        choices.add("1 2"); //showGuessFailed
-        choices.add("1 4"); //showGuessSuccess
-        choices.add("2 3"); //showException
-        choices.add("Q"); //showExit
-        loop.Start();
-        TestDriver.printTestCase("TC000", "GameLoop. play full game", true, driver.totalCounts() > 0);
 
     }
 
