@@ -67,6 +67,11 @@ public class TestGameDriver implements GameDriver {
     @Override
     public void getChoice() {
         getChoiceCount++;
+        
+        String choice = choices.poll();
+        
+        if ("Q")
+        
     }
     public int getChoiceCount;
 
