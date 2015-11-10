@@ -8,8 +8,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -509,7 +507,6 @@ public class GuiGameDriver extends JFrame implements GameDriver {
             if (text.length != 2)
                     return;
             int x = Integer.parseInt(text[0].trim());
-            button.setText(text[1]);
 
             if (x >= 0) {
                 button.setBackground(Color.ORANGE); //todo not working on OSX                
