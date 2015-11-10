@@ -26,10 +26,15 @@ public class MultiConcentration {
     /**
      * Start game based on given size and driver
      * @param args
+     * @throws IllegalArgumentException
      */
-    public void startGame(String[] args) {
+    public void startGame(String[] args) throws IllegalArgumentException {
+        if (args.length != 2){
+            throw new IllegalArgumentException("Missing Args.");
+        } //replaced assert precondition
+
         if (parseArguments(args)) {
-            assert loop != null;
+            assert loop != null; //assert precondition
             loop.Start();
         } else {
             showUsage();
@@ -60,8 +65,10 @@ public class MultiConcentration {
     public boolean parseArguments(String[] args) {
         if (args.length < 2) {
             System.out.println("Error: Game type and size are required. Please try again.");
+            //Pereferred behavior; No Assert, No Exception
             return false;
         }
+        
         //reset objects
         GameDriver driver;
         GameGrid grid;

@@ -45,7 +45,7 @@ public class TestDriver {
         if (expected.equals(actual)) {
             System.out.println(String.format("%s passed. %s", testCase, description));
         } else {
-            System.out.println(String.format("%s FAILED. %s Expceted: %s Actual: %s  ", testCase, description, expected, actual));
+            System.out.println(String.format("%s FAILED. %s Expected: %s Actual: %s  ", testCase, description, expected, actual));
         }
     }
 

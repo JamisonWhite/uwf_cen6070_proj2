@@ -14,8 +14,16 @@ public class GameLoop {
      *
      * @param driver
      * @param data
+     * @throws IllegalArgumentException
      */
-    public GameLoop(GameDriver driver, GameGrid data) {
+    public GameLoop(GameDriver driver, GameGrid data) throws IllegalArgumentException {
+        if (driver == null){
+            throw new IllegalArgumentException("driver is null.");
+        } //replaced assert precondition
+        if (data == null) {
+            throw new IllegalArgumentException("data is null.");
+        } //replaced assert precondition
+        
         this.driver = driver;
         this.data = data;
     }
@@ -51,7 +59,6 @@ public class GameLoop {
                     data.initializeGrids();
                     driver.showNewGameDisplay();
                     continue;
-
                 }
 
                 if (driver.isGuessRequested()) {
@@ -63,14 +70,12 @@ public class GameLoop {
                         driver.showGuessFailed(cell1, cell2);
                     }
                 }
-
             } catch (Exception ex) {
                 driver.showException(ex);
             }
         }
 
         driver.cleanup();
-
     }
 
     /**
