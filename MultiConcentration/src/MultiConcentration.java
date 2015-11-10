@@ -26,13 +26,8 @@ public class MultiConcentration {
     /**
      * Start game based on given size and driver
      * @param args
-     * @throws IllegalArgumentException
      */
-    public void startGame(String[] args) throws IllegalArgumentException {
-        if (args.length != 2){
-            throw new IllegalArgumentException("Missing Args.");
-        } //replaced assert precondition
-
+    public void startGame(String[] args) {
         if (parseArguments(args)) {
             assert loop != null; //assert precondition
             loop.Start();
