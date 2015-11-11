@@ -546,6 +546,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      */
     public static void classTest() {
 
+        Config.MemorizeSeconds = 1;
+        
         GameGrid grid = new GameGrid(2);
         grid.initializeGrids(42);
         //42 -> [B, A, A, B]
@@ -587,6 +589,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
 
         driver.cleanup();
         TestDriver.printTestCase("GUI009", "GuiGameDriver. cleanup", true, true);
+               
+        
     }
 
 }

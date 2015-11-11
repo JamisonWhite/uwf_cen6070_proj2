@@ -218,9 +218,12 @@ public class TextGameDriver implements GameDriver {
 
     /**
      * Perform class tests
+     * @throws java.io.UnsupportedEncodingException
      */
     public static void classTest() throws UnsupportedEncodingException {
 
+        Config.MemorizeSeconds = 1;
+        
         GameGrid grid = new GameGrid(4);
         grid.initializeGrids(42);
         //42 -> [B, A, A, B]

@@ -247,8 +247,6 @@ public class GameGrid {
 
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
 
-        GameGrid grid;
-
         // <editor-fold defaultstate="collapsed" desc="Test Constructor BVT">
         TestDriver.printTestCaseThrowsException(
                 "GG001",
