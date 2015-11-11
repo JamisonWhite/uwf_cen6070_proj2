@@ -18,10 +18,10 @@ public class Config {
     /**
      * Maximum size
      */
-    public static final int MaxGridSize = 30;
+    public static final int MaxGridSize = 20;
 
     /**
      * Number of seconds to memorize
      */
-    public static final int MemorizeSeconds = 1;
+    public static final int MemorizeSeconds = 10;
 }

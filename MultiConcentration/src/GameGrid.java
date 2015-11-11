@@ -16,7 +16,7 @@ public class GameGrid {
      * @throws IllegalArgumentException
      */
     public GameGrid(int size) throws IllegalArgumentException {
-        if (size < 2 || size >= Config.MaxGridSize) {
+        if (size < 2 || size > Config.MaxGridSize) {
             throw new IllegalArgumentException("Size out of range. 2-" + Config.MaxGridSize);
         }
         this.size = size * size;
