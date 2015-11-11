@@ -12,6 +12,7 @@ public class GameGrid {
 
     /**
      * Initialize grid
+     *
      * @param size
      * @throws IllegalArgumentException
      */
@@ -37,7 +38,7 @@ public class GameGrid {
      */
     public int getSize() {
         int retVal = size;
-        
+
         assert retVal > 0; //assert postcondition
         return retVal;
     }
@@ -59,6 +60,7 @@ public class GameGrid {
     public Boolean[] getIsFoundGrid() {
         return isFoundGrid.clone();
     }
+
     /**
      * Get the display grid
      *
@@ -71,7 +73,7 @@ public class GameGrid {
                 result[i] = dataGrid[i];
             }
         }
-        
+
         assert result.length > 0; //assert postcondition
         return result;
     }
@@ -90,7 +92,7 @@ public class GameGrid {
                 result[i] = dataGrid[i];
             }
         }
-        
+
         assert result.length > 0; //assert postcondition
         return result;
     }
@@ -106,10 +108,10 @@ public class GameGrid {
         if (cell < 0 || cell >= size) {
             throw new IllegalArgumentException("Cell out of range.");
         }
-        
+
         Boolean retVal = isFoundGrid[cell];
         assert retVal != null;
-        
+
         return isFoundGrid[cell];
     }
 
@@ -131,7 +133,7 @@ public class GameGrid {
         if (cell1 == cell2) {
             throw new IllegalArgumentException("Cell1 and cell2 must not be the same cell.");
         }
-        
+
         if (dataGrid[cell1].equals(dataGrid[cell2])) {
             isFoundGrid[cell1] = true;
             isFoundGrid[cell2] = true;
@@ -170,7 +172,7 @@ public class GameGrid {
      * @throws IllegalArgumentException
      */
     public void initializeGrids(int seed) throws IllegalArgumentException {
-        if (dataGrid.length == 0){
+        if (dataGrid.length == 0) {
             throw new IllegalArgumentException("dataGrid.length > 0");
         } //replaced assert precondition
         if (dataGrid.length != size) {
@@ -182,7 +184,7 @@ public class GameGrid {
         if (displayGrid.length != isFoundGrid.length) {
             throw new IllegalArgumentException("displayGrid.length == isFoundGrid.length");
         } //replaced assert precondition
-        
+
         //initialize values
         char data = 'A';
         for (int i = 0; i < size; i++) {
@@ -244,142 +246,89 @@ public class GameGrid {
     public static void classTest() {
 
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
-        
+
         GameGrid grid;
-        
+
         // <editor-fold defaultstate="collapsed" desc="Test Constructor BVT">
-        try {
-            grid = new GameGrid(-1);
-        } catch (Exception ex) {
-            grid = null;
-        }
-        
+        TestDriver.printTestCaseThrowsException(
+                "GG001",
+                "GameGrid. Create GameGrid(-1) throws exception.",
+                new TestCase() {
+                    @Override
+                    public GameGrid Run() throws Exception {
+                        return new GameGrid(-1);
+                    }
+                });
+
+        TestDriver.printTestCaseThrowsException(
+                "GG002",
+                "GameGrid. Create GameGrid(0) throws exception.",
+                new TestCase() {
+                    @Override
+                    public GameGrid Run() throws Exception {
+                        return new GameGrid(0);
+                    }
+                });
+
+        TestDriver.printTestCaseThrowsException(
+                "GG003",
+                "GameGrid. Create GameGrid(1) throws exception.",
+                new TestCase() {
+                    @Override
+                    public GameGrid Run() throws Exception {
+                        return new GameGrid(1);
+                    }
+                });
+
         TestDriver.printTestCase(
-                "GG001", 
-                "GameGrid. Create GameGrid(-1) throws exception.", 
-                true, 
-                grid == null);
-        
-        try {
-            grid = new GameGrid(0);
-        } catch (Exception ex) {
-            grid = null;
-        }
-        
+                "GG004",
+                "GameGrid. Create GameGrid(2) successfully created with size of 4.",
+                4,
+                (new GameGrid(2)).getSize());
+
         TestDriver.printTestCase(
-                "GG002", 
-                "GameGrid. Create GameGrid(0) throws exception.", 
-                true, 
-                grid == null);
-        
-        try {
-            grid = new GameGrid(1);
-        } catch (Exception ex) {
-            grid = null;
-        }
-        
+                "GG005",
+                "GameGrid. Create GameGrid(4) successfully created with size of 16.",
+                16,
+                (new GameGrid(4)).getSize());
+
         TestDriver.printTestCase(
-                "GG003", 
-                "GameGrid. Create GameGrid(1) throws exception.", 
-                true, 
-                grid == null);
-        
-        try {
-            grid = new GameGrid(2);
-        
-            TestDriver.printTestCase(
-                    "GG004", 
-                    "GameGrid. Create GameGrid(2) successfully created with size of 4.", 
-                    4, 
-                    grid.getSize());
-        } catch (Exception ex) {
-            grid = null;
-        
-            TestDriver.printTestCase(
-                    "GG004", 
-                    "GameGrid. Create GameGrid(2) successfully created with size of 4.", 
-                    4, 
-                    null);
-        }
-        
-        try {
-            grid = new GameGrid(4);
-        
-            TestDriver.printTestCase(
-                    "GG005", 
-                    "GameGrid. Create GameGrid(4) successfully created with size of 16.", 
-                    16, 
-                    grid.getSize());
-        } catch (Exception ex) {
-            grid = null;
-        
-            TestDriver.printTestCase(
-                    "GG005", 
-                    "GameGrid. Create GameGrid(4) successfully created with size of 16.", 
-                    16, 
-                    null);
-        }
-        
-        try {
-            grid = new GameGrid(10);
-        
-            TestDriver.printTestCase(
-                    "GG006", 
-                    "GameGrid. Create GameGrid(10) successfully created with size of 100.", 
-                    100, 
-                    grid.getSize());
-        } catch (Exception ex) {
-            grid = null;
-        
-            TestDriver.printTestCase(
-                    "GG006", 
-                    "GameGrid. Create GameGrid(10) successfully created with size of 100.", 
-                    100, 
-                    null);
-        }
-        
-        try {
-            grid = new GameGrid(20);
-        
-            TestDriver.printTestCase(
-                    "GG007", 
-                    "GameGrid. Create GameGrid(20) successfully created with size of 400.", 
-                    400, 
-                    grid.getSize());
-        } catch (Exception ex) {
-            grid = null;
-        
-            TestDriver.printTestCase(
-                    "GG007", 
-                    "GameGrid. Create GameGrid(20) successfully created with size of 400.", 
-                    400, 
-                    null);
-        }
-        
-        try {
-            grid = new GameGrid(21);
-        } catch (Exception ex) {
-            grid = null;
-        }
-        
+                "GG006",
+                "GameGrid. Create GameGrid(10) successfully created with size of 100.",
+                100,
+                (new GameGrid(10)).getSize());
+
         TestDriver.printTestCase(
-                "GG008", 
-                "GameGrid. Create GameGrid(21) throws exception.", 
-                true, 
-                grid == null);
+                "GG007",
+                "GameGrid. Create GameGrid(20) successfully created with size of 400.",
+                400,
+                (new GameGrid(20)).getSize());
+
+        TestDriver.printTestCaseThrowsException(
+                "GG008",
+                "GameGrid. Create GameGrid(21) throws exception.",
+                new TestCase() {
+                    @Override
+                    public GameGrid Run() throws Exception {
+                        return new GameGrid(21);
+                    }
+                });
+
+
         // </editor-fold>
-        
+
         TestDriver.printTestCase(
-                "TGG003", 
-                "GameGrid. Brute force solve a GameGrid", 
-                true, 
+                "TGG003",
+                "GameGrid. Brute force solve a GameGrid",
+                true,
                 solveTest(out));
     }
 
     /**
      * Brute force solve a GameGrid
+     *
      * @param out
-     * @return 
+     * @return
      */
     public static Boolean solveTest(PrintStream out) {
 
@@ -415,7 +364,7 @@ public class GameGrid {
             }
         }
         out.println("\r\nSolved in " + guesses + " guesses.\r\n");
-        
+
         return true;
     }
 
