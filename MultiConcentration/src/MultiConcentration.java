@@ -97,6 +97,7 @@ public class MultiConcentration {
      */
     public static void classTest() {
 
+        Config.MemorizeSeconds = 1;
         //todo change to using custom streams and test output
         
         boolean result;
@@ -110,12 +111,12 @@ public class MultiConcentration {
         
         args = new String[] {"-t", "-1"};
         TestDriver.printTestCase("MC003", "MultiConcentration. text game parse invalid size", false, game.parseArguments(args));
-        
-
+       
         game.showUsage();
         TestDriver.printTestCase("MC004", "MultiConcentration. show usage", true, true);
         
         
+        args = new String[] {""};
         game.startGame(args);
         TestDriver.printTestCase("MC005", "MultiConcentration. start gameinvalid arguments", true, true);
         
@@ -125,7 +126,11 @@ public class MultiConcentration {
         args = new String[] {"-g", "2"};
         TestDriver.printTestCase("MC007", "MultiConcentration. gui game parse valid arguments", true, game.parseArguments(args));
                 
-        game.startGame(args);
-        TestDriver.printTestCase("MC008", "MultiConcentration. start game valid arguments", true, true);
+        args = new String[] {"-xxx", "200"};
+        main(args);
+        TestDriver.printTestCase("TC000", "MultiConcentration. Main with invalid arguments", true, true );
+        
+//        game.startGame(args);
+//        TestDriver.printTestCase("MC008", "MultiConcentration. start game valid arguments", true, true);
     }
 }
