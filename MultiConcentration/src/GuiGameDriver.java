@@ -332,7 +332,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     @Override
     public void getChoice() {
         //ugh, tight loop.
-        resetChoices();
+        //resetChoices();
         try {
             while (!(exitRequested || resetRequested || guessRequested)) {
                 Thread.sleep(5);
@@ -508,7 +508,6 @@ public class GuiGameDriver extends JFrame implements GameDriver {
             String cellData = text[1].trim();
             redrawGameBoard(data.getDisplayGrid());
             button.setText(cellData);
-            gameStatus.setText(action);
 
             if (cellDisplayNumber >= 0) {
                 button.setBackground(Color.ORANGE); //todo not working on OSX                
@@ -546,15 +545,6 @@ public class GuiGameDriver extends JFrame implements GameDriver {
      * Perform class tests
      */
     public static void classTest() {
-//        GameGrid grid = new GameGrid(6);
-//        grid.initializeGrids(42);
-//        //42 -> [B, A, A, B]
-//
-//        GameDriver driver = new GuiGameDriver();
-//        driver.setup();
-//        driver.showNewGameDisplay(grid);
-//        driver.showExit(grid);
-//        driver.cleanup();
 
         GameGrid grid = new GameGrid(2);
         grid.initializeGrids(42);
@@ -567,6 +557,11 @@ public class GuiGameDriver extends JFrame implements GameDriver {
 
         driver.setup(grid);
         TestDriver.printTestCase("GUI001", "GuiGameDriver. setup", true, true);
+        TestDriver.printTestCase("TC000", "GuiGameDriver. isResetRequested", false, driver.isResetRequested() );    
+        TestDriver.printTestCase("TC000", "GuiGameDriver. isExitRequested", false, driver.isExitRequested() );    
+        TestDriver.printTestCase("TC000", "GuiGameDriver. isGuessRequested", false, driver.isGuessRequested() );    
+        TestDriver.printTestCase("GUI006", "GuiGameDriver. getGuessCell1", true, driver.getGuessCell1() < 0);        
+        TestDriver.printTestCase("GUI007", "GuiGameDriver. getGuessCell2", true, driver.getGuessCell2() < 0);
 
         driver.showNewGameDisplay();
         TestDriver.printTestCase("GUI002", "GuiGameDriver. showNewGameDisplay", true, driver.gameStatus.getText().length() > 0);
@@ -579,15 +574,13 @@ public class GuiGameDriver extends JFrame implements GameDriver {
 
         driver.showException(new UnsupportedOperationException("TestError"));
         TestDriver.printTestCase("GUI005", "GuiGameDriver. showException", "Error: TestError", driver.gameStatus.getText().trim());
-
-       
-        TestDriver.printTestCase("GUI006", "GuiGameDriver. getGuessCell1", true, driver.getGuessCell1() < 0);
-        
-        TestDriver.printTestCase("GUI007", "GuiGameDriver. getGuessCell2", true, driver.getGuessCell2() < 0);
-        
-//        //GetChoice is a blocking call
-//        driver.getChoice();
-//        TestDriver.printTestCase("TC000", "GuiGameDriver. getChoice", "Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ", driver.gameStatus.getText());
+               
+        //GetChoice is a blocking call, so setup state first
+        driver.guessRequested = true;
+        driver.guess1 = 0;
+        driver.guess2 = 1;
+        driver.getChoice();
+        TestDriver.printTestCase("TC000", "GuiGameDriver. getChoice did not change state and returned", true, driver.guessRequested);
 
         driver.showExit();
         TestDriver.printTestCase("GUI008", "GuiGameDriver. showExit", "Game Over", driver.gameStatus.getText().trim());
