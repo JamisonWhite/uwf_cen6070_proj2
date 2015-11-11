@@ -566,34 +566,34 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         GuiGameDriver driver = new GuiGameDriver();
 
         driver.setup(grid);
-        TestDriver.printTestCase("TC000", "GuiGameDriver. setup", true, true);
+        TestDriver.printTestCase("GUI001", "GuiGameDriver. setup", true, true);
 
         driver.showNewGameDisplay();
-        TestDriver.printTestCase("TC000", "GuiGameDriver. showNewGameDisplay", true, driver.gameStatus.getText().length() > 0);
+        TestDriver.printTestCase("GUI002", "GuiGameDriver. showNewGameDisplay", true, driver.gameStatus.getText().length() > 0);
 
         driver.showGuessFailed(0, 1);
-        TestDriver.printTestCase("TC000", "GuiGameDriver. showGuessFailed", "Sorry...", driver.gameStatus.getText().trim());
+        TestDriver.printTestCase("GUI003", "GuiGameDriver. showGuessFailed", "Sorry...", driver.gameStatus.getText().trim());
 
         driver.showGuessSuccess(0, 3);
-        TestDriver.printTestCase("TC000", "GuiGameDriver. showGuessSuccess", "Good Guess!", driver.gameStatus.getText().trim());
+        TestDriver.printTestCase("GUI004", "GuiGameDriver. showGuessSuccess", "Good Guess!", driver.gameStatus.getText().trim());
 
         driver.showException(new UnsupportedOperationException("TestError"));
-        TestDriver.printTestCase("TC000", "GuiGameDriver. showException", "Error: TestError", driver.gameStatus.getText().trim());
+        TestDriver.printTestCase("GUI005", "GuiGameDriver. showException", "Error: TestError", driver.gameStatus.getText().trim());
 
        
-        TestDriver.printTestCase("TC000", "GuiGameDriver. getGuessCell1", true, driver.getGuessCell1() < 0);
+        TestDriver.printTestCase("GUI006", "GuiGameDriver. getGuessCell1", true, driver.getGuessCell1() < 0);
         
-        TestDriver.printTestCase("TC000", "GuiGameDriver. getGuessCell2", true, driver.getGuessCell2() < 0);
+        TestDriver.printTestCase("GUI007", "GuiGameDriver. getGuessCell2", true, driver.getGuessCell2() < 0);
         
 //        //GetChoice is a blocking call
 //        driver.getChoice();
 //        TestDriver.printTestCase("TC000", "GuiGameDriver. getChoice", "Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ", driver.gameStatus.getText());
 
         driver.showExit();
-        TestDriver.printTestCase("TC000", "GuiGameDriver. showExit", "Game Over", driver.gameStatus.getText().trim());
+        TestDriver.printTestCase("GUI008", "GuiGameDriver. showExit", "Game Over", driver.gameStatus.getText().trim());
 
         driver.cleanup();
-        TestDriver.printTestCase("TC000", "GuiGameDriver. cleanup", true, true);
+        TestDriver.printTestCase("GUI009", "GuiGameDriver. cleanup", true, true);
     }
 
 }

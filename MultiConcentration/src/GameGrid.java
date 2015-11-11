@@ -253,7 +253,7 @@ public class GameGrid {
             grid = null;
         }        
         TestDriver.printTestCase(
-                "TC000", 
+                "GG001", 
                 "GameGrid. Create GameGrid(0) throws exception.", 
                 true, 
                 grid == null);
@@ -264,13 +264,13 @@ public class GameGrid {
             grid = null;
         }        
         TestDriver.printTestCase(
-                "TC000", 
+                "GG002", 
                 "GameGrid. Create GameGrid(MaxSize + 1) throws exception.", 
                 true, 
                 grid == null);
         
         TestDriver.printTestCase(
-                "TC000", 
+                "TGG003", 
                 "GameGrid. Brute force solve a GameGrid", 
                 true, 
                 solveTest(out));
