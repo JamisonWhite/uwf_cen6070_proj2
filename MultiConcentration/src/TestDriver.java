@@ -18,15 +18,15 @@ public class TestDriver {
         
         args = new String[] {"-t","4"};
         //MultiConcentration.main(args);
-        MultiConcentration.classTest();
+        
+        printTestCase("TD001", "TestDriver. Code coverage test for positive test case.", true, true);
+        printTestCase("TD002", "TestDriver. Code coverage test for negative test case. (This is not really a failure.)", true, false);
         
         GameGrid.main(args);
         GameLoop.main(args);
         TextGameDriver.main(args);
         GuiGameDriver.main(args);
-        
-        printTestCase("TD001", "TestDriver. Code coverage test for positive test case.", true, true);
-        printTestCase("TD002", "TestDriver. Code coverage test for negative test case. (This is not really a failure.)", true, false);
+        MultiConcentration.classTest();
     }
     
     /**
