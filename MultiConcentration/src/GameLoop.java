@@ -7,7 +7,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  * Game loop interacts with the driver and the data.
  *
@@ -23,13 +22,13 @@ public class GameLoop {
      * @throws IllegalArgumentException
      */
     public GameLoop(GameDriver driver, GameGrid data) throws IllegalArgumentException {
-        if (driver == null){
+        if (driver == null) {
             throw new IllegalArgumentException("driver is null.");
         } //replaced assert precondition
         if (data == null) {
             throw new IllegalArgumentException("data is null.");
         } //replaced assert precondition
-        
+
         this.driver = driver;
         this.data = data;
     }
@@ -90,33 +89,135 @@ public class GameLoop {
      * @param args
      */
     public static void main(String[] args) {
-        try {
-            classTest();
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(GameLoop.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        classTest();
     }
 
     /**
      * Perform class tests
      */
-    public static void classTest() throws UnsupportedEncodingException {
+    public static void classTest() {
 
         //ARRANGE
-        GameGrid grid = new GameGrid(2);       
+
+        GameDriver testDriver = new GameDriver() {
+
+            @Override
+            public void setup(GameGrid data) {
+                return;
+            }
+
+            @Override
+            public void cleanup() {
+                return;
+            }
+
+            @Override
+            public void showNewGameDisplay() {
+                return;
+            }
+
+            @Override
+            public void getChoice() {
+                guessRequested = (choiceCount <= 1);
+                //failed guess
+                if (choiceCount == 0) {
+                    cell1 = 0;
+                    cell2 = 1;
+                }
+                //successful guess
+                if (choiceCount == 1) {
+                    cell1 = 0;
+                    cell2 = 3;
+                }
+                resetRequested = (choiceCount == 2);
+                exitRequested = (choiceCount >= 3);
+                choiceCount++;
+            }
+            public int choiceCount = 0;
+
+            @Override
+            public Boolean isResetRequested() {
+                return resetRequested;
+            }
+            public Boolean resetRequested = false;
+
+            @Override
+            public Boolean isExitRequested() {
+                return exitRequested;
+            }
+            public Boolean exitRequested = false;
+
+            @Override
+            public Boolean isGuessRequested() {
+                return guessRequested;
+            }
+            public Boolean guessRequested = false;
+
+            @Override
+            public int getGuessCell1() {
+                return cell1;
+            }
+            public int cell1 = -1;
+
+            @Override
+            public int getGuessCell2() {
+                return cell2;
+            }
+            public int cell2 = -1;
+
+            @Override
+            public void showGuessSuccess(int cell1, int cell2) {
+                return;
+            }
+
+            @Override
+            public void showGuessFailed(int cell1, int cell2) {
+                return;
+            }
+
+            @Override
+            public void showExit() {
+                return;
+            }
+
+            @Override
+            public void showException(Exception ex) {
+                return;
+            }
+        };
         
+        testDriver.showException(null);
+        TestDriver.printTestCase("TC000", "TestGameDriver showException code coverage", true, testDriver != null);
+
+        TestDriver.printTestCaseThrowsException("TC000", "GameLoop constructor null driver exception.",
+                new TestCase() {
+                    @Override
+                    public GameLoop Run() throws Exception {
+                        return new GameLoop(null, null);
+                    }
+                });
+
+        TestDriver.printTestCaseThrowsException("TC000", "GameLoop constructor null grid exception.",
+                new TestCase() {
+                    @Override
+                    public GameLoop Run() throws Exception {
+                        return new GameLoop(new TextGameDriver(System.in, System.out), null);    
+                    }
+                });
+
+
+        GameGrid grid = new GameGrid(2);
         grid.initializeGrids(42);
         //42 -> [B, A, A, B]
+        GameLoop loop;
+        loop = new GameLoop(testDriver, grid);
+        TestDriver.printTestCase("TC000", "GameLoop constructor", true, loop != null);
 
-        String result;
+        //Exit requested
+        loop = new GameLoop(testDriver, grid);
+        loop.Start();
+        TestDriver.printTestCase("TC000", "GameLoop start", true, true);
 
-        //Read and write from custom streams
-        InputStream in = new ByteArrayInputStream("Q\r\n".getBytes("UTF-8"));
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PrintStream out = new PrintStream(outputStream);
-        TextGameDriver driver = new TextGameDriver(in, out);
-
-        GameLoop loop = new GameLoop(driver, grid);
     }
 
 }
