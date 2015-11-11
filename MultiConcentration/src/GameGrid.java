@@ -247,27 +247,127 @@ public class GameGrid {
         
         GameGrid grid;
         
+        // <editor-fold defaultstate="collapsed" desc="Test Constructor BVT">
+        try {
+            grid = new GameGrid(-1);
+        } catch (Exception ex) {
+            grid = null;
+        }
+        
+        TestDriver.printTestCase(
+                "GG001", 
+                "GameGrid. Create GameGrid(-1) throws exception.", 
+                true, 
+                grid == null);
+        
         try {
             grid = new GameGrid(0);
         } catch (Exception ex) {
             grid = null;
-        }        
+        }
+        
         TestDriver.printTestCase(
-                "GG001", 
+                "GG002", 
                 "GameGrid. Create GameGrid(0) throws exception.", 
                 true, 
                 grid == null);
         
         try {
-            grid = new GameGrid(Config.MaxGridSize + 1);
+            grid = new GameGrid(1);
         } catch (Exception ex) {
             grid = null;
-        }        
+        }
+        
         TestDriver.printTestCase(
-                "GG002", 
-                "GameGrid. Create GameGrid(MaxSize + 1) throws exception.", 
+                "GG003", 
+                "GameGrid. Create GameGrid(1) throws exception.", 
                 true, 
                 grid == null);
+        
+        try {
+            grid = new GameGrid(2);
+        
+            TestDriver.printTestCase(
+                    "GG004", 
+                    "GameGrid. Create GameGrid(2) successfully created with size of 4.", 
+                    4, 
+                    grid.getSize());
+        } catch (Exception ex) {
+            grid = null;
+        
+            TestDriver.printTestCase(
+                    "GG004", 
+                    "GameGrid. Create GameGrid(2) successfully created with size of 4.", 
+                    4, 
+                    null);
+        }
+        
+        try {
+            grid = new GameGrid(4);
+        
+            TestDriver.printTestCase(
+                    "GG005", 
+                    "GameGrid. Create GameGrid(4) successfully created with size of 16.", 
+                    16, 
+                    grid.getSize());
+        } catch (Exception ex) {
+            grid = null;
+        
+            TestDriver.printTestCase(
+                    "GG005", 
+                    "GameGrid. Create GameGrid(4) successfully created with size of 16.", 
+                    16, 
+                    null);
+        }
+        
+        try {
+            grid = new GameGrid(10);
+        
+            TestDriver.printTestCase(
+                    "GG006", 
+                    "GameGrid. Create GameGrid(10) successfully created with size of 100.", 
+                    100, 
+                    grid.getSize());
+        } catch (Exception ex) {
+            grid = null;
+        
+            TestDriver.printTestCase(
+                    "GG006", 
+                    "GameGrid. Create GameGrid(10) successfully created with size of 100.", 
+                    100, 
+                    null);
+        }
+        
+        try {
+            grid = new GameGrid(20);
+        
+            TestDriver.printTestCase(
+                    "GG007", 
+                    "GameGrid. Create GameGrid(20) successfully created with size of 400.", 
+                    400, 
+                    grid.getSize());
+        } catch (Exception ex) {
+            grid = null;
+        
+            TestDriver.printTestCase(
+                    "GG007", 
+                    "GameGrid. Create GameGrid(20) successfully created with size of 400.", 
+                    400, 
+                    null);
+        }
+        
+        try {
+            grid = new GameGrid(21);
+        } catch (Exception ex) {
+            grid = null;
+        }
+        
+        TestDriver.printTestCase(
+                "GG008", 
+                "GameGrid. Create GameGrid(21) throws exception.", 
+                true, 
+                grid == null);
+        // </editor-fold>
         
         TestDriver.printTestCase(
                 "TGG003", 
