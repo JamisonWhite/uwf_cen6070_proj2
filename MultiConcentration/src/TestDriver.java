@@ -12,30 +12,51 @@ public class TestDriver {
 
     /**
      * Execute all class tests
-     * @param args 
+     *
+     * @param args
      */
     public static void main(String[] args) throws IllegalArgumentException {
-        
-        args = new String[] {"-t","4"};
-        //MultiConcentration.main(args);
-        
-        printTestCase("TD001", "TestDriver. Code coverage test for positive test case.", true, true);
-        printTestCase("TD002", "TestDriver. Code coverage test for negative test case. (This is not really a failure.)", true, false);
-        
+
+        Config.MemorizeSeconds = 1;
+
+        args = new String[]{};
+        TestDriver.classTest();
         GameGrid.main(args);
         GameLoop.main(args);
         TextGameDriver.main(args);
-        GuiGameDriver.main(args);
-        MultiConcentration.classTest();
+        MultiConcentration.classTest();   
+        //MultiConcentration.main(args);     
+        //GuiGameDriver.main(args);
     }
-    
+
+    /**
+     * Class test for testing methods
+     */
+    public static void classTest() {
+        printTestCase("TD001", "TestDriver. Code coverage test.", true, true);
+        printTestCase("TD002", "TestDriver. Code coverage test. (NOT A REAL FAILURE)", true, false);
+        printTestCaseThrowsException("TD002", "TestDriver. Code coverage test.", new TestCase() {
+            @Override
+            public Boolean Run() throws Exception {
+                throw new Exception("Test worked");
+            }
+        });
+        printTestCaseThrowsException("TD002", "TestDriver. Code coverage test. (NOT A REAL FAILURE)", new TestCase() {
+            @Override
+            public Boolean Run() throws Exception {
+                return false; //where's the error
+            }
+        });
+    }
+
     /**
      * Print test case status and expected and actuals on failure.
+     *
      * @param <T>
      * @param testCase
      * @param description
      * @param expected
-     * @param actual 
+     * @param actual
      */
     public static <T> void printTestCase(String testCase, String description, T expected, T actual) {
         if (expected.equals(actual)) {
@@ -44,4 +65,22 @@ public class TestDriver {
             System.out.println(String.format("%s FAILED. %s Expected: %s Actual: %s  ", testCase, description, expected, actual));
         }
     }
+
+    /**
+     * print test case and if it threw an exception
+     * @param testCase
+     * @param description
+     * @param test 
+     */
+    public static void printTestCaseThrowsException(String testCase, String description, TestCase test) {
+        try {
+            test.Run();
+            System.out.println(String.format("%s FAILED. %s Expected: Exception Actual: none  ", testCase, description));
+        } catch (Exception ex) {
+            System.out.println(String.format("%s passed. %s", testCase, description));
+        }
+    }
+
+
+
 }
