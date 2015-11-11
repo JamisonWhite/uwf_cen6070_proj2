@@ -13,15 +13,15 @@ public class Config {
     /**
      * Minimum size
      */
-    public static final int MinGridSize = 2;
+    public static int MinGridSize = 2;
     
     /**
      * Maximum size
      */
-    public static final int MaxGridSize = 20;
+    public static int MaxGridSize = 20;
 
     /**
      * Number of seconds to memorize
      */
-    public static final int MemorizeSeconds = 10;
+    public static int MemorizeSeconds = 10;
 }
