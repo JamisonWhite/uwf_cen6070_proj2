@@ -234,67 +234,67 @@ public class TextGameDriver implements GameDriver {
         TextGameDriver driver = new TextGameDriver(in, out);
 
         driver.setup(grid);
-        TestDriver.printTestCase("TC000", "TextGameDriver. setup", true, true);
+        TestDriver.printTestCase("TGD001", "TextGameDriver. setup", true, true);
 
         outputStream.reset();
         driver.showNewGameDisplay();
         result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "TextGameDriver. showNewGameDisplay", true, result.length() > 0);
+        TestDriver.printTestCase("TGD002", "TextGameDriver. showNewGameDisplay", true, result.length() > 0);
         
-        TestDriver.printTestCase("TC000", "TextGameDriver. isExitRequested", false, driver.isExitRequested());
+        TestDriver.printTestCase("TGD003", "TextGameDriver. isExitRequested", false, driver.isExitRequested());
         
-        TestDriver.printTestCase("TC000", "TextGameDriver. isGuessRequested", false, driver.isGuessRequested());
+        TestDriver.printTestCase("TGD004", "TextGameDriver. isGuessRequested", false, driver.isGuessRequested());
         
-        TestDriver.printTestCase("TC000", "TextGameDriver. isResetRequested", false, driver.isResetRequested());
+        TestDriver.printTestCase("TGD005", "TextGameDriver. isResetRequested", false, driver.isResetRequested());
         
-        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell1", true, driver.getGuessCell1() < 0);
+        TestDriver.printTestCase("TGD006", "TextGameDriver. getGuessCell1", true, driver.getGuessCell1() < 0);
         
-        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell2", true, driver.getGuessCell2() < 0);
+        TestDriver.printTestCase("TGD007", "TextGameDriver. getGuessCell2", true, driver.getGuessCell2() < 0);
         
         outputStream.reset();
         driver.showGuessFailed(1, 2);
         result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "TextGameDriver. showGuessFailed", true, result.trim().endsWith("Sorry..."));
+        TestDriver.printTestCase("TGD008", "TextGameDriver. showGuessFailed", true, result.trim().endsWith("Sorry..."));
 
         outputStream.reset();
         driver.showGuessSuccess(1, 4);
         result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "TextGameDriver. showGuessSuccess", true, result.trim().endsWith("Good Guess!"));
+        TestDriver.printTestCase("TGD009", "TextGameDriver. showGuessSuccess", true, result.trim().endsWith("Good Guess!"));
 
         outputStream.reset();
         driver.showException(new UnsupportedOperationException("TestError"));
         result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "TextGameDriver. showException", true, result.trim().endsWith("Error: TestError"));
+        TestDriver.printTestCase("TGD010", "TextGameDriver. showException", true, result.trim().endsWith("Error: TestError"));
 
         outputStream.reset();
         driver.showExit();
         result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "TextGameDriver. showExit", true, result.trim().endsWith("Game Over"));
+        TestDriver.printTestCase("TGD011", "TextGameDriver. showExit", true, result.trim().endsWith("Game Over"));
 
 
         outputStream.reset();
         driver.getChoice();
         result = outputStream.toString("UTF-8");
-        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice", "Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ", result);
+        TestDriver.printTestCase("TGD012", "TextGameDriver. getChoice", "Enter a pair of numbers, or \"R\" to reset, or \"Q\" to quit: ", result);
 
         //play the game. Display is ONE-BASED; Data is ZERO-BASED
         in = new ByteArrayInputStream("1 2\r\n1 4\r\nR\r\nQ\r\n".getBytes("UTF-8"));
         driver = new TextGameDriver(in, out);
         driver.getChoice();
-        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice cells", true, driver.isGuessRequested());
-        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell1", 0, driver.getGuessCell1());
-        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell2", 1, driver.getGuessCell2());
+        TestDriver.printTestCase("TGDD013", "TextGameDriver. getChoice cells", true, driver.isGuessRequested());
+        TestDriver.printTestCase("TGD014", "TextGameDriver. getGuessCell1", 0, driver.getGuessCell1());
+        TestDriver.printTestCase("TGD015", "TextGameDriver. getGuessCell2", 1, driver.getGuessCell2());
         driver.getChoice();
-        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice cells", true, driver.isGuessRequested());
-        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell1", 0, driver.getGuessCell1());
-        TestDriver.printTestCase("TC000", "TextGameDriver. getGuessCell2", 3, driver.getGuessCell2());
+        TestDriver.printTestCase("TGD016", "TextGameDriver. getChoice cells", true, driver.isGuessRequested());
+        TestDriver.printTestCase("TGD017", "TextGameDriver. getGuessCell1", 0, driver.getGuessCell1());
+        TestDriver.printTestCase("TGD018", "TextGameDriver. getGuessCell2", 3, driver.getGuessCell2());
         driver.getChoice();
-        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice R", true, driver.isResetRequested());
+        TestDriver.printTestCase("TGD019", "TextGameDriver. getChoice R", true, driver.isResetRequested());
         driver.getChoice();
-        TestDriver.printTestCase("TC000", "TextGameDriver. getChoice Q", true, driver.isExitRequested());
+        TestDriver.printTestCase("TGD020", "TextGameDriver. getChoice Q", true, driver.isExitRequested());
 
         driver.cleanup();
-        TestDriver.printTestCase("TC000", "TextGameDriver. cleanup", true, true);
+        TestDriver.printTestCase("TGD021", "TextGameDriver. cleanup", true, true);
 
 //        outputStream.reset();
 //        //do stuff
