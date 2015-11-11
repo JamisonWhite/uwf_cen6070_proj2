@@ -23,10 +23,10 @@ public class TestDriver {
         TestDriver.classTest();
         GameGrid.main(args);
         GameLoop.main(args);
-        TextGameDriver.main(args);
+        TextGameDriver.main(args); 
         MultiConcentration.classTest();   
-        //MultiConcentration.main(args);     
-        //GuiGameDriver.main(args);
+        //GUI driver will close the window and exit the application so order matters.
+        GuiGameDriver.main(args);   
     }
 
     /**
