@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -252,7 +253,8 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         }
         // Set application title and exit button
         setTitle("The Multi-Concentration Game");
-	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	this.addWindowListener(new ClosingWindowAdapter(this));
 
         createMenuBar();
 
@@ -451,6 +453,27 @@ public class GuiGameDriver extends JFrame implements GameDriver {
     // =============================================
     // Event Listener classes
     // =============================================
+
+    // <editor-fold defaultstate="collapsed" desc="ClosingWindowAdapter">
+    /**
+     * Event handler for when the user clicks the button to close the
+     * application
+     *
+     */
+    private class ClosingWindowAdapter extends WindowAdapter {
+        GuiGameDriver window = null;
+
+        ClosingWindowAdapter(GuiGameDriver window) {
+                this.window = window;
+        }
+
+        // implement windowClosing method
+        public void windowClosing(WindowEvent e) {
+            exitRequested = true;
+        }
+    }
+    // </editor-fold>
+        
     // <editor-fold defaultstate="collapsed" desc="ResetMenuListener">
     /**
      * Event handler for the Reset Menu option
