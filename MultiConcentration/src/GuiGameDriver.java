@@ -252,7 +252,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         }
         // Set application title and exit button
         setTitle("The Multi-Concentration Game");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         createMenuBar();
 
