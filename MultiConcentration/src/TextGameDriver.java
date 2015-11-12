@@ -116,10 +116,20 @@ public class TextGameDriver implements GameDriver {
             if (cell1 < 0) {
                 cellChoice = next;
                 cell1 = Integer.parseInt(next);
+                if (cell1 < 0) {
+                    outputStream.println("Error: Cell1 out of range.");
+                    getChoice();
+                }
                 continue;
             }
             cell2 = Integer.parseInt(next);
-            guessRequested = true;
+
+            if (cell2 < 0) {
+                outputStream.println("Error: Cell2 out of range.");
+                getChoice();
+            } else {
+                guessRequested = true;
+            }
             return;
         }
     }
@@ -218,12 +228,13 @@ public class TextGameDriver implements GameDriver {
 
     /**
      * Perform class tests
+     *
      * @throws java.io.UnsupportedEncodingException
      */
     public static void classTest() throws UnsupportedEncodingException {
 
         Config.MemorizeSeconds = 1;
-        
+
         GameGrid grid = new GameGrid(4);
         grid.initializeGrids(42);
         //42 -> [B, A, A, B]
@@ -243,17 +254,17 @@ public class TextGameDriver implements GameDriver {
         driver.showNewGameDisplay();
         result = outputStream.toString("UTF-8");
         TestDriver.printTestCase("TGD002", "TextGameDriver. showNewGameDisplay", true, result.length() > 0);
-        
+
         TestDriver.printTestCase("TGD003", "TextGameDriver. isExitRequested", false, driver.isExitRequested());
-        
+
         TestDriver.printTestCase("TGD004", "TextGameDriver. isGuessRequested", false, driver.isGuessRequested());
-        
+
         TestDriver.printTestCase("TGD005", "TextGameDriver. isResetRequested", false, driver.isResetRequested());
-        
+
         TestDriver.printTestCase("TGD006", "TextGameDriver. getGuessCell1", true, driver.getGuessCell1() < 0);
-        
+
         TestDriver.printTestCase("TGD007", "TextGameDriver. getGuessCell2", true, driver.getGuessCell2() < 0);
-        
+
         outputStream.reset();
         driver.showGuessFailed(1, 2);
         result = outputStream.toString("UTF-8");
@@ -273,7 +284,6 @@ public class TextGameDriver implements GameDriver {
         driver.showExit();
         result = outputStream.toString("UTF-8");
         TestDriver.printTestCase("TGD011", "TextGameDriver. showExit", true, result.trim().endsWith("Game Over"));
-
 
         outputStream.reset();
         driver.getChoice();
