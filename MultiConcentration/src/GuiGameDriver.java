@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 /**
- * <p>
+ * <p> 
  * Desktop application version of Multi Concentration game.</p>
  *
  * @author Justin Lambert, Salina Hall, Jamie (Robert) White, Mike Worn
