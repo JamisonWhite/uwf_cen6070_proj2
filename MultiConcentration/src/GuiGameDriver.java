@@ -556,17 +556,30 @@ public class GuiGameDriver extends JFrame implements GameDriver {
 
         //Read and write from custom streams
         GuiGameDriver driver = new GuiGameDriver();
+        
+        driver.createMenuBar();
+        TestDriver.printTestCase("TC000", "GuiGameDriver. createMenuBar", true, true);
+        
+        driver.createStatusBar();
+        TestDriver.printTestCase("TC000", "GuiGameDriver. createStatusBar", true, true);
+        
+        driver.createGameBoard(grid);
+        TestDriver.printTestCase("TC000", "GuiGameDriver. createGameBoard", true, true);
 
+        driver = new GuiGameDriver();
+        
         driver.setup(grid);
         TestDriver.printTestCase("GUI001", "GuiGameDriver. setup", true, true);
         TestDriver.printTestCase("TC000", "GuiGameDriver. isResetRequested", false, driver.isResetRequested() );    
         TestDriver.printTestCase("TC000", "GuiGameDriver. isExitRequested", false, driver.isExitRequested() );    
-        TestDriver.printTestCase("TC000", "GuiGameDriver. isGuessRequested", false, driver.isGuessRequested() );    
-        TestDriver.printTestCase("GUI006", "GuiGameDriver. getGuessCell1", true, driver.getGuessCell1() < 0);        
-        TestDriver.printTestCase("GUI007", "GuiGameDriver. getGuessCell2", true, driver.getGuessCell2() < 0);
-
+        TestDriver.printTestCase("TC000", "GuiGameDriver. isGuessRequested", false, driver.isGuessRequested() );  
+        driver.guess1 = 0;
+        TestDriver.printTestCase("GUI006", "GuiGameDriver. getGuessCell1", 0, driver.getGuessCell1());    
+        driver.guess2 = 0;
+        TestDriver.printTestCase("GUI007", "GuiGameDriver. getGuessCell2", 0, driver.getGuessCell2());
+        
         driver.showNewGameDisplay();
-        TestDriver.printTestCase("GUI002", "GuiGameDriver. showNewGameDisplay", true, driver.gameStatus.getText().length() > 0);
+        TestDriver.printTestCase("GUI002", "GuiGameDriver. showNewGameDisplay", "", driver.gameStatus.getText());
 
         driver.showGuessFailed(0, 1);
         TestDriver.printTestCase("GUI003", "GuiGameDriver. showGuessFailed", "Sorry...", driver.gameStatus.getText().trim());
