@@ -551,7 +551,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         driver.createStatusBar();
         TestDriver.printTestCase("GUI011", "GuiGameDriver. createStatusBar", true, true);
 
-        TestDriver.printTestCaseThrowsException("TC000", "GuiGameDriver createGameBoard null grid exception.",
+        TestDriver.printTestCaseThrowsException("GUI029", "GuiGameDriver createGameBoard null grid exception.",
                 new TestCase() {
                     @Override
                     public GuiGameDriver Run() throws Exception {

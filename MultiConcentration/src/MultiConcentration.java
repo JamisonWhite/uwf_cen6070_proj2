@@ -128,7 +128,7 @@ public class MultiConcentration {
                 
         args = new String[] {"-xxx", "200"};
         main(args);
-        TestDriver.printTestCase("TC000", "MultiConcentration. Main with invalid arguments", true, true );
+        TestDriver.printTestCase("MC008", "MultiConcentration. Main with invalid arguments", true, true );
         
 //        game.startGame(args);
 //        TestDriver.printTestCase("MC008", "MultiConcentration. start game valid arguments", true, true);
