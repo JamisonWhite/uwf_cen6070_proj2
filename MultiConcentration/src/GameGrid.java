@@ -172,18 +172,10 @@ public class GameGrid {
      * @throws IllegalArgumentException
      */
     public void initializeGrids(int seed) throws IllegalArgumentException {
-        if (dataGrid.length == 0) {
-            throw new IllegalArgumentException("dataGrid.length > 0");
-        } //replaced assert precondition
-        if (dataGrid.length != size) {
-            throw new IllegalArgumentException("dataGrid.length == size");
-        } //replaced assert precondition
-        if (dataGrid.length != displayGrid.length) {
-            throw new IllegalArgumentException("dataGrid.length == displayGrid.length");
-        } //replaced assert precondition
-        if (displayGrid.length != isFoundGrid.length) {
-            throw new IllegalArgumentException("displayGrid.length == isFoundGrid.length");
-        } //replaced assert precondition
+        assert (dataGrid.length > 0);
+        assert (dataGrid.length == size);
+        assert (displayGrid.length == size);
+        assert (isFoundGrid.length == size);
 
         //initialize values
         char data = 'A';
@@ -320,6 +312,55 @@ public class GameGrid {
                 "GameGrid. Brute force solve a GameGrid",
                 true,
                 solveTest(out));
+        
+        
+        TestDriver.printTestCaseThrowsException(
+                "TC000",
+                "GameGrid. Create isCellFound throws exception.",
+                new TestCase() {
+                    @Override
+                    public Boolean Run() throws Exception {
+                        GameGrid grid = new GameGrid(4);
+                        return grid.isCellFound(-1);
+                    }
+                });
+
+        
+        TestDriver.printTestCaseThrowsException(
+                "TC000",
+                "GameGrid. Create matchCells cell1 = -1 throws exception.",
+                new TestCase() {
+                    @Override
+                    public Boolean Run() throws Exception {
+                        GameGrid grid = new GameGrid(4);
+                        return grid.matchCells(-1, 0);
+                    }
+                });
+
+        TestDriver.printTestCaseThrowsException(
+                "TC000",
+                "GameGrid. Create matchCells cell2 = -1 throws exception.",
+                new TestCase() {
+                    @Override
+                    public Boolean Run() throws Exception {
+                        GameGrid grid = new GameGrid(4);
+                        return grid.matchCells(0, -1);
+                    }
+                });
+
+        TestDriver.printTestCaseThrowsException(
+                "TC000",
+                "GameGrid. Create matchCells cell1 == cell2 throws exception.",
+                new TestCase() {
+                    @Override
+                    public Boolean Run() throws Exception {
+                        GameGrid grid = new GameGrid(4);
+                        return grid.matchCells(0, 0);
+                    }
+                });
+
+        
+        
     }
 
     /**
