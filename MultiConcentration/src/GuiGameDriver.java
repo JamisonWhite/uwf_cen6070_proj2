@@ -287,7 +287,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
         }
         this.redrawGameBoard(dataGrid);
         this.disableGameBoard();
-
+        this.fileMenuItem.setEnabled(false);
         for (int i = Config.MemorizeSeconds; i >= 0; i--) {
             try {
                 this.gameStatus.setText("Memorize the above grid! " + i);
@@ -296,6 +296,7 @@ public class GuiGameDriver extends JFrame implements GameDriver {
                 Logger.getLogger(GuiGameDriver.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        this.fileMenuItem.setEnabled(true);
         this.redrawGameBoard(data.getDisplayGrid());
         this.enableGameBoard();
         this.gameStatus.setText("Select a pair of numbers.");
