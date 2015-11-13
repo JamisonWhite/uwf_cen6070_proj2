@@ -97,18 +97,40 @@ public class TestDriver {
     public static void classTest() {
         printTestCase("TD001", "TestDriver. Code coverage test.", true, true);
         printTestCase("TD002", "TestDriver. Code coverage test. (NOT A REAL FAILURE)", true, false);
-        printTestCaseThrowsException("TD002", "TestDriver. Code coverage test.", new TestCase() {
+        printTestCaseThrowsException("TD003", "TestDriver. Code coverage test.", new TestCase() {
             @Override
             public Boolean Run() throws Exception {
                 throw new Exception("Test worked");
             }
         });
-        printTestCaseThrowsException("TD002", "TestDriver. Code coverage test. (NOT A REAL FAILURE)", new TestCase() {
+        printTestCaseThrowsException("TD004", "TestDriver. Code coverage test. (NOT A REAL FAILURE)", new TestCase() {
             @Override
             public Boolean Run() throws Exception {
                 return false; //where's the error
             }
         });
+        
+        runTestCase("TD005", "TestDriver. Code coverage test.", true, new TestCase<Boolean>() {
+            @Override
+            public Boolean Run() throws Exception {
+                return true;
+            }
+        });
+
+        runTestCase("TD005", "TestDriver. Code coverage test. (NOT A REAL FAILURE)", true, new TestCase<Boolean>() {
+            @Override
+            public Boolean Run() throws Exception {
+                return false;
+            }
+        });
+        
+        runTestCase("TD005", "TestDriver. Code coverage test. (NOT A REAL FAILURE)", true, new TestCase<Boolean>() {
+            @Override
+            public Boolean Run() throws Exception {
+                throw new Exception("Test worked");
+            }
+        });
+
     }
 
 }
