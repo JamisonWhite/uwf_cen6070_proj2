@@ -180,9 +180,9 @@ public class GameLoop {
         };
         
         testDriver.showException(null);
-        TestDriver.printTestCase("TC000", "TestGameDriver showException code coverage", true, testDriver != null);
+        TestDriver.printTestCase("GL001", "TestGameDriver showException code coverage", true, testDriver != null);
 
-        TestDriver.printTestCaseThrowsException("TC000", "GameLoop constructor null driver exception.",
+        TestDriver.printTestCaseThrowsException("GL002", "GameLoop constructor null driver exception.",
                 new TestCase() {
                     @Override
                     public GameLoop Run() throws Exception {
@@ -190,7 +190,7 @@ public class GameLoop {
                     }
                 });
 
-        TestDriver.printTestCaseThrowsException("TC000", "GameLoop constructor null grid exception.",
+        TestDriver.printTestCaseThrowsException("GL003", "GameLoop constructor null grid exception.",
                 new TestCase() {
                     @Override
                     public GameLoop Run() throws Exception {
@@ -204,12 +204,12 @@ public class GameLoop {
         //42 -> [B, A, A, B]
         GameLoop loop;
         loop = new GameLoop(testDriver, grid);
-        TestDriver.printTestCase("TC000", "GameLoop constructor", true, loop != null);
+        TestDriver.printTestCase("GL004", "GameLoop constructor", true, loop != null);
 
         //Exit requested
         loop = new GameLoop(testDriver, grid);
         loop.Start();
-        TestDriver.printTestCase("TC000", "GameLoop start", true, true);
+        TestDriver.printTestCase("GL005", "GameLoop start", true, true);
 
     }
 
