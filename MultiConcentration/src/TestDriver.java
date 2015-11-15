@@ -117,14 +117,14 @@ public class TestDriver {
             }
         });
 
-        runTestCase("TD005", "TestDriver. Code coverage test. (NOT A REAL FAILURE)", true, new TestCase<Boolean>() {
+        runTestCase("TD006", "TestDriver. Code coverage test. (NOT A REAL FAILURE)", true, new TestCase<Boolean>() {
             @Override
             public Boolean Run() throws Exception {
                 return false;
             }
         });
         
-        runTestCase("TD005", "TestDriver. Code coverage test. (NOT A REAL FAILURE)", true, new TestCase<Boolean>() {
+        runTestCase("TD007", "TestDriver. Code coverage test. (NOT A REAL FAILURE)", true, new TestCase<Boolean>() {
             @Override
             public Boolean Run() throws Exception {
                 throw new Exception("Test worked");
