@@ -294,7 +294,7 @@ public class TextGameDriver implements GameDriver {
         in = new ByteArrayInputStream("1 2\r\n1 4\r\nR\r\nQ\r\n".getBytes("UTF-8"));
         driver = new TextGameDriver(in, out);
         driver.getChoice();
-        TestDriver.printTestCase("TGDD013", "TextGameDriver. getChoice cells", true, driver.isGuessRequested());
+        TestDriver.printTestCase("TGD013", "TextGameDriver. getChoice cells", true, driver.isGuessRequested());
         TestDriver.printTestCase("TGD014", "TextGameDriver. getGuessCell1", 0, driver.getGuessCell1());
         TestDriver.printTestCase("TGD015", "TextGameDriver. getGuessCell2", 1, driver.getGuessCell2());
         driver.getChoice();

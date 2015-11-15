@@ -308,14 +308,13 @@ public class GameGrid {
         // </editor-fold>
 
         TestDriver.printTestCase(
-                "TGG003",
+                "TGG001",
                 "GameGrid. Brute force solve a GameGrid",
                 true,
                 solveTest(out));
         
-        
         TestDriver.printTestCaseThrowsException(
-                "TC000",
+                "TGG002",
                 "GameGrid. Create isCellFound throws exception.",
                 new TestCase() {
                     @Override
@@ -324,10 +323,9 @@ public class GameGrid {
                         return grid.isCellFound(-1);
                     }
                 });
-
         
         TestDriver.printTestCaseThrowsException(
-                "TC000",
+                "TGG003",
                 "GameGrid. Create matchCells cell1 = -1 throws exception.",
                 new TestCase() {
                     @Override
@@ -338,7 +336,7 @@ public class GameGrid {
                 });
 
         TestDriver.printTestCaseThrowsException(
-                "TC000",
+                "TGG004",
                 "GameGrid. Create matchCells cell2 = -1 throws exception.",
                 new TestCase() {
                     @Override
@@ -349,7 +347,7 @@ public class GameGrid {
                 });
 
         TestDriver.printTestCaseThrowsException(
-                "TC000",
+                "TGG005",
                 "GameGrid. Create matchCells cell1 == cell2 throws exception.",
                 new TestCase() {
                     @Override
@@ -358,9 +356,6 @@ public class GameGrid {
                         return grid.matchCells(0, 0);
                     }
                 });
-
-        
-        
     }
 
     /**
