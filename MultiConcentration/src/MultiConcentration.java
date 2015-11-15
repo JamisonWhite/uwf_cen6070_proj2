@@ -131,6 +131,6 @@ public class MultiConcentration {
         TestDriver.printTestCase("MC008", "MultiConcentration. Main with invalid arguments", true, true );
         
 //        game.startGame(args);
-//        TestDriver.printTestCase("MC008", "MultiConcentration. start game valid arguments", true, true);
+//        TestDriver.printTestCase("MC009", "MultiConcentration. start game valid arguments", true, true);
     }
 }
