@@ -5,10 +5,17 @@
  */
 
 /**
- *
+ * Test case interface
+ * 
  * @author jamie
  * @param <T>
  */
 public interface TestCase<T>  {
+    
+    /**
+     * Execute the test case
+     * @return
+     * @throws Exception 
+     */
     public T Run() throws Exception;
 }

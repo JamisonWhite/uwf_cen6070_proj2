@@ -71,9 +71,17 @@
 
     -->
     
-        <copy file="emma/emma.jar" todir="build/classes/"/>        
-        <copy file="emma/runall.sh" todir="build/classes/"/>        
-        <copy file="emma/runall.bat" todir="build/classes/"/>          
+
         
+            <target name="-post-compile">
+                <copy todir="${build.classes.dir}">
+                    <fileset dir="emma/">
+                        <include name ="**/**"/>
+                    </fileset>
+                    <fileset dir="src/">
+                        <include name ="**/**"/>
+                    </fileset>
+                </copy>
+        </target>
         
 </project>
